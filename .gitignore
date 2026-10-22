@@ -4,8 +4,8 @@ data/
 *.parquet
 *.pcap
 *.pcapng
-models/*.pkl
-models/*.joblib
+models/*
+!models/README.md
 
 # Python
 __pycache__/
@@ -48,7 +48,6 @@ reports/A4/
 reports/course_details.json
 
 .venv-ml/
-models/
 artifacts/
 
 *.egg-info/

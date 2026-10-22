@@ -106,3 +106,36 @@ def test_pseudonymise_is_keyed_and_stable():
 def test_rank_agreement():
     assert rank_agreement(["a", "b"], ["a", "b"]) == 1.0
     assert rank_agreement(["a", "b"], ["c", "d"]) == 0.0
+
+
+def test_temporal_split_keeps_every_class_and_never_trains_on_the_future(flows):
+    from ids.data import temporal_split
+    train, val, test = temporal_split(flows)
+    assert len(train) + len(val) + len(test) == len(flows)
+    for label in flows[LABEL_COL].unique():
+        tr = pd.to_datetime(train.loc[train[LABEL_COL] == label, "Timestamp"])
+        te = pd.to_datetime(test.loc[test[LABEL_COL] == label, "Timestamp"])
+        assert len(te) > 0, f"{label} missing from test"
+        assert tr.max() <= te.min(), f"{label}: training flow later than a test flow"
+
+
+def test_align_columns_maps_loose_cicflowmeter_names():
+    from ids.scoring import align_columns
+    df = pd.DataFrame({" total fwd packets ": [1], "Flow_Duration": [2]})
+    out, missing = align_columns(df, ["Total Fwd Packet", "Flow Duration", "Protocol"])
+    assert {"Total Fwd Packet", "Flow Duration"} <= set(out.columns) and missing == ["Protocol"]
+
+
+def test_interleave_background_spreads_benign_and_keeps_every_flow(flows):
+    from ids.scoring import interleave_background
+    out = interleave_background(flows)
+    assert len(out) == len(flows) and sorted(out[LABEL_COL]) == sorted(flows[LABEL_COL])
+    first_tenth = out.head(len(out) // 10)
+    assert (first_tenth[LABEL_COL] == BENIGN).any() and (first_tenth[LABEL_COL] != BENIGN).any()
+
+
+def test_verdict_compares_alert_with_label():
+    from ids.scoring import verdict
+    assert verdict("PortScan", "PortScan") == "correct"
+    assert verdict(BENIGN, "PortScan") == "false positive"
+    assert verdict("DoS-Hulk", "DDoS-HTTP") == "attack, other class"

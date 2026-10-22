@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from .data import BENIGN
-from .threat import context_for
+from .threat import context_for, display_name
 
 SEVERITY_RANK = {"Info": 0, "Medium": 1, "High": 2, "Critical": 3}
 
@@ -41,8 +41,8 @@ def plain_summary(label: str, ctx, is_outlier: bool) -> str:
     """At most ~30 words for non-specialist owners (US1)."""
     if label == BENIGN and is_outlier:
         return "Unusual network traffic that matches no known attack. Ask your IT support to review it."
-    tech = f" ({ctx.technique_id} {ctx.technique})" if ctx.technique_id else ""
-    return f"Possible {label.replace('-', ' ').lower()} detected{tech}. Severity {ctx.severity.lower()}. {ctx.guidance.split(';')[0]}."
+    tech = f" ({ctx.technique_id})" if ctx.technique_id else ""
+    return f"Possible {display_name(label)}{tech}, {ctx.severity.lower()} severity. {ctx.guidance.split(';')[0]}."
 
 
 def aggregate(alerts: list[dict], window_minutes: int = 10) -> list[dict]:

@@ -1,0 +1,13 @@
+# Exact runtime versions used to train models/detector.joblib (pickles need matching libraries).
+numpy==2.5.4
+pandas==3.1.0
+scikit-learn==1.9.1
+lightgbm==4.7.0
+xgboost==3.4.1
+shap==0.54.1
+joblib==1.6.0
+pyarrow==26.0.0
+fastapi==0.159.1
+uvicorn==0.54.0
+pydantic==2.14.1
+python-multipart==0.0.32
