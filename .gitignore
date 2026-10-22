@@ -46,3 +46,7 @@ reports/A2/
 reports/A3/
 reports/A4/
 reports/course_details.json
+
+.venv-ml/
+models/
+artifacts/

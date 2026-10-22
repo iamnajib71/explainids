@@ -1,0 +1,27 @@
+Metadata-Version: 2.4
+Name: explainids
+Version: 0.1.0
+Summary: Explainable ML network intrusion detection with MITRE ATT&CK context
+License: MIT
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: pandas>=2.2
+Requires-Dist: numpy>=1.26
+Requires-Dist: scikit-learn>=1.5
+Requires-Dist: xgboost>=2.1
+Requires-Dist: lightgbm>=4.5
+Requires-Dist: shap>=0.46
+Requires-Dist: joblib>=1.4
+Requires-Dist: pyarrow>=17
+Provides-Extra: api
+Requires-Dist: fastapi>=0.115; extra == "api"
+Requires-Dist: uvicorn>=0.30; extra == "api"
+Requires-Dist: pydantic>=2.8; extra == "api"
+Provides-Extra: dashboard
+Requires-Dist: streamlit>=1.38; extra == "dashboard"
+Requires-Dist: plotly>=5.24; extra == "dashboard"
+Requires-Dist: httpx>=0.27; extra == "dashboard"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3; extra == "dev"
+Requires-Dist: httpx>=0.27; extra == "dev"
+Dynamic: license-file

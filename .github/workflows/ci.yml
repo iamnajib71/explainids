@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[api,dashboard,dev]"
+      - run: pytest -q
+
+  privacy-guard:
+    # The repo is public: fail if student names, IDs or private folders ever get committed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block private paths
+        run: |
+          if git ls-files | grep -E '^(private|assessments|templates|meetings|evidence)/|^reports/A[1-4]/|course_details\.json'; then
+            echo "Private files are tracked"; exit 1; fi
+      - name: Block student IDs
+        run: |
+          if git grep -nE '\b20(25|26)[0-9]{5}\b' -- ':!*.png' ':!*.drawio'; then
+            echo "Student-ID-like numbers found"; exit 1; fi
