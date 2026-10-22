@@ -1,0 +1,15 @@
+# Allowlist: only what the image needs. Private coursework, data and environments never enter an image.
+*
+!pyproject.toml
+!requirements-deploy.txt
+!README.md
+!LICENSE
+!src/
+!api/
+!web/
+!models/README.md
+!models/detector.joblib
+!models/model_card.json
+!models/replay.parquet
+**/__pycache__
+**/*.egg-info

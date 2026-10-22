@@ -52,6 +52,22 @@ ANOMALY = ThreatContext(None, "unmapped (statistical outlier)", "-", "Medium",
                         "Unusual traffic with no matching known class: review the flow and its host.")
 
 
+DISPLAY_NAMES = {
+    "PortScan": "port scan", "FTP-BruteForce": "FTP password-guessing attack",
+    "SSH-BruteForce": "SSH password-guessing attack", "Web-BruteForce": "web login password-guessing attack",
+    "Web-XSS": "cross-site scripting attempt", "Web-SQLInjection": "SQL injection attack",
+    "DoS-Slowloris": "slow-connection denial of service (Slowloris)", "DoS-SlowHTTPTest": "slow HTTP denial of service",
+    "DoS-Hulk": "HTTP flood denial of service", "DoS-GoldenEye": "HTTP keep-alive denial of service",
+    "DDoS-HTTP": "distributed HTTP flood (DDoS)", "DDoS-UDP": "distributed UDP flood (DDoS)",
+    "Heartbleed": "Heartbleed exploit attempt", "Infiltration": "internal infiltration activity",
+    "Bot": "botnet command-and-control traffic",
+}
+
+
+def display_name(label: str) -> str:
+    return DISPLAY_NAMES.get(label, label.replace("-", " ").lower())
+
+
 def context_for(label: str, is_outlier: bool = False) -> ThreatContext:
     if label == "BENIGN":
         return ANOMALY if is_outlier else ThreatContext(None, "none", "-", "Info", "No action.")

@@ -117,8 +117,22 @@ def session_split(df: pd.DataFrame, test_size: float = 0.2, val_size: float = 0.
     return df[split == "train"], df[split == "val"], df[split == "test"]
 
 
+def temporal_split(df: pd.DataFrame, test_size: float = 0.2, val_size: float = 0.1):
+    """Chronological split within each class: earliest flows train, then validation, latest test.
+
+    CIC captures run each attack as one burst from a single attacker, so random or session-level
+    splits either leak near-duplicate flows or drop whole classes from the test set. Splitting each
+    class in time order keeps every class in every split and makes the model predict the *later*
+    part of each attack from its earlier part (no future information in training).
+    """
+    ts = pd.to_datetime(df["Timestamp"], errors="coerce", format="mixed")
+    order = ts.groupby(df[LABEL_COL]).rank(method="first", pct=True)
+    train = order <= 1 - test_size - val_size
+    test = order > 1 - test_size
+    return df[train], df[~train & ~test], df[test]
+
+
 def stratified_sample(df: pd.DataFrame, per_class: int, seed: int = SEED) -> pd.DataFrame:
     """Cap each class at `per_class` rows (keeps rare classes whole) to fit laptop memory."""
-    return (df.groupby(LABEL_COL, group_keys=False)
-              .apply(lambda g: g.sample(min(len(g), per_class), random_state=seed))
-              .reset_index(drop=True))
+    parts = [g.sample(min(len(g), per_class), random_state=seed) for _, g in df.groupby(LABEL_COL)]
+    return pd.concat(parts).sample(frac=1, random_state=seed).reset_index(drop=True)

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ExplainIDS Console</title>
+<meta name="description" content="Explainable AI intrusion detection: real network flows, SHAP explanations and MITRE ATT&CK context.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z' fill='%2322d3ee'/%3E%3Cpath d='m11 16 4 4 7-8' stroke='%230b1020' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script src="vendor/echarts.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z"/><path class="tick" d="m11 16 4 4 7-8"/></svg>
+    <div><strong>ExplainIDS</strong><span>Explainable intrusion detection</span></div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-view="live" class="active">Live monitor</button>
+    <button role="tab" data-view="incidents">Incidents</button>
+    <button role="tab" data-view="attack">ATT&amp;CK</button>
+    <button role="tab" data-view="lab">Model lab</button>
+    <button role="tab" data-view="upload">Analyse a file</button>
+    <button role="tab" data-view="about">About</button>
+  </nav>
+  <div class="status">
+    <span id="model-pill" class="pill"><i class="dot"></i><span>Connecting…</span></span>
+    <button id="theme" class="icon-btn" title="Toggle light or dark theme" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<main>
+<!-- LIVE -->
+<section id="view-live" class="view active">
+  <div class="controls card">
+    <div class="ctl-group">
+      <button id="play" class="btn primary"><span class="ico">▶</span> <span class="lbl">Start replay</span></button>
+      <button id="reset" class="btn ghost" title="Restart from the first flow">↺ Reset</button>
+    </div>
+    <div class="ctl-group">
+      <label>Speed</label>
+      <div class="seg" id="speed">
+        <button data-n="10">1×</button><button data-n="40" class="active">4×</button>
+        <button data-n="120">12×</button><button data-n="300">30×</button>
+      </div>
+    </div>
+    <p class="hint" id="replay-hint">Replays real, held-out network flows the model never saw in training: attack episodes in capture order over benign background traffic. Every flow keeps its true dataset label, so you see live whether the detector is right.</p>
+    <div class="capture-clock"><span>Flow captured</span><strong id="clock">—</strong></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi card"><span>Flows analysed</span><strong id="k-flows">0</strong><small id="k-rate">0 flows/s</small></div>
+    <div class="kpi card"><span>Alerts raised</span><strong id="k-alerts">0</strong><small id="k-open">0 awaiting triage</small></div>
+    <div class="kpi card good"><span>Attacks caught</span><strong id="k-recall">—</strong><small id="k-recall-sub">detection rate vs. ground truth</small></div>
+    <div class="kpi card"><span>Alert precision</span><strong id="k-precision">—</strong><small id="k-fp">0 false alarms</small></div>
+    <div class="kpi card gauge-card"><span>Threat level</span><div id="g-threat" class="gauge"></div></div>
+  </div>
+
+  <div class="live-grid">
+    <div class="card map-card">
+      <div class="card-head"><h3>Network activity</h3><div class="legend"><i class="lg benign"></i>benign <i class="lg attack"></i>flagged <i class="lg missed"></i>missed attack</div></div>
+      <canvas id="netmap" aria-label="Animated map of hosts and flows"></canvas>
+      <div id="map-tip" class="map-tip"></div>
+    </div>
+    <div class="card queue-card">
+      <div class="card-head"><h3>Alert queue</h3><select id="queue-filter" aria-label="Filter alerts">
+        <option value="all">All</option><option value="open">Awaiting triage</option><option value="Critical">Critical</option><option value="High">High</option></select></div>
+      <div id="queue" class="queue"><div class="empty">Press <b>Start replay</b> to stream traffic.</div></div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="card"><div class="card-head"><h3>Traffic over time</h3><small>flows per batch, by model verdict</small></div><div id="c-timeline" class="chart"></div></div>
+    <div class="card"><div class="card-head"><h3>What the model is seeing</h3><small>predicted attack classes</small></div><div id="c-classes" class="chart"></div></div>
+    <div class="card"><div class="card-head"><h3>Live scorecard</h3><small>model vs. dataset label</small></div>
+      <div class="matrix" id="mini-matrix"></div></div>
+  </div>
+</section>
+
+<!-- INCIDENTS -->
+<section id="view-incidents" class="view">
+  <div class="card"><div class="card-head"><h3>Incident timeline</h3><small>alerts grouped by source, candidate technique and 10-minute window</small></div><div id="c-incidents" class="chart tall"></div></div>
+  <div class="card"><div class="card-head"><h3>Incidents</h3><small id="inc-count"></small></div><div id="incident-list" class="incident-list"><div class="empty">No incidents yet. Start the live replay or analyse a file.</div></div></div>
+</section>
+
+<!-- ATT&CK -->
+<section id="view-attack" class="view">
+  <div class="card"><div class="card-head"><h3>MITRE ATT&amp;CK coverage</h3><small>candidate techniques for alerts seen this session; an analyst confirms each mapping</small></div>
+    <div id="attack-matrix" class="attack-matrix"></div></div>
+  <div class="card"><div class="card-head"><h3>From detection to adversary behaviour</h3><small>predicted class → candidate technique → tactic, sized by alert count (hover to trace a path)</small></div>
+    <div id="c-sankey" class="chart tall"></div></div>
+</section>
+
+<!-- MODEL LAB -->
+<section id="view-lab" class="view">
+  <div class="card lab-intro" id="lab-intro"></div>
+  <div class="lab-grid">
+    <div class="card"><div class="card-head"><h3>Model comparison</h3><small>held-out test split</small></div><div id="c-compare" class="chart"></div></div>
+    <div class="card"><div class="card-head"><h3>What drives detections</h3><small>global SHAP importance (mean |contribution|)</small></div><div id="c-importance" class="chart"></div></div>
+    <div class="card wide"><div class="card-head"><h3>Per-class F1</h3><small id="perclass-sub"></small></div><div id="c-perclass" class="chart"></div></div>
+    <div class="card wide"><div class="card-head"><h3>Confusion matrix</h3><small>rows = true class, columns = predicted (log colour scale)</small></div><div id="c-confusion" class="chart tall"></div></div>
+  </div>
+</section>
+
+<!-- UPLOAD -->
+<section id="view-upload" class="view">
+  <div class="card">
+    <div class="card-head"><h3>Analyse your own flows</h3><small>CICFlowMeter CSV, up to 25 MB / 200,000 rows. Files are scored in memory and never stored.</small></div>
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="file" accept=".csv,text/csv" hidden>
+      <div class="dz-icon">⇪</div>
+      <div><b>Drop a CSV here</b> or click to choose a file</div>
+      <small>Has a <code>Label</code> column? You also get precision, recall, F1 and a confusion matrix.</small>
+    </label>
+    <p class="hint">No file to hand? <a href="sample.csv" download>Download a labelled sample</a> of real test flows and upload it back.</p>
+    <div id="upload-status"></div>
+  </div>
+  <div id="upload-results"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="view-about" class="view">
+  <div class="card prose" id="about"></div>
+</section>
+</main>
+
+<!-- Investigation drawer -->
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="drawer-inner">
+    <button class="icon-btn close" id="drawer-close" aria-label="Close">✕</button>
+    <div id="drawer-body"></div>
+  </div>
+</aside>
+<div id="scrim" class="scrim"></div>
+<div id="toasts" class="toasts"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
