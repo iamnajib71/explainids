@@ -50,3 +50,5 @@ reports/course_details.json
 .venv-ml/
 models/
 artifacts/
+
+*.egg-info/
