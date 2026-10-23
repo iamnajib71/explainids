@@ -492,14 +492,14 @@ function renderAttack() {
   drawSankey();
 }
 function drawSankey() {
-  const p = palette(), links = new Map(), add = (a, b) => links.set(a + " " + b, (links.get(a + " " + b) || 0) + 1);
+  const p = palette(), links = new Map(), add = (a, b) => links.set(a + "|" + b, (links.get(a + "|" + b) || 0) + 1);
   for (const a of S.alerts) {
     const tech = a.attack.technique_id ? `${a.attack.technique_id} ${a.attack.technique}` : (a.outlier ? "Statistical outlier" : "Unmapped");
     const tactic = a.attack.tactic && a.attack.tactic !== "-" ? a.attack.tactic : "Needs analyst";
     add(a.predicted_class === BENIGN ? "Unusual (no class)" : a.predicted_class, tech); add(tech, "▸ " + tactic);
   }
   const names = new Set();
-  const data = [...links].map(([k, value]) => { const [source, target] = k.split(" "); names.add(source); names.add(target); return { source, target, value }; });
+  const data = [...links].map(([k, value]) => { const [source, target] = k.split("|"); names.add(source); names.add(target); return { source, target, value }; });
   const colors = [p.attack, p.high, p.medium, p.accent2, p.accent, p.missed, "#f472b6", "#2dd4bf", "#a3e635", "#60a5fa"];
   chart("c-sankey").setOption({ ...base(), tooltip: { ...base().tooltip, trigger: "item" },
     series: [{ type: "sankey", left: 8, right: 150, top: 10, bottom: 10, nodeGap: 10, nodeWidth: 14, draggable: true,
