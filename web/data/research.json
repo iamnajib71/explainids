@@ -1,0 +1,129 @@
+{
+ "transfer": {
+  "question": "Does it work on a new network?",
+  "headline": "8%",
+  "label": "of attack flows caught after moving 2017 \u2192 2018",
+  "targets": [
+   "2017",
+   "2018"
+  ],
+  "same": [
+   0.9976122669783984,
+   0.9926392699024907
+  ],
+  "other": [
+   0.7028889082339481,
+   0.08211595615869671
+  ],
+  "tip": "Trained on one corrected CIC dataset, tested on the other (LGBM, all 83 shared features). Bars show attack recall; macro F1 over the 12 common classes: 2017\u21922017 0.89, 2017\u21922018 0.58, 2018\u21922017 0.34, 2018\u21922018 0.95. Dropping environment-specific features (port, TCP windows) did not help. Source: docs/results/cross_dataset.md"
+ },
+ "stability": null,
+ "unseen": {
+  "question": "Can it catch attacks it never saw?",
+  "headline": "52%",
+  "label": "median detection of an unseen attack type",
+  "classes": [
+   {
+    "class": "Web-XSS",
+    "either": 1.0,
+    "classifier": 1.0
+   },
+   {
+    "class": "Heartbleed",
+    "either": 1.0,
+    "classifier": 0.7272727272727273
+   },
+   {
+    "class": "Web-BruteForce",
+    "either": 0.958904109589041,
+    "classifier": 0.958904109589041
+   },
+   {
+    "class": "DoS-GoldenEye",
+    "either": 0.8815911193339501,
+    "classifier": 0.8432668164398044
+   },
+   {
+    "class": "DoS-SlowHTTPTest",
+    "either": 0.6775862068965517,
+    "classifier": 0.6775862068965517
+   },
+   {
+    "class": "DoS-Slowloris",
+    "either": 0.6177766260689298,
+    "classifier": 0.5778699144856181
+   },
+   {
+    "class": "DDoS-HTTP",
+    "either": 0.5629151601782562,
+    "classifier": 0.5629151601782562
+   },
+   {
+    "class": "Infiltration",
+    "either": 0.4722222222222222,
+    "classifier": 0.0
+   },
+   {
+    "class": "DoS-Hulk",
+    "either": 0.38738420375091503,
+    "classifier": 0.38730216826110003
+   },
+   {
+    "class": "Web-SQLInjection",
+    "either": 0.15384615384615385,
+    "classifier": 0.15384615384615385
+   },
+   {
+    "class": "Bot",
+    "either": 0.058423913043478264,
+    "classifier": 0.0
+   },
+   {
+    "class": "PortScan",
+    "either": 0.0004394776494224008,
+    "classifier": 0.0004394776494224008
+   },
+   {
+    "class": "FTP-BruteForce",
+    "either": 0.0,
+    "classifier": 0.0
+   },
+   {
+    "class": "SSH-BruteForce",
+    "either": 0.0,
+    "classifier": 0.0
+   }
+  ],
+  "tip": "Each attack class removed from training in turn (cicids2017, 14 classes); bars show how much of it still raised an alert. Isolation Forest threshold set for 1% false alarms on validation benign traffic. Source: docs/results/unseen_cicids2017.md"
+ },
+ "sources": [
+  {
+   "label": "Cantone et al., 2024",
+   "url": "https://doi.org/10.1109/ACCESS.2024.3472907"
+  },
+  {
+   "label": "D'hooge et al., 2022",
+   "url": "https://doi.org/10.1007/978-3-031-09484-2_2"
+  },
+  {
+   "label": "Liu et al., 2022",
+   "url": "https://doi.org/10.1109/CNS56114.2022.9947235"
+  },
+  {
+   "label": "Lin & Wang, 2025",
+   "url": "https://doi.org/10.3390/risks13120238"
+  },
+  {
+   "label": "Sarhan et al., 2023",
+   "url": "https://doi.org/10.1007/s10207-023-00676-0"
+  },
+  {
+   "label": "Lundberg et al., 2020",
+   "url": "https://doi.org/10.1038/s42256-019-0138-9"
+  },
+  {
+   "label": "MITRE ATT&CK",
+   "url": "https://attack.mitre.org/"
+  }
+ ]
+}

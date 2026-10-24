@@ -1,5 +1,7 @@
 # Data and models
 data/
+# the console findings summary is small and derived (no datasets)
+!web/data/
 *.csv
 *.parquet
 *.pcap
