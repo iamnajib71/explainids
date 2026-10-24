@@ -68,3 +68,27 @@ def test_model_card_and_web_console_are_served():
     assert "classes" in client.get("/model").json()
     page = client.get("/")
     assert page.status_code == 200 and "ExplainIDS" in page.text
+
+
+def _upload(client, text: str):
+    return client.post("/score-csv", files={"file": ("flows.csv", text.encode(), "text/csv")})
+
+
+def test_score_csv_rejects_header_only_and_duplicate_columns():
+    from api.main import detector
+    header = ",".join(detector().features)
+    assert _upload(client, header + "\n").status_code == 422
+    dup = header + ",Flow_Duration\n" + ",".join(["1"] * (len(detector().features) + 1)) + "\n"
+    assert _upload(client, dup).status_code == 422
+
+
+def test_score_csv_skips_invalid_rows_and_handles_attack_only_labels():
+    from api.main import detector
+    feats = detector().features
+    good = ",".join(["1"] * len(feats)) + ",PortScan"
+    bad = ",".join(["inf"] + ["1"] * (len(feats) - 1)) + ",PortScan"
+    r = _upload(client, ",".join(feats) + ",Label\n" + good + "\n" + bad + "\n")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["rows"] == 1 and body["dropped_invalid_rows"] == 1
+    assert body["evaluation"]["benign_fpr"] is None

@@ -15,7 +15,10 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode: ignore */ } },
 };
 
+const STATIC = window.EXPLAINIDS_STATIC;  // set by scripts/export_static.py for server-free hosting
+
 async function api(path, opts) {
+  if (STATIC) return staticApi(path);
   const r = await fetch(path, opts);
   if (!r.ok) {
     let detail = r.statusText;
@@ -23,6 +26,33 @@ async function api(path, opts) {
     throw new Error(`${r.status}: ${detail}`);
   }
   return r.json();
+}
+
+/* Static build: the same responses, read from pre-scored JSON chunks instead of the live API. */
+const staticCache = {};
+function staticJson(file) {
+  return staticCache[file] ??= fetch(STATIC.data + file).then(r => {
+    if (!r.ok) throw new Error(`${r.status}: ${file}`);
+    return r.json();
+  });
+}
+async function staticApi(path) {
+  const [route, query] = path.split("?");
+  if (route === "health" || route === "model") return staticJson(route + ".json");
+  if (route !== "replay") {
+    throw new Error(STATIC.fullApp ? `file scoring needs the live app: ${STATIC.fullApp}` : "file scoring needs the live API");
+  }
+  const q = new URLSearchParams(query), h = await staticJson("health.json");
+  const total = h.replay_flows, n = Math.max(1, Math.min(+q.get("n") || 40, 500));
+  const cursor = ((+q.get("cursor") || 0) % total + total) % total, flows = [], alerts = [];
+  for (let j = 0; j < n; ) {
+    const i = (cursor + j) % total, chunk = Math.floor(i / h.chunk), end = Math.min((chunk + 1) * h.chunk, i + n - j);
+    const c = await staticJson(`replay/${String(chunk).padStart(3, "0")}.json`);
+    flows.push(...c.flows.filter(f => f.i >= i && f.i < end));
+    alerts.push(...c.alerts.filter(a => a.flow_index >= i && a.flow_index < end));
+    j += end - i;
+  }
+  return { cursor: (cursor + n) % total, total, wrapped: cursor + n >= total, flows, alerts };
 }
 
 function toast(msg) {
@@ -581,7 +611,7 @@ async function upload(file) {
   const t0 = performance.now();
   try {
     const r = await api("score-csv", { method: "POST", body: fd });
-    st.innerHTML = `<p>✓ Scored <b>${fmt(r.rows)}</b> flows in ${((performance.now() - t0) / 1000).toFixed(1)} s.</p>`;
+    st.innerHTML = `<p>✓ Scored <b>${fmt(r.rows)}</b> flows in ${((performance.now() - t0) / 1000).toFixed(1)} s.${r.dropped_invalid_rows ? ` ${fmt(r.dropped_invalid_rows)} rows with invalid values were skipped.` : ""}</p>`;
     r.top_alerts.forEach(a => addAlert(a, false, "upload"));
     renderUpload(r);
   } catch (e) { st.innerHTML = `<p style="color:var(--attack)">✗ ${esc(e.message)}</p>`; }

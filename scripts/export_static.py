@@ -22,9 +22,13 @@ def main():
     ap.add_argument("--full-app", default="", help="URL of the live deployment (shown on the upload page)")
     ap.add_argument("--chunk", type=int, default=500)
     args = ap.parse_args()
+    if not 1 <= args.chunk <= 500:  # /replay returns at most 500 flows per call
+        ap.error("--chunk must be between 1 and 500")
 
-    out = Path(args.out)
+    out = Path(args.out).resolve()
     if out.exists():
+        if not (out / "data" / "health.json").exists():  # only ever replace an earlier export
+            ap.error(f"{out} exists and is not a previous static export; choose a new directory")
         shutil.rmtree(out)
     shutil.copytree(ROOT / "web", out)
     data = out / "data"
@@ -41,7 +45,7 @@ def main():
 
     (data / "model.json").write_text(json.dumps(appmod.model_card(), default=str))
     (data / "health.json").write_text(json.dumps({**health, "chunk": args.chunk, "chunks": chunks}))
-    (data / "sample.csv").write_text(appmod.sample_csv(rows=3000).body.decode())
+    (out / "sample.csv").write_text(appmod.sample_csv(rows=3000).body.decode())
 
     config = {"data": "data/", "fullApp": args.full_app}
     page = (out / "index.html").read_text(encoding="utf-8")

@@ -18,7 +18,7 @@ import pandas as pd
 from fastapi import Depends, FastAPI, File, HTTPException, Response, Security, UploadFile
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ids.alerts import SEVERITY_RANK, aggregate
 from ids.data import BENIGN, LABEL_COL, feature_columns
@@ -32,6 +32,7 @@ MODEL_DIR = Path(os.environ.get("EXPLAINIDS_MODEL_DIR", "models"))
 API_KEY = os.environ.get("EXPLAINIDS_API_KEY")  # unset = open (local dev only)
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 MAX_UPLOAD_MB, MAX_UPLOAD_ROWS, MAX_RETURNED_ALERTS = 25, 200_000, 300
+MAX_PREDICT_FLOWS, MAX_KEPT_ALERTS = 1000, 10_000
 FLOW_META = {"Src IP": "src", "Dst IP": "dst", "Dst Port": "dport", "Protocol": "proto",
              "Flow Duration": "duration", "Total Fwd Packet": "fwd_pkts", "Total Bwd packets": "bwd_pkts"}
 
@@ -80,7 +81,7 @@ def detector() -> Detector:
 
 
 class Flows(BaseModel):
-    flows: list[dict]
+    flows: list[dict] = Field(max_length=MAX_PREDICT_FLOWS)
 
 
 def _flow_rows(df: pd.DataFrame, flows: pd.DataFrame, offset: int = 0) -> list[dict]:
@@ -141,7 +142,7 @@ def sample_csv(rows: int = 3000):
 @app.post("/score-csv")
 async def score_csv(file: UploadFile = File(...)):
     """Score an uploaded CICFlowMeter CSV. If it has a Label column, return a full evaluation too."""
-    raw = await file.read()
+    raw = await file.read(MAX_UPLOAD_MB * 1024 * 1024 + 1)  # never buffer more than the limit
     if len(raw) > MAX_UPLOAD_MB * 1024 * 1024:
         raise HTTPException(status_code=413, detail=f"file larger than {MAX_UPLOAD_MB} MB")
     try:
@@ -152,15 +153,25 @@ async def score_csv(file: UploadFile = File(...)):
     df, missing = align_columns(df, det.features)
     if missing:
         raise HTTPException(status_code=422, detail=f"{len(missing)} model features missing, e.g. {missing[:6]}")
+    dupes = sorted({c for c in df.columns[df.columns.duplicated()] if c in det.features})
+    if dupes:
+        raise HTTPException(status_code=422, detail=f"ambiguous duplicate feature columns: {dupes[:6]}")
+    # Same policy as training (ids.data.clean): rows with non-numeric, NaN or infinite features are dropped.
+    X = df[det.features].apply(pd.to_numeric, errors="coerce")
+    valid = np.isfinite(X.to_numpy(dtype=float)).all(axis=1)
+    df = df[valid].reset_index(drop=True)
+    if df.empty:
+        raise HTTPException(status_code=422, detail="CSV contains no flow rows with valid feature values")
     flows, alerts = score_frame(det, state()["explainer"], df)
-    out = {"rows": len(df), "alerts": len(alerts),
+    out = {"rows": len(df), "dropped_invalid_rows": int((~valid).sum()), "alerts": len(alerts),
            "predicted_counts": flows["predicted"].value_counts().to_dict(),
            "outliers": int(flows["outlier"].sum()),
            "top_alerts": representative(alerts, MAX_RETURNED_ALERTS),
            "incidents": aggregate(alerts)[:100]}
     if "truth" in flows:
         rep = report(flows["truth"], flows["predicted"])
-        out["evaluation"] = {"macro": rep["macro"], "benign_fpr": rep["benign_fpr"],
+        fpr = rep["benign_fpr"]  # undefined (NaN) for attack-only files; JSON has no NaN
+        out["evaluation"] = {"macro": rep["macro"], "benign_fpr": fpr if np.isfinite(fpr) else None,
                              "per_class": rep["per_class"].reset_index(names="class").to_dict("records"),
                              "labels": list(rep["confusion"].index), "confusion": rep["confusion"].values.tolist()}
     return out
@@ -188,7 +199,7 @@ def predict(body: Flows):
     if missing:
         raise HTTPException(status_code=422, detail=f"missing features: {missing[:5]}")
     _, alerts = score_frame(det, state()["explainer"], df)
-    _state["alerts"].extend(alerts)
+    _state["alerts"] = (_state["alerts"] + alerts)[-MAX_KEPT_ALERTS:]  # bounded memory in long-running workers
     return {"scored": len(df), "alerts": alerts}
 
 
