@@ -75,6 +75,17 @@ def clean(df: pd.DataFrame, attempted_as_benign: bool = True) -> pd.DataFrame:
     return out.drop_duplicates(subset=feats + [LABEL_COL]).reset_index(drop=True)
 
 
+def dedup_global(df: pd.DataFrame) -> pd.DataFrame:
+    """Make every feature vector unique across the whole dataset, so no split can share one.
+
+    Per-file cleaning leaves the same vector in several files (and float32 casting can merge
+    near-identical ones). Vectors seen with more than one label are ambiguous and dropped.
+    """
+    feats = feature_columns(df)
+    conflict = df.groupby(feats, dropna=False, sort=False)[LABEL_COL].transform("nunique") > 1
+    return df.loc[~conflict].drop_duplicates(subset=feats).reset_index(drop=True)
+
+
 def feature_columns(df: pd.DataFrame) -> list[str]:
     skip = set(ID_COLUMNS) | {LABEL_COL, "source_file", "session"}
     return [c for c in df.columns if c not in skip]

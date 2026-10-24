@@ -19,13 +19,12 @@ import time
 from pathlib import Path
 
 import joblib
-import numpy as np
 import pandas as pd
 
 from ids import SEED
 from ids.data import BENIGN, LABEL_COL, feature_columns, stratified_sample, temporal_split
 from ids.evaluate import binary_pr_auc, latency_ms_per_flow, report
-from ids.explain import Explainer
+from ids.explain import global_importance
 from ids.models import Detector
 
 REPLAY_META = ["Src IP", "Dst IP", "Src Port", "Timestamp"]
@@ -37,16 +36,6 @@ def evaluate(det: Detector, X: pd.DataFrame, y: pd.Series) -> dict:
     proba = det.predict_proba(X)
     return {"rep": rep, "pr_auc": binary_pr_auc(y, 1 - proba[:, det.benign_index]),
             "latency_ms": latency_ms_per_flow(det.predict, X.head(5000))}
-
-
-def global_importance(det: Detector, X: pd.DataFrame, n: int = 2000, k: int = 15) -> list[dict]:
-    """Mean |SHAP| per feature over a test sample, summed across classes."""
-    sample = X.sample(min(n, len(X)), random_state=SEED)
-    values = Explainer(det)._explainer.shap_values(sample[det.features])
-    arr = np.abs(np.stack(values, axis=-1) if isinstance(values, list) else np.asarray(values))
-    imp = arr.mean(axis=0).sum(axis=-1) if arr.ndim == 3 else arr.mean(axis=0)
-    top = np.argsort(-imp)[:k]
-    return [{"feature": det.features[j], "importance": float(imp[j])} for j in top]
 
 
 def replay_set(test: pd.DataFrame, per_attack: int = 400, benign: int = 6000) -> pd.DataFrame:

@@ -43,3 +43,15 @@ def latency_ms_per_flow(predict, X, repeats: int = 3) -> float:
         predict(X)
         best = min(best, (time.perf_counter() - t0) / max(len(X), 1))
     return best * 1000
+
+
+def binary_report(y_true, flagged) -> dict:
+    """Attack-vs-benign alert quality for a boolean `flagged` mask (any attack class counts as a hit)."""
+    attack, flagged = np.asarray(y_true) != BENIGN, np.asarray(flagged, dtype=bool)
+    tp, fp = int((attack & flagged).sum()), int((~attack & flagged).sum())
+    fn, tn = int((attack & ~flagged).sum()), int((~attack & ~flagged).sum())
+    precision = tp / (tp + fp) if tp + fp else 0.0
+    recall = tp / (tp + fn) if tp + fn else float("nan")
+    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+    return {"precision": precision, "recall": recall, "f1": f1,
+            "fpr": fp / (fp + tn) if fp + tn else float("nan"), "tp": tp, "fp": fp, "fn": fn, "tn": tn}

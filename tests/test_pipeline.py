@@ -139,3 +139,21 @@ def test_verdict_compares_alert_with_label():
     assert verdict("PortScan", "PortScan") == "correct"
     assert verdict(BENIGN, "PortScan") == "false positive"
     assert verdict("DoS-Hulk", "DDoS-HTTP") == "attack, other class"
+
+
+def test_binary_report_counts_any_attack_as_hit():
+    from ids.evaluate import binary_report
+    r = binary_report([BENIGN, BENIGN, "Bot", "PortScan"], [False, True, True, False])
+    assert (r["tp"], r["fp"], r["fn"], r["tn"]) == (1, 1, 1, 1)
+    assert r["precision"] == 0.5 and r["recall"] == 0.5 and r["fpr"] == 0.5
+
+
+def test_dedup_global_drops_cross_file_copies_and_label_conflicts():
+    from ids.data import dedup_global
+    df = clean(make_flows(10))
+    feats = feature_columns(df)
+    copy = df.iloc[[0]].assign(source_file="other")              # same vector, another file
+    clash = df.iloc[[1]].assign(**{LABEL_COL: "Bot" if df.iloc[1][LABEL_COL] != "Bot" else BENIGN})
+    out = dedup_global(pd.concat([df, copy, clash], ignore_index=True))
+    assert not out.duplicated(subset=feats).any()
+    assert len(out) == len(df) - 1                                  # the conflicting vector is gone entirely

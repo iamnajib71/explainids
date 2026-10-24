@@ -32,7 +32,8 @@ def patch(path: str, url: str, start: int, end: int) -> None:
 
 def main(path: str, url: str, out: str) -> None:
     out_dir = Path(out)
-    for attempt in range(3):
+    tries: dict[str, int] = {}
+    while True:
         z = zipfile.ZipFile(path)
         ranges = member_ranges(z, Path(path).stat().st_size)
         bad = None
@@ -52,8 +53,10 @@ def main(path: str, url: str, out: str) -> None:
         if bad is None:
             print("ALL_DONE")
             return
+        tries[bad] = tries.get(bad, 0) + 1
+        if tries[bad] > 3:
+            sys.exit(f"{bad} still damaged after 3 repair attempts")
         patch(path, url, *ranges[bad])
-    sys.exit("still damaged after 3 repair attempts")
 
 
 if __name__ == "__main__":
