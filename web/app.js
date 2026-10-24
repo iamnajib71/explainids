@@ -46,7 +46,7 @@ async function staticApi(path) {
   const total = h.replay_flows, n = Math.max(1, Math.min(+q.get("n") || 40, 500));
   const cursor = ((+q.get("cursor") || 0) % total + total) % total, flows = [], alerts = [];
   for (let j = 0; j < n; ) {
-    const i = (cursor + j) % total, chunk = Math.floor(i / h.chunk), end = Math.min((chunk + 1) * h.chunk, i + n - j);
+    const i = (cursor + j) % total, chunk = Math.floor(i / h.chunk), end = Math.min((chunk + 1) * h.chunk, total, i + n - j);
     const c = await staticJson(`replay/${String(chunk).padStart(3, "0")}.json`);
     flows.push(...c.flows.filter(f => f.i >= i && f.i < end));
     alerts.push(...c.alerts.filter(a => a.flow_index >= i && a.flow_index < end));
