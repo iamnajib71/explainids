@@ -157,3 +157,12 @@ def test_dedup_global_drops_cross_file_copies_and_label_conflicts():
     out = dedup_global(pd.concat([df, copy, clash], ignore_index=True))
     assert not out.duplicated(subset=feats).any()
     assert len(out) == len(df) - 1                                  # the conflicting vector is gone entirely
+
+
+def test_signed_log_anomaly_option_keeps_fpr_target(flows):
+    from ids.models import signed_log
+    assert signed_log(pd.DataFrame({"a": [-1.0, 0.0, np.e - 1]})).ravel().round(6).tolist() == [-0.693147, 0.0, 1.0]
+    X, y = flows[feature_columns(flows)], flows[LABEL_COL]
+    det = Detector("rf", anomaly_log=True).fit(X, y).fit_anomaly(X[y == BENIGN])
+    det.tune_anomaly_threshold(X[y == BENIGN], target_fpr=0.05)
+    assert det.anomaly(X[y == BENIGN])[1].mean() <= 0.06

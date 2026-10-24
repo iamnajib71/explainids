@@ -10,7 +10,8 @@ in-domain row (A->A) and cross-domain row (B->A) share the same test flows. Two 
 compared: all shared CICFlowMeter features, and a "portable" set without features that encode the
 capture environment (destination port, TCP initial window sizes, minimum segment size).
 
-Per direction we report multi-class metrics over the classes both datasets share, binary alert
+Per direction we report multi-class metrics averaged over the classes both datasets contain (the same set
+for every row), binary alert
 quality for the classifier alone and for the deployed rule (classifier OR Isolation Forest outlier),
 per-class detection rates, and the overlap of global SHAP top-10 features between source and target.
 """
@@ -44,11 +45,10 @@ def fit(src: dict, feats: list[str], model: str) -> Detector:
     return det
 
 
-def score(det: Detector, src: dict, tgt: dict, feats: list[str]) -> dict:
+def score(det: Detector, src: dict, tgt: dict, feats: list[str], common: list[str]) -> dict:
     X, y = tgt["test"][feats], tgt["test"][LABEL_COL]
     pred = det.predict(X)
     _, outlier = det.anomaly(X)
-    shared = sorted(set(src["classes"]) & set(tgt["classes"]))
     rep = report(y, pred, sorted(set(det.classes) | set(tgt["classes"])))
     per = rep["per_class"]
     detected = pd.Series(pred != BENIGN, index=y.index).groupby(y).mean()
@@ -58,8 +58,8 @@ def score(det: Detector, src: dict, tgt: dict, feats: list[str]) -> dict:
             for c in tgt["classes"]]
     return {
         "source": src["name"], "target": tgt["name"], "test_rows": len(y),
-        "macro_shared": per.loc[[c for c in shared if per.loc[c, "support"] > 0],
-                                ["precision", "recall", "f1"]].mean().to_dict(),
+        # Averaged over the classes BOTH datasets contain, so in-domain and transfer rows are comparable.
+        "macro_common": per.loc[common, ["precision", "recall", "f1"]].mean().to_dict(),
         "classifier": binary_report(y, pred != BENIGN),
         "with_anomaly": binary_report(y, (pred != BENIGN) | outlier),
         "pr_auc": binary_pr_auc(y, 1 - det.predict_proba(X)[:, det.benign_index]),
@@ -86,15 +86,16 @@ def to_markdown(res: dict, cmd: str) -> str:
           "rows with the same target use identical test flows.", "",
           "| Dataset | Rows after dedup | Train (capped) | Test | Classes |", "|---|---|---|---|---|"]
     md += [f"| {d['name']} | {d['rows']:,} | {d['train']:,} | {d['test']:,} | {d['classes']} |" for d in ds]
+    md += ["", f"Common classes ({len(res['common_classes'])}): {', '.join(res['common_classes'])}."]
     if res.get("benign_note"):
         md += ["", res["benign_note"]]
     for fs, runs in res["runs"].items():
         md += ["", f"## Feature set: {fs} ({len(res['features'][fs])} features)", "",
-               "| Source → target | Macro F1 (shared classes) | Alert P | Alert R | Alert F1 | Benign FPR | "
+               "| Source → target | Macro F1 (common classes) | Alert P | Alert R | Alert F1 | Benign FPR | "
                "R with anomaly | FPR with anomaly | PR-AUC |", "|---|---|---|---|---|---|---|---|---|"]
         for r in runs:
             c, a = r["classifier"], r["with_anomaly"]
-            md.append(f"| {r['source']} → {r['target']} | {fmt(r['macro_shared']['f1'])} | {fmt(c['precision'])} | "
+            md.append(f"| {r['source']} → {r['target']} | {fmt(r['macro_common']['f1'])} | {fmt(c['precision'])} | "
                       f"{fmt(c['recall'])} | {fmt(c['f1'])} | {c['fpr']:.4f} | {fmt(a['recall'])} | {a['fpr']:.4f} | "
                       f"{fmt(r['pr_auc'])} |")
         for r in runs:
@@ -126,9 +127,10 @@ def main():
     t0 = time.perf_counter()
     data = [load(args.a, args.cap), load(args.b, args.cap)]
     shared = [f for f in feature_columns(data[0]["test"]) if f in set(feature_columns(data[1]["test"]))]
+    common = sorted(set(data[0]["classes"]) & set(data[1]["classes"]))
     feature_sets = {"all": shared, "portable": [f for f in shared if f not in ENV_SPECIFIC]}
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "cap": args.cap,
-           "features": feature_sets, "runs": {}, "shap_shift": [],
+           "features": feature_sets, "common_classes": common, "runs": {}, "shap_shift": [],
            "datasets": [{"name": d["name"], "rows": d["rows"], "train": len(d["train"]), "test": len(d["test"]),
                          "classes": len(d["classes"])} for d in data]}
     meta = Path(args.b).with_suffix(".json")
@@ -141,10 +143,10 @@ def main():
         for src in data:
             det = fit(src, feats, args.model)
             for tgt in data:
-                r = score(det, src, tgt, feats)
+                r = score(det, src, tgt, feats, common)
                 res["runs"][fs].append(r)
                 print(f"[{fs}] {src['name']} -> {tgt['name']}: alert R {r['classifier']['recall']:.3f} "
-                      f"FPR {r['classifier']['fpr']:.4f} | macro F1 shared {r['macro_shared']['f1']:.3f}", flush=True)
+                      f"FPR {r['classifier']['fpr']:.4f} | macro F1 common {r['macro_common']['f1']:.3f}", flush=True)
             if fs == "all":
                 other = data[1] if src is data[0] else data[0]
                 res["shap_shift"].append({"trained_on": src["name"], **shap_shift(det, src, other, feats)})
