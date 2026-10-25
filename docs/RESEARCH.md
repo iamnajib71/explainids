@@ -35,6 +35,28 @@ Common setup: data deduplicated globally (no feature vector appears in two split
 
 **Limits.** 2018 benign traffic is a 5% random sample, which makes alert precision optimistic; recall and FPR are unaffected. Two corrected CIC captures share a lab design, so this is a lower bound on how hard a real new network would be.
 
+### Follow-up: can a small business fix this with its own normal traffic?
+
+**Why it matters.** A real site has no labelled attacks, but it can let the detector watch its own normal traffic before alerting. We tested whether that alone recovers the transfer failure.
+
+**Method.** [`scripts/local_calibration_eval.py`](../scripts/local_calibration_eval.py). Take the model trained on one dataset. From the *earliest* part of the other dataset, use only 1,000, 5,000 or 20,000 benign flows (no attack labels), three random samples each. Fit a local anomaly detector on 70% of them and set every threshold on the other 30%, with a 1% false-alarm budget. Score the *later* test period. For speed the test keeps at most 50,000 flows per class, so we quote **class-balanced detection** (the mean of per-class detection), which matches the full-test figure (0.546 vs 0.548). Result: [`results/local_calibration.md`](results/local_calibration.md).
+
+| Rule (2017 model on 2018 traffic) | Class-balanced detection | Benign FPR | False alarms per 10k benign |
+|---|---|---|---|
+| As deployed (no calibration) | 0.55 | **3.4%** | 344 |
+| Local threshold (1,000 local flows) | 0.32 | **1.2%** | 118 |
+| Local anomaly detector (1,000 local flows) | **0.61** | 4.4% | 438 |
+| Ceiling: model trained on 2018 itself | 0.98 | 0.9% | 91 |
+
+**What we found.**
+- **On a new network the false-alarm rate silently triples.** The model was tuned for about 1% false alarms, but it runs at 3.4% on 2018 traffic and 3.1% the other way. Setting the threshold on local benign flows restores the promised rate: 1.0–1.2% for 2017 → 2018 from 1,000 flows; for 2018 → 2017 it falls from 1.7% (1,000 flows) to 1.0% (20,000 flows). For an SME, that is the difference between a workable alert queue and one that gets ignored.
+- **But holding the false-alarm budget costs detection.** The model's attack scores do not transfer, so the stricter threshold also drops detection (0.55 → 0.32). Calibration controls alert burden; it cannot create detection the model lacks.
+- **A locally refit anomaly detector recovers some attacks.** 2018 → 2017: PortScan 45% → 99%, flow-weighted recall 70% → 88%. 2017 → 2018: DDoS-UDP 0% → 67%. It does so above the budget (2.1–4.4% FPR), because it adds to the classifier's own false alarms.
+- **Nothing label-free recovers DoS-Hulk or DDoS-HTTP** (0% before and after, 91% of 2018's attack flows). The classifier confidently calls them normal, and they look normal to an anomaly detector too.
+- **More local data steadies the false-alarm rate but does not raise detection** (class-balanced detection is flat from 1,000 to 20,000 flows). The limit is what the model learned, not the size of the calibration sample.
+
+**What this means.** Benign-only calibration is necessary for honest alert budgets on a new site, but not sufficient for detection. Recovering the tools that changed between captures needs either training on more than one environment or a few labelled local examples. Those are the next experiments.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.
@@ -84,6 +106,8 @@ Common setup: data deduplicated globally (no feature vector appears in two split
 | Cross-dataset rows averaged over different classes | Codex dashboard review | Macro F1 over one common class set for every row | In-domain and transfer scores are now comparable |
 | Anomaly layer blind on skewed features | RQ3 results plus EDA skewness | Optional signed-log input (`Detector(anomaly_log=True)`) | Unseen PortScan 0% → 93% at a lower false-alarm rate |
 | Port "shortcut" suspected (D'hooge et al., 2022) | Literature | Portable feature-set ablation | Not the cause here; transfer got worse without these features |
+| False-alarm rate drifts on a new network (3.4% vs ~1% intended) | Local-calibration experiment | Threshold set on local benign flows | Promised 1% budget restored (1.0–1.2%; 2018 → 2017 needs ~20,000 flows), at a cost in detection |
+| "0% false alarms" in a 40-flow lab capture | Wilson intervals added to every metric | Intervals and alert burden reported; small captures labelled as pipeline checks | 0/40 shown honestly as up to 876 false alarms per 10k benign flows |
 
 ## Reproduce
 ```bash
@@ -92,6 +116,7 @@ python scripts/build_sampled.py data/raw/csecicids2018 data/processed/csecicids2
 python scripts/cross_dataset_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --results docs/results/cross_dataset.md
 python scripts/shap_stability_eval.py data/processed/cicids2017.parquet --seeds 42,1,2,3,4 --results docs/results/shap_stability_cicids2017.md
 python scripts/unseen_attack_eval.py data/processed/cicids2017.parquet [--anomaly-log] --results docs/results/unseen_cicids2017.md
+python scripts/local_calibration_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --sizes 1000,5000,20000 --seeds 42,1,2
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
 

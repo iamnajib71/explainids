@@ -49,6 +49,18 @@ def transfer(res: dict | None) -> dict | None:
     }
 
 
+def calibration_note(res: dict) -> str:
+    """One sentence on benign-only local calibration for the worst transfer direction."""
+    d = min(res["directions"], key=lambda x: x["deployed"]["macro_detection"])
+    thr = [r for r in d["runs"] if r["rule"] == "local threshold" and r["size"] == min(res["sizes"])]
+    fpr = float(np.mean([r["fpr"] for r in thr]))
+    det = float(np.mean([r["macro_detection"] for r in thr]))
+    return (f"Calibrating on {min(res['sizes']):,} local benign flows cuts false alarms from "
+            f"{d['deployed']['fpr']:.1%} to {fpr:.1%} but class-balanced detection falls from "
+            f"{d['deployed']['macro_detection']:.0%} to {det:.0%}: calibration controls alert burden, not detection. "
+            "Source: docs/results/local_calibration.md")
+
+
 def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
     if not res:
         return None
@@ -97,6 +109,9 @@ def main():
                             next((load(f) for f in sorted(r.glob("unseen_*.json"))
                                   if args.dataset not in f.stem and not f.stem.endswith("_log")), None)),
            "sources": [{"label": label, "url": url} for label, url in SOURCES]}
+    calib = load(r / "local_calibration.json")
+    if out["transfer"] and calib:
+        out["transfer"]["tip"] += " " + calibration_note(calib)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {args.out}: " + ", ".join(f"{k}={'ok' if v else 'pending'}" for k, v in out.items() if k != "sources"))
