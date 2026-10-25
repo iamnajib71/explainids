@@ -294,7 +294,119 @@ def w5_dashboard_wireframe():
     return d
 
 
-BUILDERS = {f.__name__: f for f in (a1_architecture, w5_ml_pipeline, w5_attack_lab, w5_use_cases, w5_dashboard_wireframe)}
+# ---------------------------------------------------------------- A2 Week 7: architecture v2 (as built)
+def w7_architecture():
+    d = Diagram("w7_architecture")
+    d.zone("Data sources", 20, 20, 230, 440, "blue")
+    s1 = d.box(f"{b('Corrected CIC-IDS2017')}<br>{small('trains the deployed model;<br>RQ1–RQ3 experiments')}", 35, 65, 200, 80)
+    s2 = d.box(f"{b('Corrected CSE-CIC-IDS2018')}<br>{small('second network for RQ1/RQ3;<br>all attacks + 5% benign sample')}", 35, 175, 200, 85)
+    s3 = d.box(f"{b('Isolated lab flows')}<br>{small('own traffic, labelled from<br>the attack schedule')}", 35, 290, 200, 80)
+    d.zone("Offline pipeline (Python, seed 42)", 280, 20, 270, 440, "green", size=13)
+    p1 = d.box("Clean · harmonise labels ·<br>global de-duplication", 295, 65, 240, 55, "green")
+    p2 = d.box("Chronological split per class<br>70 / 10 / 20 · cap 60k per class", 295, 145, 240, 55, "green")
+    p3 = d.box("LightGBM · XGBoost · Random Forest<br>+ Isolation Forest (benign only)", 295, 225, 240, 58, "green")
+    p4 = d.box(f"{b('Evaluation')}<br>{small('baseline · RQ1 cross-dataset ·<br>RQ2 SHAP stability · RQ3 unseen · lab')}", 295, 310, 240, 75, "green")
+    d.zone("Artefacts", 580, 20, 170, 440, "purple")
+    cyl = (f"shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFFFFF;"
+           f"strokeColor={ZONES['purple'][1]};strokeWidth=1.5;fontSize=11;fontColor={INK};")
+    a1 = d.vertex(f"{b('detector.joblib')}<br>model + thresholds", 595, 223, 140, 62, cyl)
+    a2 = d.vertex(f"{b('model_card.json')}<br>test metrics, SHAP", 595, 305, 140, 58, cyl)
+    a3 = d.vertex(f"{b('replay.parquet')}<br>held-out test flows", 595, 141, 140, 62, cyl)
+    a4 = d.vertex(f"{b('research.json')}<br>RQ1–RQ3 answers", 595, 380, 140, 58, cyl)
+    d.zone("Docker container · FastAPI + web console", 780, 20, 270, 440, "orange", size=13)
+    c1 = d.box(f"{b('FastAPI')}<br>{small('/replay · /score-csv · /predict ·<br>/model · /health')}", 795, 65, 240, 70, "orange")
+    c2 = d.box(f"{b('Scoring')}<br>{small('classifier + anomaly → SHAP top-5 →<br>candidate ATT&amp;CK, severity, response')}", 795, 160, 240, 75, "orange")
+    c3 = d.box(f"{b('Web console')}<br>{small('Traffic replay · Incidents · ATT&amp;CK ·<br>Model lab · Findings · Analyse a file')}", 795, 260, 240, 75, "orange")
+    c4 = d.box(f"{b('Static export')}<br>{small('pre-scored replay; free static hosting')}", 795, 360, 240, 60, "orange")
+    actor = f"shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;strokeColor={INK};fillColor=#FFFFFF;strokeWidth=1.5;fontSize=12;fontColor={INK};"
+    u1 = d.vertex("SMB IT manager /<br>analyst", 1100, 265, 30, 60, actor)
+    d.box("Deployment target: Azure for Students App Service (container) or a free Hugging Face Space · $10 budget alert · "
+          "shut down after marking", 280, 475, 770, 40, "orange", fill="#FFF4E5", size=11)
+    d.box("Engineering &amp; security: GitHub Actions CI (pytest + privacy guard) · API key on /predict · bounded uploads · "
+          "invalid rows dropped · pseudonymised identifiers · public code, private data", 20, 528, 1030, 40, "grey", fill="#F5F6F8", size=11)
+    for s, y in ((s1, 0.4), (s2, 0.5), (s3, 0.6)):
+        d.edge(s, p1 if s is s1 else p4, extra="" if s is s1 else "dashed=1;", exit=(1, 0.5), entry=(0, y) if s is s1 else (0, y))
+    for a, c in ((p1, p2), (p2, p3), (p3, p4)):
+        d.edge(a, c, exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(p2, a3, "test split", exit=(1, 0.5), entry=(0, 0.5))
+    d.edge(p3, a1, "model", exit=(1, 0.5), entry=(0, 0.5))
+    d.edge(p4, a2, exit=(1, 0.3), entry=(0, 0.5))
+    d.edge(p4, a4, exit=(1, 0.8), entry=(0, 0.5), points=[(565, 370), (565, 409)])
+    for a, y in ((a3, 0.3), (a1, 0.55), (a2, 0.8)):
+        d.edge(a, c1, extra="dashed=1;", exit=(1, 0.5), entry=(0, y))
+    d.edge(a4, c3, extra="dashed=1;", exit=(1, 0.5), entry=(0, 0.6))
+    d.edge(c1, c2, exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(c2, c3, exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(c3, c4, "export", exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(c3, u1, exit=(1, 0.5), entry=(0, 0.5))
+    return d
+
+
+# ---------------------------------------------------------------- A2 Week 7: sequence (one replay batch)
+def w7_sequence():
+    d = Diagram("w7_sequence")
+    names = ["Analyst", "Web console", "FastAPI", "Detector<br>(classifier + IF)", "Explainer<br>(TreeSHAP)", "Threat map<br>(ATT&amp;CK)"]
+    xs = [70 + i * 175 for i in range(len(names))]
+    bottom = 640
+    for name, x in zip(names, xs):
+        d.box(b(name), x - 70, 20, 140, 46, "grey" if name == "Analyst" else "blue", size=12)
+        d.free_line([(x, 66), (x, bottom)], "dashed=1;strokeColor=#9AA5B1;")
+
+    def msg(i, j, y, label, ret=False):
+        style = "endArrow=open;endSize=8;" + ("dashed=1;" if ret else "endFill=1;endArrow=block;")
+        d.free_line([(xs[i], y), (xs[j], y)], style)
+        left = min(xs[i], xs[j])
+        d.text(label, left + 6, y - 22, abs(xs[j] - xs[i]) - 12, 20, 11)
+
+    steps = [(0, 1, "Start replay"), (1, 2, "GET /replay?cursor&amp;n"), (2, 3, "predict + anomaly(batch)"),
+             (3, 2, "classes, outlier flags", True), (2, 4, "top_features(flagged flows)"), (4, 2, "SHAP top-5 per alert", True),
+             (2, 5, "context_for(class)"), (5, 2, "technique, tactic, severity, response", True),
+             (2, 1, "flows + alerts (JSON)", True), (1, 0, "queue, KPIs, network map", True),
+             (0, 1, "open alert"), (1, 0, "why · technique · response", True),
+             (0, 1, "Confirm / Dismiss")]
+    for k, (i, j, label, *ret) in enumerate(steps):
+        msg(i, j, 105 + k * 37 + (22 if k >= 1 else 0) + (14 if k >= 10 else 0), label, bool(ret))
+    # UML loop frame around the repeated messages (2-10): transparent, so nothing underneath is hidden
+    d.vertex(f"{b('loop')} every second while replaying", xs[0] + 30, 117, xs[-1] - xs[0] + 20, 358,
+             f"rounded=0;html=1;fillColor=none;strokeColor={MUTED};strokeWidth=1.2;dashed=1;align=left;verticalAlign=top;"
+             f"spacingLeft=6;fontSize=11;fontColor={INK};")
+    d.text(small("The API is stateless: each viewer keeps its own cursor, so many people can watch at once."),
+           xs[0] - 60, bottom + 8, xs[-1] - xs[0] + 120, 22, 11)
+    return d
+
+
+# ---------------------------------------------------------------- A2 Week 7: evaluation framework
+def w7_evaluation():
+    d = Diagram("w7_evaluation")
+    d.zone("Shared preparation (same for every experiment)", 20, 20, 1020, 110, "blue")
+    steps = ["Corrected CIC releases<br>(2017 · 2018 · lab)", "Global de-duplication<br>(no vector in two splits)",
+             "Chronological split<br>per class 70/10/20", "Cap 60k flows per class<br>seed 42"]
+    ids_ = [d.box(t, 40 + i * 250, 60, 220, 52) for i, t in enumerate(steps)]
+    for a, c in zip(ids_, ids_[1:]):
+        d.edge(a, c, exit=(1, 0.5), entry=(0, 0.5))
+    cols = [("RQ1 · Does it work on a new network?", "green",
+             ["Train on one dataset", "Test on both test splits<br>(same flows per target)",
+              "All features vs portable<br>(no port / TCP window)", "Recall, FPR, macro F1 over<br>12 common classes · SHAP shift"]),
+            ("RQ2 · Do explanations stay the same?", "purple",
+             ["Fix training rows and<br>500 test attack flows", "Retrain with 5 seeds<br>(bagging on)",
+              "Per-alert top-5 SHAP<br>Jaccard (same prediction)", "Global top-10 Jaccard,<br>Spearman · macro F1 per seed"]),
+            ("RQ3 · Can it catch unseen attacks?", "orange",
+             ["Remove one attack class<br>from train + validation", "Classifier + Isolation Forest<br>(raw vs signed-log input)",
+              "Score every flow<br>of the withheld class", "Detection, benign FPR,<br>'mistaken for' class"])]
+    for c, (title, colour, items) in enumerate(cols):
+        x = 20 + c * 345
+        d.zone(title, x, 160, 330, 400, colour, size=13)
+        boxes = [d.box(t, x + 25, 205 + i * 85, 280, 58, colour) for i, t in enumerate(items)]
+        for a, z in zip(boxes, boxes[1:]):
+            d.edge(a, z, exit=(0.5, 1), entry=(0.5, 0))
+    d.box("Every result: script + JSON/Markdown in docs/results/ · metrics per rule 4 (precision, recall, F1 macro and per class, "
+          "benign FPR, confusion matrix; never accuracy alone) · summarised in docs/RESEARCH.md and the console's Findings tab",
+          20, 580, 1020, 44, "grey", fill="#F5F6F8", size=11)
+    return d
+
+
+BUILDERS = {f.__name__: f for f in (a1_architecture, w5_ml_pipeline, w5_attack_lab, w5_use_cases, w5_dashboard_wireframe,
+                                    w7_architecture, w7_sequence, w7_evaluation)}
 
 
 def export(drawio_path):

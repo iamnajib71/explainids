@@ -1,0 +1,20 @@
+flowchart TB
+    subgraph PREP["Shared preparation (same for every experiment)"]
+        direction LR
+        P1["Corrected CIC releases<br>(2017 · 2018 · lab)"] --> P2["Global de-duplication<br>(no vector in two splits)"] --> P3["Chronological split<br>per class 70/10/20"] --> P4["Cap 60k flows per class<br>seed 42"]
+    end
+    subgraph RQ1["RQ1 · Does it work on a new network?"]
+        A1["Train on one dataset"] --> A2["Test on both test splits<br>(same flows per target)"] --> A3["All features vs portable<br>(no port / TCP window)"] --> A4["Recall, FPR, macro F1 over<br>12 common classes · SHAP shift"]
+    end
+    subgraph RQ2["RQ2 · Do explanations stay the same?"]
+        B1["Fix training rows and<br>500 test attack flows"] --> B2["Retrain with 5 seeds<br>(bagging on)"] --> B3["Per-alert top-5 SHAP Jaccard<br>(same prediction)"] --> B4["Global top-10 Jaccard,<br>Spearman · macro F1 per seed"]
+    end
+    subgraph RQ3["RQ3 · Can it catch unseen attacks?"]
+        C1["Remove one attack class<br>from train + validation"] --> C2["Classifier + Isolation Forest<br>(raw vs signed-log input)"] --> C3["Score every flow<br>of the withheld class"] --> C4["Detection, benign FPR,<br>'mistaken for' class"]
+    end
+    PREP --> RQ1
+    PREP --> RQ2
+    PREP --> RQ3
+    RQ1 --> OUT["docs/results/ · docs/RESEARCH.md · console Findings tab"]
+    RQ2 --> OUT
+    RQ3 --> OUT
