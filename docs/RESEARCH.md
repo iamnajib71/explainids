@@ -4,7 +4,7 @@ Most published ML intrusion detectors report about 99% on a single benchmark. Th
 
 | | Question | Answer | One-line takeaway |
 |---|---|---|---|
-| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Retrain or calibrate on local traffic before trusting it. |
+| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; 10–50 labelled local incidents per attack type restore detection (0.55 → 0.94–0.98). |
 | **RQ2** | Do SHAP explanations stay the same when the model is retrained? | **4 of 5** top features shared per alert (median overlap 0.67); model-wide top-10 overlap 0.82–1.0 | The "why" is stable enough to guide an analyst, but individual ranks are not. |
 | **RQ3** | Can it flag an attack type it never saw in training? | **52%** median (2017), 57% with a log-scaled anomaly detector; **7%** on 2018 | Unseen attacks are mostly caught by resembling a known class. The anomaly layer helps scans, not brute force. |
 
@@ -55,7 +55,30 @@ Common setup: data deduplicated globally (no feature vector appears in two split
 - **Nothing label-free recovers DoS-Hulk or DDoS-HTTP** (0% before and after, 91% of 2018's attack flows). The classifier confidently calls them normal, and they look normal to an anomaly detector too.
 - **More local data steadies the false-alarm rate but does not raise detection** (class-balanced detection is flat from 1,000 to 20,000 flows). The limit is what the model learned, not the size of the calibration sample.
 
-**What this means.** Benign-only calibration is necessary for honest alert budgets on a new site, but not sufficient for detection. Recovering the tools that changed between captures needs either training on more than one environment or a few labelled local examples. Those are the next experiments.
+**What this means.** Benign-only calibration is necessary for honest alert budgets on a new site, but not sufficient for detection. Recovering the tools that changed between captures needs either training on more than one environment or a few labelled local examples.
+
+### Follow-up: more environments, or a few labelled local incidents?
+
+**Method.** [`scripts/multi_env_eval.py`](../scripts/multi_env_eval.py). Train on one dataset, on both together, or on one dataset plus **k labelled flows per attack type** (k = 10, 50, 200; two random samples each) and 1,000 benign flows from the *earliest* period of the other. Score every model on the later test period of both datasets and on our lab traffic, a third environment no model trains on. Result: [`results/multi_env.md`](results/multi_env.md).
+
+| Training | 2017 test | 2018 test | Lab traffic |
+|---|---|---|---|
+| 2017 only (deployed situation) | 0.98 / 1.5% | **0.55 / 3.4%** | 0.60 / 0% |
+| 2017 + **10** labelled 2018 flows per attack type | 0.99 / 1.5% | **0.94 / 0.6%** | 0.60 / 0% |
+| 2017 + **50** labelled 2018 flows per attack type | 0.99 / 1.5% | **0.98 / 0.7%** | 0.60 / 0% |
+| 2017 and 2018 together | 0.95 / 1.8% | 0.996 / 0.7% | 0.40 / 0% |
+| Ceiling: 2018 only, on 2018 | — | 0.98 / 0.9% | — |
+
+Each cell is class-balanced detection / benign false-positive rate.
+
+**What we found.**
+- **A handful of labelled local incidents closes the gap.** With 10 labelled flows per attack type, class-balanced detection on 2018 rises from 0.55 to 0.94 and false alarms fall from 3.4% to 0.6%. With 50 it matches a model trained entirely on 2018 (0.98). DoS-Hulk, missed completely before, goes 0% → 85% (k = 10) → 95% (k = 50) → 99.6% (k = 200).
+- **Nothing is forgotten.** Performance on 2017 stays at 0.97–0.99.
+- **Training on more environments does not reach a new one.** The model trained on both datasets is excellent on both, but on the lab traffic it is no better than the 2017-only model (0.40 vs 0.60 class-balanced detection, i.e. 2 vs 3 of the 5 lab attack types). Only labels from the site itself helped.
+
+**The catch (critical for real-world use).** These labels include attacks the deployed model *missed*: DoS-Hulk raised no alerts on 2018. An analyst confirming alerts in the console would only ever label what the model already catches. In practice the missing labels must come from another source: an incident the site actually suffered, a signature-based IDS such as Snort or Suricata running alongside, or a controlled test of the site's own systems (like our lab). The experiment shows how *few* such labels are needed, not that they come for free.
+
+**Limits.** The lab traffic is a small deterministic emulation (304 flows, 40 benign), so its detection rates (0.6 = 3 of 5 attack types) carry wide intervals and its 0% false alarms means at most about 9%. Two random few-shot samples per k is enough to see the trend, not to bound its variance tightly.
 
 ## RQ2: Stability of explanations
 
@@ -107,6 +130,7 @@ Common setup: data deduplicated globally (no feature vector appears in two split
 | Anomaly layer blind on skewed features | RQ3 results plus EDA skewness | Optional signed-log input (`Detector(anomaly_log=True)`) | Unseen PortScan 0% → 93% at a lower false-alarm rate |
 | Port "shortcut" suspected (D'hooge et al., 2022) | Literature | Portable feature-set ablation | Not the cause here; transfer got worse without these features |
 | False-alarm rate drifts on a new network (3.4% vs ~1% intended) | Local-calibration experiment | Threshold set on local benign flows | Promised 1% budget restored (1.0–1.2%; 2018 → 2017 needs ~20,000 flows), at a cost in detection |
+| Transfer misses whole attack tools (DoS-Hulk 0%) | Calibration could not recover them | 10–50 labelled local flows per attack type added to training | 2018 class-balanced detection 0.55 → 0.94–0.98; 2017 unaffected |
 | "0% false alarms" in a 40-flow lab capture | Wilson intervals added to every metric | Intervals and alert burden reported; small captures labelled as pipeline checks | 0/40 shown honestly as up to 876 false alarms per 10k benign flows |
 
 ## Reproduce
@@ -117,6 +141,7 @@ python scripts/cross_dataset_eval.py data/processed/cicids2017.parquet data/proc
 python scripts/shap_stability_eval.py data/processed/cicids2017.parquet --seeds 42,1,2,3,4 --results docs/results/shap_stability_cicids2017.md
 python scripts/unseen_attack_eval.py data/processed/cicids2017.parquet [--anomaly-log] --results docs/results/unseen_cicids2017.md
 python scripts/local_calibration_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --sizes 1000,5000,20000 --seeds 42,1,2
+python scripts/multi_env_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --lab data/lab/<run>/flows_labelled.csv --shots 10,50,200 --seeds 42,1
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
 

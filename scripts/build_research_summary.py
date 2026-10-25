@@ -61,6 +61,18 @@ def calibration_note(res: dict) -> str:
             "Source: docs/results/local_calibration.md")
 
 
+def few_shot_note(res: dict) -> str:
+    """How far a few labelled local incidents per attack type close the worst transfer gap."""
+    worst = res["focus"]
+    base = next(r for r in res["runs"] if r["config"].startswith("single") and worst not in r["config"])
+    shots = [r for r in res["runs"] if r.get("target") == worst]
+    k = min(r["k"] for r in shots)
+    det = float(np.mean([r["tests"][worst]["macro_detection"] for r in shots if r["k"] == k]))
+    return (f"Adding just {k} labelled local flows per attack type lifts detection on {worst} from "
+            f"{base['tests'][worst]['macro_detection']:.0%} to {det:.0%}, but those labels must come from outside the "
+            "model's own alerts (it never flagged the missed attacks). Source: docs/results/multi_env.md")
+
+
 def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
     if not res:
         return None
@@ -112,6 +124,9 @@ def main():
     calib = load(r / "local_calibration.json")
     if out["transfer"] and calib:
         out["transfer"]["tip"] += " " + calibration_note(calib)
+    multi = load(r / "multi_env.json")
+    if out["transfer"] and multi:
+        out["transfer"]["tip"] += " " + few_shot_note(multi)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {args.out}: " + ", ".join(f"{k}={'ok' if v else 'pending'}" for k, v in out.items() if k != "sources"))
