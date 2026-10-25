@@ -323,7 +323,7 @@ def w7_architecture():
     d.box("Deployment target: Azure for Students App Service (container) or a free Hugging Face Space · $10 budget alert · "
           "shut down after marking", 280, 475, 770, 40, "orange", fill="#FFF4E5", size=11)
     d.box("Engineering &amp; security: GitHub Actions CI (pytest + privacy guard) · API key on /predict · bounded uploads · "
-          "invalid rows dropped · pseudonymised identifiers · public code, private data", 20, 528, 1030, 40, "grey", fill="#F5F6F8", size=11)
+          "invalid rows dropped · keyed-hash pseudonymisation for lab data · public code, private data", 20, 528, 1030, 40, "grey", fill="#F5F6F8", size=11)
     for s, y in ((s1, 0.4), (s2, 0.5), (s3, 0.6)):
         d.edge(s, p1 if s is s1 else p4, extra="" if s is s1 else "dashed=1;", exit=(1, 0.5), entry=(0, y) if s is s1 else (0, y))
     for a, c in ((p1, p2), (p2, p3), (p3, p4)):
