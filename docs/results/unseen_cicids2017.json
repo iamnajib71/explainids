@@ -1,0 +1,208 @@
+{
+ "dataset": "cicids2017",
+ "generated": "2026-10-25",
+ "model": "lgbm",
+ "cap": 60000,
+ "anomaly_target_fpr": 0.01,
+ "anomaly_log": false,
+ "results": [
+  {
+   "class": "DoS-Hulk",
+   "unseen": {
+    "flows": 158468,
+    "classifier": 0.38730216826110003,
+    "anomaly": 8.203548981497842e-05,
+    "either": 0.38738420375091503,
+    "mistaken_for": {
+     "DDoS-HTTP": 58024,
+     "PortScan": 3244,
+     "DoS-GoldenEye": 58
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.014519929177877845
+  },
+  {
+   "class": "PortScan",
+   "unseen": {
+    "flows": 127424,
+    "classifier": 0.0004394776494224008,
+    "anomaly": 0.0,
+    "either": 0.0004394776494224008,
+    "mistaken_for": {
+     "DDoS-HTTP": 56
+    }
+   },
+   "seen_classifier": 0.9972140474789092,
+   "benign_fpr": 0.010051722455352786
+  },
+  {
+   "class": "DDoS-HTTP",
+   "unseen": {
+    "flows": 95144,
+    "classifier": 0.5629151601782562,
+    "anomaly": 0.0,
+    "either": 0.5629151601782562,
+    "mistaken_for": {
+     "DoS-Hulk": 29043,
+     "PortScan": 24505,
+     "Web-SQLInjection": 9
+    }
+   },
+   "seen_classifier": 0.9995795890482947,
+   "benign_fpr": 0.014519929177877845
+  },
+  {
+   "class": "DoS-GoldenEye",
+   "unseen": {
+    "flows": 7567,
+    "classifier": 0.8432668164398044,
+    "anomaly": 0.0666049953746531,
+    "either": 0.8815911193339501,
+    "mistaken_for": {
+     "DoS-SlowHTTPTest": 3484,
+     "DoS-Hulk": 2180,
+     "Web-SQLInjection": 711
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.013641623332264496
+  },
+  {
+   "class": "FTP-BruteForce",
+   "unseen": {
+    "flows": 3972,
+    "classifier": 0.0,
+    "anomaly": 0.0,
+    "either": 0.0,
+    "mistaken_for": {}
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.015492339221235484
+  },
+  {
+   "class": "DoS-Slowloris",
+   "unseen": {
+    "flows": 3859,
+    "classifier": 0.5778699144856181,
+    "anomaly": 0.04068411505571391,
+    "either": 0.6177766260689298,
+    "mistaken_for": {
+     "DoS-SlowHTTPTest": 2230
+    }
+   },
+   "seen_classifier": 0.9961139896373057,
+   "benign_fpr": 0.015398235023491197
+  },
+  {
+   "class": "SSH-BruteForce",
+   "unseen": {
+    "flows": 2961,
+    "classifier": 0.0,
+    "anomaly": 0.0,
+    "either": 0.0,
+    "mistaken_for": {}
+   },
+   "seen_classifier": 0.9983136593591906,
+   "benign_fpr": 0.01541217638611998
+  },
+  {
+   "class": "DoS-SlowHTTPTest",
+   "unseen": {
+    "flows": 1740,
+    "classifier": 0.6775862068965517,
+    "anomaly": 0.11666666666666667,
+    "either": 0.6775862068965517,
+    "mistaken_for": {
+     "DoS-Slowloris": 889,
+     "DoS-Hulk": 160,
+     "DoS-GoldenEye": 123
+    }
+   },
+   "seen_classifier": 0.6867816091954023,
+   "benign_fpr": 0.014202763178073025
+  },
+  {
+   "class": "Bot",
+   "unseen": {
+    "flows": 736,
+    "classifier": 0.0,
+    "anomaly": 0.058423913043478264,
+    "either": 0.058423913043478264,
+    "mistaken_for": {}
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.015534163309121834
+  },
+  {
+   "class": "Web-BruteForce",
+   "unseen": {
+    "flows": 73,
+    "classifier": 0.958904109589041,
+    "anomaly": 0.0,
+    "either": 0.958904109589041,
+    "mistaken_for": {
+     "Web-XSS": 70
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.015467941836635113
+  },
+  {
+   "class": "Infiltration",
+   "unseen": {
+    "flows": 36,
+    "classifier": 0.0,
+    "anomaly": 0.4722222222222222,
+    "either": 0.4722222222222222,
+    "mistaken_for": {}
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.014443251683419537
+  },
+  {
+   "class": "Web-XSS",
+   "unseen": {
+    "flows": 18,
+    "classifier": 1.0,
+    "anomaly": 1.0,
+    "either": 1.0,
+    "mistaken_for": {
+     "Web-BruteForce": 18
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.014729049617309595
+  },
+  {
+   "class": "Web-SQLInjection",
+   "unseen": {
+    "flows": 13,
+    "classifier": 0.15384615384615385,
+    "anomaly": 0.0,
+    "either": 0.15384615384615385,
+    "mistaken_for": {
+     "DoS-GoldenEye": 2
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.015276248100489342
+  },
+  {
+   "class": "Heartbleed",
+   "unseen": {
+    "flows": 11,
+    "classifier": 0.7272727272727273,
+    "anomaly": 1.0,
+    "either": 1.0,
+    "mistaken_for": {
+     "DDoS-HTTP": 7,
+     "Infiltration": 1
+    }
+   },
+   "seen_classifier": 1.0,
+   "benign_fpr": 0.01552022194649305
+  }
+ ],
+ "minutes": 10.325828089999899
+}

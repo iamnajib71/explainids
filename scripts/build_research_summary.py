@@ -49,7 +49,7 @@ def transfer(res: dict | None) -> dict | None:
     }
 
 
-def unseen(res: dict | None, log_res: dict | None) -> dict | None:
+def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
     if not res:
         return None
     rows = sorted(res["results"], key=lambda r: -r["unseen"]["either"])
@@ -59,6 +59,9 @@ def unseen(res: dict | None, log_res: dict | None) -> dict | None:
     if log_res:
         log_med = float(np.median([r["unseen"]["either"] for r in log_res["results"]]))
         tip += f" With signed-log features for the Isolation Forest the median is {log_med:.0%}."
+    if other:
+        other_med = float(np.median([r["unseen"]["either"] for r in other["results"]]))
+        tip += f" On {other['dataset']} the median is {other_med:.0%}."
     return {"question": "Can it catch attacks it never saw?", "headline": f"{med:.0%}",
             "label": "median detection of an unseen attack type",
             "classes": [{"class": r["class"], "either": r["unseen"]["either"], "classifier": r["unseen"]["classifier"]}
@@ -77,7 +80,7 @@ def stability(res: dict | None) -> dict | None:
             "label": f"median top-{res['k']} SHAP overlap across {len(res['seeds'])} training seeds",
             "classes": classes,
             "tip": (f"Same {res['explained_flows']} test attack flows explained by models trained with different seeds; "
-                    f"overlap 1 = identical top-{res['k']} features, 0 = none shared. {skipped:,} of {total:,} flow pairs "
+                    f"overlap 1 = identical top-{res['k']} features, 0 = none shared (0.67 = 4 of 5 shared). {skipped:,} of {total:,} flow pairs "
                     f"skipped because the prediction changed. Source: docs/results/shap_stability_{res['dataset']}.md")}
 
 
@@ -90,7 +93,9 @@ def main():
     r = Path(args.results)
     out = {"transfer": transfer(load(r / "cross_dataset.json")),
            "stability": stability(load(r / f"shap_stability_{args.dataset}.json")),
-           "unseen": unseen(load(r / f"unseen_{args.dataset}.json"), load(r / f"unseen_{args.dataset}_log.json")),
+           "unseen": unseen(load(r / f"unseen_{args.dataset}.json"), load(r / f"unseen_{args.dataset}_log.json"),
+                            next((load(f) for f in sorted(r.glob("unseen_*.json"))
+                                  if args.dataset not in f.stem and not f.stem.endswith("_log")), None)),
            "sources": [{"label": label, "url": url} for label, url in SOURCES]}
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")

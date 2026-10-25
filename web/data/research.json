@@ -17,7 +17,50 @@
   ],
   "tip": "Trained on one corrected CIC dataset, tested on the other (LGBM, all 83 shared features). Bars show attack recall; macro F1 over the 12 common classes: 2017\u21922017 0.89, 2017\u21922018 0.58, 2018\u21922017 0.34, 2018\u21922018 0.95. Dropping environment-specific features (port, TCP windows) did not help. Source: docs/results/cross_dataset.md"
  },
- "stability": null,
+ "stability": {
+  "question": "Do explanations stay the same?",
+  "headline": "0.67",
+  "label": "median top-5 SHAP overlap across 5 training seeds",
+  "classes": [
+   {
+    "class": "PortScan",
+    "median": 1.0
+   },
+   {
+    "class": "SSH-BruteForce",
+    "median": 1.0
+   },
+   {
+    "class": "Bot",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "DDoS-HTTP",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "DoS-GoldenEye",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "DoS-Hulk",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "DoS-SlowHTTPTest",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "DoS-Slowloris",
+    "median": 0.6666666666666666
+   },
+   {
+    "class": "FTP-BruteForce",
+    "median": 0.6666666666666666
+   }
+  ],
+  "tip": "Same 500 test attack flows explained by models trained with different seeds; overlap 1 = identical top-5 features, 0 = none shared (0.67 = 4 of 5 shared). 0 of 5,000 flow pairs skipped because the prediction changed. Source: docs/results/shap_stability_cicids2017.md"
+ },
  "unseen": {
   "question": "Can it catch attacks it never saw?",
   "headline": "52%",
@@ -94,7 +137,7 @@
     "classifier": 0.0
    }
   ],
-  "tip": "Each attack class removed from training in turn (cicids2017, 14 classes); bars show how much of it still raised an alert. Isolation Forest threshold set for 1% false alarms on validation benign traffic. Source: docs/results/unseen_cicids2017.md"
+  "tip": "Each attack class removed from training in turn (cicids2017, 14 classes); bars show how much of it still raised an alert. Isolation Forest threshold set for 1% false alarms on validation benign traffic. With signed-log features for the Isolation Forest the median is 57%. On csecicids2018 the median is 7%. Source: docs/results/unseen_cicids2017.md"
  },
  "sources": [
   {
