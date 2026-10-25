@@ -5,8 +5,9 @@ Usage:
 
 Uses the same column alignment and invalid-row policy as the API's CSV upload. Reports alert-level
 recall/precision/FPR for the classifier alone and with the Isolation Forest (the deployed alert rule),
-per-scenario detection, multi-class metrics over the classes the model knows, and the confusion matrix.
-Classes the model never saw (e.g. SYN-Flood) count as caught when any alert fires.
+per-scenario detection, per-class attribution metrics for all evaluated labels, and the confusion matrix.
+Classes the model never saw (e.g. SYN-Flood) count as detected when any alert fires, not as correctly
+attributed to that unseen class.
 """
 from __future__ import annotations
 
@@ -36,12 +37,16 @@ def evaluate(det, df: pd.DataFrame) -> dict:
     flagged = (pred != BENIGN) | outlier
     known = sorted(set(det.classes) & set(y))
     rep = report(y, pred, sorted(set(det.classes) | set(y)))
+    per_class = rep["per_class"].copy()
+    per_class["seen_in_training"] = per_class.index.isin(det.classes)
     per = pd.DataFrame({"truth": y.to_numpy(), "clf": pred != BENIGN, "any": flagged})
     scen = per.groupby("truth").agg(flows=("clf", "size"), classifier=("clf", "mean"), with_anomaly=("any", "mean"))
     scen["seen_in_training"] = [c in det.classes for c in scen.index]
     return {"flows": int(len(y)), "dropped_invalid": int((~valid).sum()),
             "classifier": binary_report(y, pred != BENIGN), "with_anomaly": binary_report(y, flagged),
             "macro_known": rep["per_class"].loc[known, ["precision", "recall", "f1"]].mean().to_dict(),
+            "macro_observed": rep["per_class"].loc[sorted(set(y)), ["precision", "recall", "f1"]].mean().to_dict(),
+            "per_class": per_class.reset_index(names="class").to_dict("records"),
             "per_scenario": scen.reset_index(names="class").to_dict("records"),
             "labels": list(rep["confusion"].index), "confusion": rep["confusion"].values.tolist()}
 
@@ -55,12 +60,22 @@ def to_markdown(res: dict, cmd: str) -> str:
           f"| Classifier or anomaly (deployed) | {a['recall']:.3f} | {a['precision']:.3f} | {a['fpr']:.4f} |", "",
           f"Macro precision / recall / F1 over classes the model knows: {res['macro_known']['precision']:.3f} / "
           f"{res['macro_known']['recall']:.3f} / {res['macro_known']['f1']:.3f}.", "",
+          "Macro precision / recall / F1 over all observed truth classes (including unseen): "
+          f"{res['macro_observed']['precision']:.3f} / {res['macro_observed']['recall']:.3f} / "
+          f"{res['macro_observed']['f1']:.3f}.", "",
           "| Class | Flows | Seen in training | Flagged by classifier | Flagged incl. anomaly |", "|---|---|---|---|---|"]
     md += [f"| {s['class']} | {s['flows']:,} | {'yes' if s['seen_in_training'] else 'no'} | {s['classifier']:.3f} | "
            f"{s['with_anomaly']:.3f} |" for s in res["per_scenario"]]
-    labels = res["labels"]
     md += ["", "For BENIGN, the flagged columns are false-positive rates. Accuracy is not reported (rule 4).", "",
-           "## Confusion matrix (rows = true, columns = predicted)", "",
+           "## Per-class attribution (classifier only)", "",
+           "| Class | Precision | Recall | F1 | Support | Seen in training |", "|---|---:|---:|---:|---:|---|"]
+    md += [f"| {s['class']} | {s['precision']:.3f} | {s['recall']:.3f} | {s['f1']:.3f} | "
+           f"{s['support']:,} | {'yes' if s['seen_in_training'] else 'no'} |" for s in res["per_class"]]
+    md += ["", "Unseen scenarios can be detected by any attack or anomaly alert without being correctly attributed. "
+           "Their detection rates are in the scenario table; the attribution metrics and confusion matrix "
+           "use the classifier's predicted class only. Undefined per-class metrics are shown as zero."]
+    labels = res["labels"]
+    md += ["", "## Confusion matrix (rows = true, columns = predicted)", "",
            "| | " + " | ".join(labels) + " |", "|---|" + "---:|" * len(labels)]
     md += [f"| {labels[i]} | " + " | ".join(f"{v:,}" for v in row) + " |" for i, row in enumerate(res["confusion"])]
     return "\n".join(md) + "\n"

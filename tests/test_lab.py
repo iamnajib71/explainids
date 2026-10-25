@@ -1,10 +1,11 @@
+import numpy as np
 import pandas as pd
 import pytest
 
 from ids.data import BENIGN, LABEL_COL, clean, feature_columns
 from ids.models import Detector
 from ids.synthetic import make_flows
-from scripts.evaluate_lab import evaluate
+from scripts.evaluate_lab import evaluate, to_markdown
 from scripts.label_lab_flows import label_flows
 
 ATTACKER, VICTIM, OTHER = "192.168.56.10", "192.168.56.20", "192.168.56.30"
@@ -57,3 +58,47 @@ def test_evaluate_counts_unseen_class_as_caught_by_any_alert():
     assert not by_class["SYN-Flood"]["seen_in_training"]
     assert 0 <= res["with_anomaly"]["recall"] <= 1 and res["flows"] == len(lab)
     assert "SYN-Flood" not in res["macro_known"] and set(res["macro_known"]) == {"precision", "recall", "f1"}
+
+
+def test_per_class_attribution_matches_confusion_without_claiming_unknown_labels():
+    class FrozenDetector:
+        features = ["flow_feature"]
+        classes = [BENIGN, "PortScan", "SSH-BruteForce"]
+        iforest = object()
+
+        def predict(self, X):
+            return np.array([BENIGN, "PortScan", "PortScan", BENIGN, "PortScan", BENIGN])
+
+        def anomaly(self, X):
+            # The final unknown attack is detected only by the anomaly layer.
+            return np.zeros(len(X)), np.array([False, False, False, False, False, True])
+
+    flows = pd.DataFrame({"flow_feature": range(6),
+                          LABEL_COL: [BENIGN, BENIGN, "PortScan", "PortScan", "SYN-Flood", "SYN-Flood"]})
+    res = evaluate(FrozenDetector(), flows)
+    metrics = {row["class"]: row for row in res["per_class"]}
+    confusion = np.array(res["confusion"])
+    assert list(metrics) == res["labels"]
+    assert confusion.sum() == res["flows"] == sum(row["support"] for row in metrics.values())
+    for i, label in enumerate(res["labels"]):
+        row = metrics[label]
+        true_count, predicted_count, correct = confusion[i].sum(), confusion[:, i].sum(), confusion[i, i]
+        precision = correct / predicted_count if predicted_count else 0
+        recall = correct / true_count if true_count else 0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0
+        assert row["support"] == true_count
+        assert row["precision"] == pytest.approx(precision)
+        assert row["recall"] == pytest.approx(recall)
+        assert row["f1"] == pytest.approx(f1)
+    assert metrics["SSH-BruteForce"]["support"] == 0  # Include every evaluated label.
+    observed = [row for row in metrics.values() if row["support"] > 0]
+    for metric in ("precision", "recall", "f1"):
+        assert res["macro_observed"][metric] == pytest.approx(np.mean([row[metric] for row in observed]))
+    assert not metrics["SYN-Flood"]["seen_in_training"]
+    assert metrics["SYN-Flood"]["recall"] == metrics["SYN-Flood"]["f1"] == 0
+    scenarios = {row["class"]: row for row in res["per_scenario"]}
+    assert scenarios["SYN-Flood"]["classifier"] == 0.5
+    assert scenarios["SYN-Flood"]["with_anomaly"] == 1.0
+    rendered = to_markdown({**res, "generated": "2026-10-25", "model": "frozen test detector"}, "test")
+    assert "| SYN-Flood | 0.000 | 0.000 | 0.000 | 2 | no |" in rendered
+    assert "without being correctly attributed" in rendered
