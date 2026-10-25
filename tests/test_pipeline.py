@@ -166,3 +166,13 @@ def test_signed_log_anomaly_option_keeps_fpr_target(flows):
     det = Detector("rf", anomaly_log=True).fit(X, y).fit_anomaly(X[y == BENIGN])
     det.tune_anomaly_threshold(X[y == BENIGN], target_fpr=0.05)
     assert det.anomaly(X[y == BENIGN])[1].mean() <= 0.06
+
+
+def test_wilson_interval_is_honest_about_small_samples():
+    from ids.evaluate import wilson_interval
+    lo, hi = wilson_interval(0, 40)
+    assert lo == 0 and 0.08 < hi < 0.09          # 0 false alarms in 40 flows still allows ~9%
+    lo, hi = wilson_interval(12, 12)
+    assert 0.75 < lo < 0.76 and hi == 1.0
+    lo, hi = wilson_interval(500, 1000)
+    assert lo < 0.5 < hi and hi - lo < 0.07

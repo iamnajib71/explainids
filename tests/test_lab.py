@@ -102,3 +102,11 @@ def test_per_class_attribution_matches_confusion_without_claiming_unknown_labels
     rendered = to_markdown({**res, "generated": "2026-10-25", "model": "frozen test detector"}, "test")
     assert "| SYN-Flood | 0.000 | 0.000 | 0.000 | 2 | no |" in rendered
     assert "without being correctly attributed" in rendered
+
+
+def test_alert_burden_carries_interval_and_projection():
+    from scripts.evaluate_lab import alert_burden
+    b = alert_burden(fp=0, benign=40, hours=0.05, benign_per_hour=10_000)
+    assert b["per_10k"] == 0 and b["per_10k_ci"][1] > 800        # 0/40 still allows ~876 per 10k
+    assert b["projected_per_hour"] == 0 and b["projected_per_hour_ci"][1] > 800
+    assert alert_burden(fp=5, benign=10_000, hours=2, benign_per_hour=None)["per_capture_hour"] == 2.5

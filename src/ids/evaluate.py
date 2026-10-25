@@ -45,6 +45,16 @@ def latency_ms_per_flow(predict, X, repeats: int = 3) -> float:
     return best * 1000
 
 
+def wilson_interval(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson score interval for a proportion k/n. Honest at the extremes: 0/40 is not 'exactly 0%'."""
+    if n == 0:
+        return float("nan"), float("nan")
+    p, z2 = k / n, z * z
+    centre = (p + z2 / (2 * n)) / (1 + z2 / n)
+    half = z * np.sqrt(p * (1 - p) / n + z2 / (4 * n * n)) / (1 + z2 / n)
+    return float(max(0.0, centre - half)), float(min(1.0, centre + half))
+
+
 def binary_report(y_true, flagged) -> dict:
     """Attack-vs-benign alert quality for a boolean `flagged` mask (any attack class counts as a hit)."""
     attack, flagged = np.asarray(y_true) != BENIGN, np.asarray(flagged, dtype=bool)
@@ -54,4 +64,5 @@ def binary_report(y_true, flagged) -> dict:
     recall = tp / (tp + fn) if tp + fn else float("nan")
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     return {"precision": precision, "recall": recall, "f1": f1,
-            "fpr": fp / (fp + tn) if fp + tn else float("nan"), "tp": tp, "fp": fp, "fn": fn, "tn": tn}
+            "fpr": fp / (fp + tn) if fp + tn else float("nan"), "tp": tp, "fp": fp, "fn": fn, "tn": tn,
+            "recall_ci": wilson_interval(tp, tp + fn), "fpr_ci": wilson_interval(fp, fp + tn)}
