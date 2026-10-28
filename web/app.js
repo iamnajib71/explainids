@@ -126,6 +126,81 @@ const S = {
   classCounts: {}, timeline: [],
 };
 
+/* Sensor data never enters replay counters or its labelled scorecard. Keys stay in memory. */
+const sensor = { enabled: false, key: "", cursor: 0, timer: null, controller: null,
+  alerts: new Map(), rows: [], receivedAt: null, generation: 0 };
+function disconnectSensor(message = "Feed disconnected") {
+  sensor.enabled = false; sensor.generation++; sensor.key = "";
+  clearTimeout(sensor.timer); sensor.controller?.abort();
+  $("#sensor-key").value = "";
+  $("#sensor-connect").disabled = false; $("#sensor-disconnect").disabled = true;
+  $("#sensor-status").textContent = message;
+}
+async function pollSensor(generation) {
+  if (!sensor.enabled || generation !== sensor.generation) return;
+  sensor.controller = new AbortController();
+  const timeout = setTimeout(() => sensor.controller?.abort(), 10000);
+  try {
+    const response = await fetch(`sensor/feed?after=${sensor.cursor}&limit=200`, {
+      headers: sensor.key ? { "X-API-Key": sensor.key } : {}, cache: "no-store",
+      signal: sensor.controller.signal });
+    if (!response.ok) {
+      if (response.status === 401) { disconnectSensor("API key required or incorrect"); return; }
+      throw new Error(`Feed unavailable (${response.status})`);
+    }
+    const feed = await response.json();
+    if (!sensor.enabled || generation !== sensor.generation) return;
+    // A restarted server has a new in-memory cursor/history.
+    if (feed.latest_cursor < sensor.cursor) { sensor.cursor = 0; sensor.rows = []; sensor.alerts.clear(); }
+    else {
+      sensor.cursor = feed.cursor;
+      sensor.rows = [...sensor.rows, ...feed.flows].slice(-200);
+      feed.alerts.forEach(a => sensor.alerts.set(a.alert_id, a));
+      while (sensor.alerts.size > 200) sensor.alerts.delete(sensor.alerts.keys().next().value);
+    }
+    $("#sensor-access").textContent = feed.key_required
+      ? "API key accepted · kept only in memory until disconnect. Use localhost or a trusted HTTPS connection."
+      : "No server API key configured · open local development access. Keep this app bound to localhost.";
+    const summary = feed.summary;
+    const age = summary ? (Date.now() - Date.parse(summary.received_at)) / 1000 : Infinity;
+    $("#sensor-status").textContent = !summary ? "No sensor connected"
+      : age > 30 ? "Collector idle · no recent batch" : "Receiving sensor observations";
+    $("#sensor-flows").textContent = fmt(summary?.total_flows || 0);
+    $("#sensor-alert-count").textContent = fmt(summary?.total_alerts || 0);
+    $("#sensor-last").textContent = summary ? new Date(summary.received_at).toLocaleTimeString() : "—";
+    $("#sensor-session").textContent = summary ? `Session ${summary.sensor_session} · ${summary.model}` : "Waiting for a collector";
+    const queue = $("#sensor-alerts"); queue.replaceChildren();
+    [...sensor.alerts.values()].reverse().slice(0, 80).forEach(a => queue.appendChild(alertCard(a)));
+    if (!queue.children.length) {
+      const empty = document.createElement("div"); empty.className = "empty";
+      empty.textContent = summary ? "No candidate alerts in received batches" : "No sensor connected";
+      queue.appendChild(empty);
+    }
+    $("#sensor-rows").innerHTML = [...sensor.rows].reverse().slice(0, 100).map(r => `<tr>
+      <td>${esc(String(r.time).slice(0, 19))}</td><td>${esc(r.src)}</td><td>${esc(r.dst)}</td>
+      <td>${esc(r.predicted)}</td><td>${r.outlier ? "yes" : "no"}</td></tr>`).join("");
+    if (feed.history_truncated) $("#sensor-access").textContent += " Earlier history expired from the bounded server queue.";
+  } catch (e) {
+    if (sensor.enabled && generation === sensor.generation) $("#sensor-status").textContent = e.name === "AbortError" ? "Feed request timed out" : "Feed unavailable; retrying";
+  } finally {
+    clearTimeout(timeout);
+    if (sensor.enabled && generation === sensor.generation) sensor.timer = setTimeout(() => pollSensor(generation), 3000);
+  }
+}
+$("#sensor-connect").onclick = () => {
+  if (STATIC) { $("#sensor-status").textContent = "Sensor feed requires the live local app"; return; }
+  const key = $("#sensor-key").value;
+  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+  if (!loopback && !key) { $("#sensor-status").textContent = "Remote feed requires an API key and a trusted connection"; return; }
+  if (!loopback && location.protocol !== "https:") { $("#sensor-status").textContent = "Use localhost or HTTPS before entering an API key"; return; }
+  sensor.key = key; $("#sensor-key").value = ""; sensor.enabled = true;
+  $("#sensor-connect").disabled = true; $("#sensor-disconnect").disabled = false;
+  $("#sensor-status").textContent = "Connecting to sensor feed…";
+  pollSensor(++sensor.generation);
+};
+$("#sensor-disconnect").onclick = () => disconnectSensor();
+window.addEventListener("pagehide", () => disconnectSensor());
+
 /* ---------------- network map (canvas) ---------------- */
 const map = (() => {
   const cv = $("#netmap"), ctx = cv.getContext("2d"), tip = $("#map-tip");
@@ -717,7 +792,7 @@ async function boot() {
     S.health = h; S.card = c;
     const synthetic = !c.models || !Object.keys(c.models).length;
     pill.className = "pill ok";
-    $("span", pill).textContent = `${synthetic ? "Synthetic" : "Held-out"} replay · ${fmt(h.replay_flows)} flows`;
+    $("span", pill).textContent = synthetic ? "Synthetic model · replay only" : `${h.classifier.toUpperCase()} · model ready`;
     pill.title = `${h.classifier.toUpperCase()} trained on ${c.dataset}`;
     if (synthetic) { $("#replay-hint").textContent = "Synthetic demo flows"; $("#replay-hint").dataset.tip = "Generated flows from the demo model; not benchmark evidence."; }
     $("#play").disabled = false;
@@ -725,6 +800,6 @@ async function boot() {
     pill.className = "pill err"; $("span", pill).textContent = "Replay unavailable"; pill.title = e.message;
   }
   updateKpis(false); drawTimeline(); drawClasses(); drawMatrix();
-  showView(store.get("view", "live"));
+  showView(store.get("view", "sensor"));
 }
 boot();

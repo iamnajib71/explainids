@@ -16,7 +16,8 @@
     <div><strong>ExplainIDS</strong><span>Explainable intrusion detection</span></div>
   </div>
   <nav class="tabs" role="tablist">
-    <button role="tab" data-view="live" class="active">Traffic replay</button>
+    <button role="tab" data-view="sensor" class="active">Local sensor</button>
+    <button role="tab" data-view="live">Traffic replay</button>
     <button role="tab" data-view="incidents">Incidents</button>
     <button role="tab" data-view="attack">ATT&amp;CK</button>
     <button role="tab" data-view="lab">Model lab</button>
@@ -30,8 +31,38 @@
 </header>
 
 <main>
+<!-- LOCAL SENSOR: separate from labelled replay and file experiments -->
+<section id="view-sensor" class="view active">
+  <div class="card sensor-intro">
+    <div class="card-head"><h3>Own-network observations</h3><span id="sensor-status" role="status">No sensor connected</span></div>
+    <p>Read flows submitted by a collector you run on your own computer. Replay continues in its own tab and never counts as sensor observations.</p>
+    <p class="sensor-warning">Candidate alerts · model needs local validation. A prediction or high confidence does not prove an attack. Unlabelled traffic has no measured accuracy, precision or recall.</p>
+    <div class="sensor-controls">
+      <label for="sensor-key">API key, if configured <input id="sensor-key" type="password" autocomplete="off" maxlength="256" placeholder="Kept only in memory while connected"></label>
+      <button id="sensor-connect" class="btn primary">Connect to feed</button>
+      <button id="sensor-disconnect" class="btn ghost" disabled>Disconnect</button>
+    </div>
+    <p id="sensor-access" class="hint">Feed is disconnected. With no server key, local development access is open; keep the app bound to localhost.</p>
+    <details><summary>Set up a collector</summary>
+      <ol><li>Start the local app with a saved trained detector. Synthetic demo mode cannot accept sensor batches.</li>
+      <li>On the host you own and are allowed to monitor, list interfaces and explicitly choose the intended interface in the sensor command-line tool.</li>
+      <li>Run a bounded capture and the compatible flow extractor on that host, then submit the extracted CSV to <code>/sensor/ingest</code> with the same API key.</li>
+      <li>Use the local setup guide for the exact command and prerequisites. The app never starts capture remotely. Monitor only traffic you are authorised to collect.</li></ol>
+      <p class="hint">Source addresses are pseudonymised by this server. Capture counts and origin are sender-reported. The in-memory feed resets when the app restarts; each server worker has its own feed.</p>
+    </details>
+  </div>
+  <div class="kpis sensor-kpis">
+    <div class="kpi card"><span>Accepted observations</span><strong id="sensor-flows">0</strong><small>All accepted sensor batches</small></div>
+    <div class="kpi card"><span>Candidate alerts</span><strong id="sensor-alert-count">0</strong><small>Model flags, not confirmed incidents</small></div>
+    <div class="kpi card"><span>Last batch received</span><strong id="sensor-last">—</strong><small id="sensor-session">Waiting for a collector</small></div>
+  </div>
+  <div class="card"><div class="card-head"><h3>Sensor candidate alerts</h3><small>Newest received · bounded local history</small></div>
+    <div id="sensor-alerts" class="queue"><div class="empty">No sensor connected</div></div></div>
+  <div class="card"><div class="card-head"><h3>Recent observations</h3><small>Predictions only · no ground-truth labels</small></div>
+    <div class="sensor-table-wrap"><table class="tbl"><thead><tr><th>Time</th><th>Source</th><th>Destination</th><th>Predicted class</th><th>Unusual</th></tr></thead><tbody id="sensor-rows"></tbody></table></div></div>
+</section>
 <!-- LIVE -->
-<section id="view-live" class="view active">
+<section id="view-live" class="view">
   <div class="controls card">
     <div class="ctl-group">
       <button id="play" class="btn primary" disabled><span class="ico">▶</span> <span class="lbl">Start replay</span></button>

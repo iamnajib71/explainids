@@ -227,6 +227,16 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .scroll { max-height: 380px; overflow: auto; }
 
 /* drawer */
+.sensor-intro p { max-width: 100ch; }
+.sensor-warning { padding: 10px 12px; border-left: 3px solid var(--medium); background: var(--panel2); }
+.sensor-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 16px 0; }
+.sensor-controls label { display: grid; gap: 6px; color: var(--muted); }
+.sensor-controls input { width: min(360px, 75vw); padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); }
+.sensor-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#sensor-status { color: var(--accent); }
+#sensor-alerts { max-height: 480px; overflow-y: auto; }
+.sensor-table-wrap { overflow-x: auto; }
+@media (max-width: 640px) { .sensor-kpis { grid-template-columns: 1fr; } }
 .scrim { position: fixed; inset: 0; background: rgba(5,10,20,.45); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 30; }
 .scrim.open { opacity: 1; pointer-events: auto; }
 .drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(560px, 100vw); z-index: 40; transform: translateX(105%);

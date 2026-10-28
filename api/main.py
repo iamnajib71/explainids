@@ -8,17 +8,25 @@ trained on synthetic flows, so the app boots anywhere.
 from __future__ import annotations
 
 import io
+import csv
+import hashlib
+import hmac
 import json
 import os
+import re
+import secrets
+import threading
+from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import Depends, FastAPI, File, HTTPException, Response, Security, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, Security, UploadFile
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from starlette.concurrency import run_in_threadpool
 
 from ids.alerts import SEVERITY_RANK, aggregate
 from ids.data import BENIGN, LABEL_COL, feature_columns
@@ -33,6 +41,10 @@ API_KEY = os.environ.get("EXPLAINIDS_API_KEY")  # unset = open (local dev only)
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 MAX_UPLOAD_MB, MAX_UPLOAD_ROWS, MAX_RETURNED_ALERTS = 25, 200_000, 300
 MAX_PREDICT_FLOWS, MAX_KEPT_ALERTS = 1000, 10_000
+MAX_SENSOR_BYTES, MAX_SENSOR_ROWS, MAX_SENSOR_KEPT = 5 * 1024 * 1024, 1000, 2000
+_sensor_lock = threading.RLock()
+_sensor_key = secrets.token_bytes(32)  # local process lifetime; never return addresses or hostname
+_sensor: dict = {"rows": [], "alerts": [], "seq": 0, "batches": [], "summary": None}
 FLOW_META = {"Src IP": "src", "Dst IP": "dst", "Dst Port": "dport", "Protocol": "proto",
              "Flow Duration": "duration", "Total Fwd Packet": "fwd_pkts", "Total Bwd packets": "bwd_pkts"}
 
@@ -101,7 +113,141 @@ def _flow_rows(df: pd.DataFrame, flows: pd.DataFrame, offset: int = 0) -> list[d
 @app.get("/health")
 def health():
     s = state()
-    return {"status": "ok", "model": s["mode"], "classifier": s["detector"].name, "replay_flows": len(s["replay"])}
+    return {"status": "ok", "model": s["mode"], "classifier": s["detector"].name,
+            "replay_flows": len(s["replay"]), "sensor_key_required": bool(API_KEY)}
+
+
+def _sensor_token(value: str, name: str) -> str:
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", value):
+        raise HTTPException(status_code=422, detail=f"{name} must be a 1–64 character token")
+    return value
+
+
+def _private_host(value: object) -> str:
+    digest = hmac.new(_sensor_key, str(value).encode(), hashlib.sha256).hexdigest()
+    return "host-" + digest[:12]
+
+
+@app.post("/sensor/ingest", dependencies=[Depends(require_key)])
+async def sensor_ingest(file: UploadFile = File(...), sensor_session: str = Form("local"),
+                        batch_id: str = Form(""), sensor_id: str = Form("local"),
+                        session_stats: str = Form("{}")):
+    """Accept already-extracted observations; this endpoint never starts packet capture.
+
+    Sender provenance is self-reported. A valid feature schema is not proof of live capture or attack.
+    Labels and extra input columns are discarded; no ground-truth metrics are inferred.
+    """
+    sensor_session = _sensor_token(sensor_session, "sensor_session")
+    if len(sensor_id) > 64 or len(session_stats) > 512:
+        raise HTTPException(status_code=422, detail="sensor metadata too large")
+    try:
+        supplied = json.loads(session_stats)
+        if not isinstance(supplied, dict):
+            raise ValueError("object required")
+        stats = {k: v for k, v in supplied.items() if k in {"captured_packets", "dropped_packets"}}
+        if any(type(v) is not int or not 0 <= v <= 10**12 for v in stats.values()):
+            raise ValueError("non-negative bounded integer counts required")
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=422, detail="invalid session_stats") from None
+    raw = await file.read(MAX_SENSOR_BYTES + 1)
+    if len(raw) > MAX_SENSOR_BYTES:
+        raise HTTPException(status_code=413, detail="sensor batch exceeds 5 MB")
+    checksum = hashlib.sha256(raw).hexdigest()
+    batch_id = _sensor_token(batch_id or checksum[:24], "batch_id")
+    batch_key = (sensor_session, batch_id)
+    with _sensor_lock:
+        previous = next((b for b in _sensor["batches"] if b["key"] == batch_key), None)
+        if previous:
+            if previous["checksum"] != checksum:
+                raise HTTPException(status_code=409, detail="batch_id reused with different data")
+            return {**previous["result"], "duplicate": True}
+    try:
+        text = raw.decode("utf-8-sig")
+        header = next(csv.reader(io.StringIO(text, newline="")))
+        if len(header) != len(set(header)):
+            raise ValueError("duplicate columns")
+        df = pd.read_csv(io.StringIO(text), nrows=MAX_SENSOR_ROWS + 1)
+    except (UnicodeError, ValueError, StopIteration, csv.Error, pd.errors.ParserError):
+        raise HTTPException(status_code=422, detail="invalid sensor CSV or duplicate columns") from None
+    if not 1 <= len(df) <= MAX_SENSOR_ROWS:
+        raise HTTPException(status_code=413 if len(df) > MAX_SENSOR_ROWS else 422,
+                            detail="sensor batch requires 1–1000 rows")
+    det = detector()
+    if state()["mode"].startswith("demo"):
+        raise HTTPException(status_code=503, detail="local sensor requires a saved trained model; synthetic demo is replay only")
+    df, missing = align_columns(df, det.features)
+    if missing or df.columns.duplicated().any():
+        raise HTTPException(status_code=422, detail=f"missing or ambiguous model features: {missing[:6]}")
+    numeric = df[det.features].apply(pd.to_numeric, errors="coerce")
+    if not np.isfinite(numeric.to_numpy(dtype=float)).all():
+        raise HTTPException(status_code=422, detail="sensor features must all be finite numeric values; no rows accepted")
+    # Keep only approved numeric model fields and bounded, pseudonymised display metadata.
+    frame = numeric.copy()
+    for col in ("Src IP", "Dst IP"):
+        frame[col] = df[col].astype(str).map(_private_host) if col in df else _private_host("unknown")
+    if "Timestamp" in df:
+        times = pd.to_datetime(df["Timestamp"], errors="coerce", utc=True, format="mixed")
+        if times.isna().any():
+            raise HTTPException(status_code=422, detail="invalid sensor timestamps")
+        frame["Timestamp"] = times.astype(str)
+    else:
+        frame["Timestamp"] = datetime.now(timezone.utc).isoformat()
+    flows, new_alerts = await run_in_threadpool(score_frame, det, state()["explainer"], frame)
+    rows = _flow_rows(frame, flows)
+    flagged = [i for i, row in enumerate(rows) if row["predicted"] != BENIGN or row["outlier"]]
+    for i, row in enumerate(rows):
+        row["flow_id"] = hashlib.sha256(f"{sensor_session}:{batch_id}:{checksum}:{i}".encode()).hexdigest()[:32]
+        row["mode"], row["sensor_session"] = "local_sensor", sensor_session
+    for a, i in zip(new_alerts, flagged):
+        a.update(alert_id=rows[i]["flow_id"], flow_id=rows[i]["flow_id"],
+                 dst=rows[i].get("dst"), dport=rows[i].get("dport"),
+                 mode="local_sensor", sensor_session=sensor_session,
+                 values={e["feature"]: e["value"] for e in a["explanation"]})
+    now = datetime.now(timezone.utc).isoformat()
+    with _sensor_lock:
+        # A concurrent retry may have finished scoring; accept each batch only once.
+        previous = next((b for b in _sensor["batches"] if b["key"] == batch_key), None)
+        if previous:
+            if previous["checksum"] != checksum:
+                raise HTTPException(status_code=409, detail="batch_id reused with different data")
+            return {**previous["result"], "duplicate": True}
+        for row in rows:
+            _sensor["seq"] += 1
+            row["seq"] = _sensor["seq"]
+        for a, i in zip(new_alerts, flagged):
+            a["seq"] = rows[i]["seq"]
+        prior = _sensor["summary"] or {}
+        result = {"mode": "local_sensor", "source": "sensor-submitted observations",
+                  "sensor_session": sensor_session, "batch_id": batch_id, "rows": len(rows),
+                  "alerts": len(new_alerts), "duplicate": False}
+        _sensor["rows"] = (_sensor["rows"] + rows)[-MAX_SENSOR_KEPT:]
+        _sensor["alerts"] = (_sensor["alerts"] + new_alerts)[-MAX_SENSOR_KEPT:]
+        _sensor["summary"] = {**result, "sensor_id": _private_host(sensor_id), "received_at": now,
+                              "total_flows": prior.get("total_flows", 0) + len(rows),
+                              "total_alerts": prior.get("total_alerts", 0) + len(new_alerts),
+                              "predicted_counts": flows["predicted"].value_counts().to_dict(),
+                              "outliers": int(flows["outlier"].sum()), "reported_capture": stats,
+                              "ground_truth_available": False, "addresses_pseudonymised": True,
+                              "model": state()["mode"]}
+        _sensor["batches"] = (_sensor["batches"] + [{"key": batch_key, "checksum": checksum, "result": result}])[-128:]
+        _state["alerts"] = (_state["alerts"] + new_alerts)[-MAX_KEPT_ALERTS:]
+        return result
+
+
+@app.get("/sensor/feed", dependencies=[Depends(require_key)])
+def sensor_feed(after: int = 0, limit: int = 100):
+    """Bounded incremental observations; no accuracy/precision/recall for unlabelled traffic."""
+    after, limit = max(0, after), max(1, min(limit, 200))
+    with _sensor_lock:
+        rows = [r for r in _sensor["rows"] if r["seq"] > after][:limit]
+        cursor = rows[-1]["seq"] if rows else _sensor["seq"]
+        alerts = [a for a in _sensor["alerts"] if after < a["seq"] <= cursor][:limit]
+        first = _sensor["rows"][0]["seq"] if _sensor["rows"] else 0
+        return {"mode": "local_sensor", "connected": _sensor["summary"] is not None,
+                "key_required": bool(API_KEY), "cursor": cursor, "latest_cursor": _sensor["seq"],
+                "history_truncated": bool(first and after < first - 1),
+                "flows": rows, "alerts": alerts, "summary": _sensor["summary"],
+                "notice": "Candidate alerts; model needs local validation. Sender provenance is self-reported."}
 
 
 @app.get("/model")

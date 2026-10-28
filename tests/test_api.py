@@ -1,6 +1,7 @@
 import io
 import os
 import tempfile
+import pytest
 
 os.environ["EXPLAINIDS_MODEL_DIR"] = tempfile.mkdtemp()  # hermetic: always the synthetic demo model
 
@@ -92,3 +93,106 @@ def test_score_csv_skips_invalid_rows_and_handles_attack_only_labels():
     body = r.json()
     assert body["rows"] == 1 and body["dropped_invalid_rows"] == 1
     assert body["evaluation"]["benign_fpr"] is None
+
+
+@pytest.fixture
+def sensor_api(monkeypatch):
+    import api.main as api
+    # Hermetic feature/scoring fixture; tests do not assert a synthetic model is deployable.
+    monkeypatch.setitem(api.state(), "mode", "trained on test fixture")
+    monkeypatch.setattr(api, "_sensor", {"rows": [], "alerts": [], "seq": 0, "batches": [], "summary": None})
+    monkeypatch.setattr(api, "API_KEY", None)
+    return api
+
+
+def sensor_upload(frame, **metadata):
+    return client.post("/sensor/ingest", data=metadata,
+                       files={"file": ("flows.csv", frame.to_csv(index=False).encode(), "text/csv")})
+
+
+def test_sensor_auth_required_for_ingest_and_feed(sensor_api, monkeypatch):
+    monkeypatch.setattr(sensor_api, "API_KEY", "test-secret")
+    csv_bytes = make_flows(2).to_csv(index=False).encode()
+    assert client.post("/sensor/ingest", files={"file": ("f.csv", csv_bytes)}).status_code == 401
+    assert client.get("/sensor/feed").status_code == 401
+    assert client.get("/sensor/feed", headers={"X-API-Key": "wrong"}).status_code == 401
+    assert client.get("/sensor/feed", headers={"X-API-Key": "test-secret"}).json()["connected"] is False
+    response = client.post("/sensor/ingest", headers={"X-API-Key": "test-secret"},
+                           files={"file": ("f.csv", csv_bytes)})
+    assert response.status_code == 200
+
+
+def test_sensor_refuses_synthetic_model(sensor_api, monkeypatch):
+    monkeypatch.setitem(sensor_api.state(), "mode", "demo (synthetic)")
+    assert sensor_upload(make_flows(2)).status_code == 503
+    assert client.get("/sensor/feed").json()["connected"] is False
+
+
+def test_sensor_requires_complete_finite_schema_and_valid_timestamps(sensor_api):
+    import pandas as pd
+    assert sensor_upload(pd.DataFrame({"bad": [1]})).status_code == 422
+    frame = make_flows(2)
+    feature = sensor_api.detector().features[0]
+    frame[feature] = frame[feature].astype(float)
+    frame.loc[0, feature] = float("inf")
+    assert sensor_upload(frame).status_code == 422
+    frame = make_flows(2)
+    frame["Timestamp"] = frame["Timestamp"].astype(str)
+    frame.loc[0, "Timestamp"] = "not-a-time"
+    assert sensor_upload(frame).status_code == 422
+    assert client.get("/sensor/feed").json()["cursor"] == 0
+
+
+def test_sensor_discards_supplied_truth_pseudonymises_and_retries_idempotently(sensor_api):
+    frame = make_flows(5)
+    response = sensor_upload(frame, sensor_session="session_1", batch_id="batch_1", sensor_id="private-pc")
+    assert response.status_code == 200
+    first = client.get("/sensor/feed", params={"limit": 200}).json()
+    assert first["summary"]["total_flows"] == len(frame)
+    assert first["summary"]["ground_truth_available"] is False
+    assert first["summary"]["sensor_id"].startswith("host-")
+    assert first["alerts"] and first["mode"] == "local_sensor"
+    for row in first["flows"]:
+        assert "truth" not in row and row["src"].startswith("host-") and row["dst"].startswith("host-")
+        assert row["mode"] == "local_sensor"
+    for alert in first["alerts"]:
+        assert not {"truth", "verdict", "evaluation", "accuracy"} & alert.keys()
+        assert alert["source"].startswith("host-") and alert["explanation"]
+    assert not {"accuracy", "precision", "recall", "evaluation", "confusion"} & first["summary"].keys()
+    retry = sensor_upload(frame, sensor_session="session_1", batch_id="batch_1")
+    assert retry.json()["duplicate"] is True
+    assert client.get("/sensor/feed").json()["summary"]["total_flows"] == len(frame)
+    frame.loc[0, sensor_api.detector().features[0]] += 1
+    assert sensor_upload(frame, sensor_session="session_1", batch_id="batch_1").status_code == 409
+
+
+def test_sensor_rejects_oversized_rows_bytes_duplicate_columns_and_metadata(sensor_api, monkeypatch):
+    frame = make_flows(2)
+    monkeypatch.setattr(sensor_api, "MAX_SENSOR_ROWS", 1)
+    assert sensor_upload(frame).status_code == 413
+    monkeypatch.setattr(sensor_api, "MAX_SENSOR_ROWS", 1000)
+    monkeypatch.setattr(sensor_api, "MAX_SENSOR_BYTES", 10)
+    assert sensor_upload(frame).status_code == 413
+    monkeypatch.setattr(sensor_api, "MAX_SENSOR_BYTES", 5 * 1024 * 1024)
+    csv_text = frame.to_csv(index=False)
+    header, rest = csv_text.split("\n", 1)
+    duplicate = header + "," + header.split(",")[0] + "\n" + rest
+    assert client.post("/sensor/ingest", files={"file": ("f.csv", duplicate.encode())}).status_code == 422
+    assert sensor_upload(frame, sensor_session="bad/session").status_code == 422
+    assert sensor_upload(frame, session_stats='{"captured_packets":-1}').status_code == 422
+
+
+def test_sensor_feed_pages_and_caps_history_without_mixing_replay(sensor_api, monkeypatch):
+    monkeypatch.setattr(sensor_api, "MAX_SENSOR_KEPT", 4)
+    frame = make_flows(2)
+    assert sensor_upload(frame).status_code == 200
+    feed = client.get("/sensor/feed", params={"limit": 99999}).json()
+    assert len(feed["flows"]) == 4 and len(feed["alerts"]) <= 4
+    assert feed["history_truncated"]
+    page = client.get("/sensor/feed", params={"limit": 1}).json()
+    assert len(page["flows"]) == 1
+    next_page = client.get("/sensor/feed", params={"after": page["cursor"], "limit": 1}).json()
+    assert next_page["cursor"] > page["cursor"]
+    empty = client.get("/sensor/feed", params={"after": feed["cursor"]}).json()
+    assert empty["flows"] == [] and empty["alerts"] == []
+    assert all("truth" in row for row in client.get("/replay", params={"n": 2}).json()["flows"])
