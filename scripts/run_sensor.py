@@ -112,8 +112,9 @@ def main(argv: list[str] | None = None) -> int:
             source = args.csv.resolve()
         manifest.update(input_csv_sha256=sensor.digest(source))
         validated = folder / "validated.csv"
-        rows = sensor.validate_csv(source, validated, features)
-        manifest.update(rows=rows, validated_sha256=sensor.digest(validated), status="validated")
+        rows, dropped = sensor.validate_csv(source, validated, features)
+        manifest.update(rows=rows, dropped_unusable_rows=dropped,
+                        validated_sha256=sensor.digest(validated), status="validated")
         sensor.save_manifest(folder, manifest)
         if args.push:
             for index, (count, payload) in enumerate(sensor.csv_batches(validated)):

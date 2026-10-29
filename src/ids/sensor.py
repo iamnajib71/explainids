@@ -203,8 +203,15 @@ def convert(pcap: Path, argv_template: Sequence[str], folder: Path, timeout: int
     return csvs[0]
 
 
-def validate_csv(source: Path, target: Path, features: Sequence[str]) -> int:
-    """Reject missing/invalid values and strip labels/arbitrary columns before scoring."""
+def validate_csv(source: Path, target: Path, features: Sequence[str]) -> tuple[int, int]:
+    """Strip labels/arbitrary columns and drop unusable rows, returning (kept, dropped).
+
+    Real captures routinely contain single-packet, zero-duration flows for which the extractor
+    emits Infinity for the per-second rates and NaN for the inter-arrival statistics. Those rows
+    carry no usable feature vector, so they are dropped and counted, matching `ids.data.clean`
+    and the API's CSV upload. A row whose column count disagrees with the header is a broken
+    file rather than ordinary traffic and remains fatal, as does a file with nothing left.
+    """
     if source.resolve() == target.resolve():
         raise SensorError("validated output must differ from input")
     if target.exists():
@@ -212,6 +219,7 @@ def validate_csv(source: Path, target: Path, features: Sequence[str]) -> int:
     if not source.is_file() or not 0 < source.stat().st_size <= MAX_INPUT_BYTES:
         raise SensorError("input CSV must be nonempty and at most 100 MiB")
     count = 0
+    dropped = 0
     created = False
     try:
         with source.open(encoding="utf-8-sig", newline="") as inp, target.open("x", encoding="utf-8", newline="") as out:
@@ -236,7 +244,8 @@ def validate_csv(source: Path, target: Path, features: Sequence[str]) -> int:
                 except (ValueError, OverflowError):
                     valid = False
                 if not valid:
-                    raise SensorError(f"nonnumeric or nonfinite features at CSV row {count + 2}")
+                    dropped += 1
+                    continue
                 count += 1
                 if count > MAX_ROWS:
                     raise SensorError("CSV exceeds 200000 rows")
@@ -251,8 +260,8 @@ def validate_csv(source: Path, target: Path, features: Sequence[str]) -> int:
         raise
     if count == 0:
         target.unlink(missing_ok=True)
-        raise SensorError("CSV has no flow rows")
-    return count
+        raise SensorError(f"CSV has no usable flow rows ({dropped} dropped for unusable feature values)")
+    return count, dropped
 
 
 def csv_batches(source: Path) -> Iterator[tuple[int, bytes]]:

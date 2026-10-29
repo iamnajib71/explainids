@@ -73,7 +73,7 @@ def test_local_converter_adapter_uses_literal_argv_and_validates_result(tmp_path
     pcap = tmp_path / "fixture.pcap"
     pcap.write_bytes(b"fixture")
     out = sensor.convert(pcap, [sys.executable, str(script), "{pcap}", "{output}"], tmp_path)
-    assert sensor.validate_csv(out, tmp_path / "validated.csv", ["f1", "f2"]) == 1
+    assert sensor.validate_csv(out, tmp_path / "validated.csv", ["f1", "f2"]) == (1, 0)
 
 
 def test_converter_requires_one_csv(monkeypatch, tmp_path):
@@ -86,19 +86,37 @@ def test_converter_requires_one_csv(monkeypatch, tmp_path):
 def test_validation_keeps_features_and_metadata_but_removes_truth(tmp_path):
     source = write_csv(tmp_path / "raw.csv", [[1, 2, "attack", "192.0.2.1"]])
     target = tmp_path / "validated.csv"
-    assert sensor.validate_csv(source, target, ["f1", "f2"]) == 1
+    assert sensor.validate_csv(source, target, ["f1", "f2"]) == (1, 0)
     text = target.read_text()
     assert "Label" not in text and "attack" not in text and "Src IP" in text
     assert sensor.digest(source) != sensor.digest(target)
 
 
 @pytest.mark.parametrize("bad", ["", "nan", "inf", "-inf", "not-a-number"])
-def test_invalid_feature_rejected_without_output(tmp_path, bad):
+def test_unusable_rows_are_dropped_and_counted_not_fatal(tmp_path, bad):
+    """Real captures contain zero-duration flows with inf/NaN rates; they must not void the batch."""
+    source = write_csv(tmp_path / "raw.csv", [[bad, 2, "BENIGN", "x"], [3, 4, "BENIGN", "y"]])
+    target = tmp_path / "validated.csv"
+    assert sensor.validate_csv(source, target, ["f1", "f2"]) == (1, 1)
+    kept = target.read_text().splitlines()
+    assert len(kept) == 2 and kept[1].startswith("3,4")
+
+
+@pytest.mark.parametrize("bad", ["", "nan", "inf", "not-a-number"])
+def test_a_file_with_nothing_usable_still_fails_without_output(tmp_path, bad):
     source = write_csv(tmp_path / "raw.csv", [[bad, 2, "BENIGN", "x"]])
     target = tmp_path / "validated.csv"
-    with pytest.raises(sensor.SensorError, match="nonfinite"):
+    with pytest.raises(sensor.SensorError, match="no usable flow rows"):
         sensor.validate_csv(source, target, ["f1", "f2"])
     assert not target.exists()
+
+
+def test_a_row_with_the_wrong_column_count_remains_fatal(tmp_path):
+    source = tmp_path / "raw.csv"
+    rows = ["f1,f2,Label,Src IP", "1,2,BENIGN,x", "1,2,BENIGN", ""]
+    source.write_text(chr(10).join(rows), encoding="utf-8")
+    with pytest.raises(sensor.SensorError, match="malformed CSV row"):
+        sensor.validate_csv(source, tmp_path / "v.csv", ["f1", "f2"])
 
 
 @pytest.mark.parametrize("header,rows", [(("f1",), [[1]]), (("f1", " f1 "), [[1,2]]), (("f1", "f2"), [])])
@@ -196,9 +214,17 @@ def test_cli_validates_whole_file_before_push_and_saves_each_batch(tmp_path, mon
     assert manifest["status"] == "submitted" and manifest["rows"] == 1001
     assert len(manifest["uploads"]) == 2 and "test-key" not in manifests[0].read_text()
     calls.clear()
-    bad = write_csv(tmp_path / "bad.csv", [[1,2,"BENIGN","x"],["nan",2,"BENIGN","x"]])
-    assert run_sensor.main(["ingest",str(bad),"--model-card",str(card),"--push"]) == 2
+    # Nothing usable: still refused outright, with no partial upload.
+    unusable = write_csv(tmp_path / "unusable.csv", [["nan",2,"BENIGN","x"],["inf",2,"BENIGN","x"]])
+    assert run_sensor.main(["ingest",str(unusable),"--model-card",str(card),"--push"]) == 2
     assert not calls
+    # Partly usable, as any real capture is: the unusable rows are dropped and counted.
+    mixed = write_csv(tmp_path / "mixed.csv", [[1,2,"BENIGN","x"],["nan",2,"BENIGN","x"]])
+    assert run_sensor.main(["ingest",str(mixed),"--model-card",str(card),"--push"]) == 0
+    assert len(calls) == 1
+    newest = max((tmp_path / "data/sensor").glob("*/manifest.json"), key=lambda p: p.stat().st_mtime)
+    mixed_manifest = json.loads(newest.read_text())
+    assert mixed_manifest["rows"] == 1 and mixed_manifest["dropped_unusable_rows"] == 1
 
 
 def test_cli_doctor_and_missing_interface_never_capture(tmp_path, monkeypatch):
