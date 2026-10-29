@@ -4,7 +4,7 @@ Most published ML intrusion detectors report about 99% on a single benchmark. Th
 
 | | Question | Answer | One-line takeaway |
 |---|---|---|---|
-| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget. Training on both environments restores detection (0.60 → 0.996) and halves service false alerts; limited-label adaptation restores detection but degrades legitimate service traffic. |
+| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; training on both environments restores detection (0.60 → 0.996). Limited-label adaptation restores detection but degrades legitimate service traffic, and adding ~30 local benign service flows removes that regression at no cost to detection. |
 | **RQ2** | Do SHAP explanations stay the same when the model is retrained? | **4 of 5** top features shared per alert (median overlap 0.67); model-wide top-10 overlap 0.82–1.0 | The "why" is stable enough to guide an analyst, but individual ranks are not. |
 | **RQ3** | Can it flag an attack type it never saw in training? | **52%** median (2017), 57% with a log-scaled anomaly detector; **7%** on 2018 | Unseen attacks are mostly caught by resembling a known class. The anomaly layer helps scans, not brute force. |
 
@@ -93,6 +93,59 @@ The baseline has two specific, interpretable faults: FTP data transfers resemble
 
 **Limits.** Two service profiles, one capture each, on a single topology; the profiles are not independent environments. Labels are oracle class-balanced draws from the target's training period, not the incidents a site would actually accumulate, so the annotation cost is understated. Wilson intervals in the JSON are nominal flow-level intervals and do not account for clustering within a capture. The lab column remains a small deterministic emulation (304 flows, 40 benign).
 
+### Follow-up: can the service regression be repaired?
+
+**Why it matters.** The regression above would stop an SME deploying the adapted model at all: a third
+of legitimate SSH, FTP and HTTP flows raising alerts is unusable regardless of attack detection. The
+matched run showed the adaptation's benign sample is drawn from the target dataset's training period,
+which contains nothing resembling those services, so the model is never shown that they are normal.
+
+**Method.** [`scripts/service_aware_eval.py`](../scripts/service_aware_eval.py). Identical to the
+few-shot condition, plus a small number of benign flows taken from one service capture, stratified by
+destination port so every service is represented. Those flows are removed from evaluation. Two untrained
+populations are scored: the **held-in** remainder of that capture (293 flows), and a **held-out** second
+capture in a different service configuration (330 flows, alternate ports) that contributes nothing to
+training. Result: [`results/service_aware.md`](results/service_aware.md).
+
+| Training | k | Service flows | Target detection | Held-in false alerts | Held-out false alerts |
+|---|---|---|---|---|---|
+| Source only | — | — | 0.548 | 18.2% (14.4–22.7) | 9.1% (6.4–12.7) |
+| Both environments | — | — | **0.996** | 9.1% (6.4–12.7) | 9.1% (6.4–12.7) |
+| Few-shot | 50 | 0 | 0.979 | **41.1%** (34.3–48.1) | **33.6%** (25.0–42.9) |
+| **Few-shot + 30 service flows** | 50 | 30 | **0.982** | **0.0%** (0.0–1.3) | **0.0%** (0.0–1.2) |
+| Few-shot + 100 service flows | 50 | 100 | 0.981 | 0.0% (0.0–1.7) | 0.0% (0.0–1.2) |
+
+Detection is class-balanced; service columns are benign false-alert rates with 95% Wilson intervals.
+
+**What we found.**
+- **Thirty benign service flows remove the regression at no cost to detection.** False alerts fall from
+  41.1% to zero observed in 293 held-in flows, while target detection rises slightly, 0.979 to 0.982.
+  A hundred flows add nothing over thirty.
+- **The repair transfers to a configuration it never saw.** The held-out capture, using alternate ports,
+  falls from 33.6% to zero observed in 330 flows. The model is not memorising the exact flows it was
+  given.
+- **It beats multi-environment training on this axis.** Training on both datasets leaves 9.1% false
+  alerts; thirty local service flows leave none observed. Multi-environment training still wins on raw
+  detection, 0.996 against 0.982, so the two remain a genuine choice rather than one dominating.
+
+**Mechanism, by destination port.** The source-only model flags *every* flow on port 22 as
+SSH-BruteForce and *every* flow on the passive FTP data ports 30000–30010 as PortScan. Multi-environment
+training clears port 22 but not the FTP data ports. Few-shot adaptation at k = 50 keeps both faults and
+spreads a new one into **half of all port 80 traffic**. Adding service flows clears every port. The
+errors are whole-service failures throughout: a model either flags a service entirely or not at all,
+which is why so few examples are enough to correct it.
+
+**What this means.** The deployment recipe is: watch local normal traffic to set an honest alert budget,
+seed the model with a few dozen confirmed local incidents per attack type, **and include a few dozen
+flows of ordinary local service traffic**. The third step costs almost nothing and is what makes the
+second step safe to use.
+
+**Limits.** Both service captures come from one lab topology on one day; "a different configuration" is
+not an independent network. Zero observed false alerts is not zero: the intervals allow up to about 1.3%.
+Attack labels remain oracle class-balanced draws, so annotation cost is still understated. Two label
+seeds per condition show the result is stable here; they do not bound its variance. Whether thirty flows
+suffice on a production network with far more service diversity is untested.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.
@@ -144,6 +197,7 @@ The baseline has two specific, interpretable faults: FTP data transfers resemble
 | Port "shortcut" suspected (D'hooge et al., 2022) | Literature | Portable feature-set ablation | Not the cause here; transfer got worse without these features |
 | False-alarm rate drifts on a new network (3.4% vs ~1% intended) | Local-calibration experiment | Threshold set on local benign flows | Promised 1% budget restored (1.0–1.2%; 2018 → 2017 needs ~20,000 flows), at a cost in detection |
 | Transfer misses whole attack tools (DoS-Hulk 0%) | Calibration could not recover them | Training on both environments; limited-label adaptation measured against a matched target-only control | Both-environment training: 2018 detection 0.60 → 0.996 with service false alerts halved. Limited labels raise detection but worsen service false alerts; local labels alone flag all legitimate traffic |
+| Adaptation raised false alerts on legitimate SSH/FTP/HTTP to 41% | Service-regression profiles in the matched run | Added ~30 benign local service flows, stratified by port, to the adaptation set | Held-in false alerts 41.1% → 0.0% observed, held-out 33.6% → 0.0% observed, detection 0.979 → 0.982 |
 | "0% false alarms" in a 40-flow lab capture | Wilson intervals added to every metric | Intervals and alert burden reported; small captures labelled as pipeline checks | 0/40 shown honestly as up to 876 false alarms per 10k benign flows |
 
 ## Reproduce
@@ -153,6 +207,7 @@ python scripts/build_sampled.py data/raw/csecicids2018 data/processed/csecicids2
 python scripts/cross_dataset_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --results docs/results/cross_dataset.md
 python scripts/shap_stability_eval.py data/processed/cicids2017.parquet --seeds 42,1,2,3,4 --results docs/results/shap_stability_cicids2017.md
 python scripts/unseen_attack_eval.py data/processed/cicids2017.parquet [--anomaly-log] --results docs/results/unseen_cicids2017.md
+python scripts/service_aware_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --fit-profile data/lab/<standard>/flows_labelled.csv --held-profile data/lab/<alternate>/flows_labelled.csv
 python scripts/local_calibration_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --sizes 1000,5000,20000 --seeds 42,1,2
 python scripts/multi_env_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --lab data/lab/<run>/flows_labelled.csv --shots 10,50,200 --seeds 42,1
 python scripts/build_research_summary.py   # refreshes the console's Findings tab

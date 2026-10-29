@@ -92,6 +92,23 @@ def few_shot_note(res: dict) -> str:
             "Source: docs/results/multi_env_matched.md")
 
 
+def service_aware_note(res: dict) -> str:
+    """Whether a few local benign service flows repair the adaptation's service regression."""
+    runs = res["runs"]
+    worst = max((r for r in runs if r.get("service_flows") == 0 and r.get("k")),
+                key=lambda r: r["held_in_profile"]["fpr"])
+    repaired = [r for r in runs if r.get("service_flows") and r.get("k") == worst["k"]]
+    if not repaired:
+        return ""
+    best = min(repaired, key=lambda r: r["service_flows"])
+    hi = best["held_in_profile"]
+    return (f"Adding {best['service_flows']} local benign service flows cuts false alerts on legitimate traffic "
+            f"from {worst['held_in_profile']['fpr']:.0%} to {hi['fpr']:.0%} observed (95% interval to "
+            f"{max(hi['fpr_ci']):.1%}) while detection holds at {best['target_test']['macro_detection']:.3f}, "
+            "and it transfers to a service configuration never trained on. "
+            "Source: docs/results/service_aware.md")
+
+
 def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
     if not res:
         return None
@@ -146,6 +163,11 @@ def main():
     multi = load(r / "multi_env_matched.json") or load(r / "multi_env.json")
     if out["transfer"] and multi:
         out["transfer"]["tip"] += " " + few_shot_note(multi)
+    repair = load(r / "service_aware.json")
+    if out["transfer"] and repair:
+        note = service_aware_note(repair)
+        if note:
+            out["transfer"]["tip"] += " " + note
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {args.out}: " + ", ".join(f"{k}={'ok' if v else 'pending'}" for k, v in out.items() if k != "sources"))
