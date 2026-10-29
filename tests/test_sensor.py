@@ -210,3 +210,26 @@ def test_cli_doctor_and_missing_interface_never_capture(tmp_path, monkeypatch):
     assert run_sensor.main(["doctor","--model-card",str(card)]) == 2
     with pytest.raises(SystemExit):
         run_sensor.main(["capture","--duration","30","--max-bytes",str(sensor.MIB)])
+
+
+def test_discovery_finds_a_standard_windows_install_not_on_path(tmp_path, monkeypatch):
+    """Wireshark's installer does not extend PATH, so a present tool must still be found."""
+    from ids import sensor
+    wireshark = tmp_path / "Wireshark"
+    wireshark.mkdir()
+    tool = wireshark / "dumpcap.exe"
+    tool.write_text("binary")
+    tool.chmod(0o755)
+    monkeypatch.setattr(sensor.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(sensor, "standard_capture_locations", lambda: [wireshark])
+    assert sensor.discover_tool() == str(tool.resolve())
+
+
+def test_an_explicit_tool_is_never_silently_replaced_by_a_standard_install(tmp_path, monkeypatch):
+    from ids import sensor
+    wireshark = tmp_path / "Wireshark"
+    wireshark.mkdir()
+    (wireshark / "dumpcap.exe").write_text("binary")
+    monkeypatch.setattr(sensor.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(sensor, "standard_capture_locations", lambda: [wireshark])
+    assert sensor.discover_tool(str(tmp_path / "absent.exe")) is None

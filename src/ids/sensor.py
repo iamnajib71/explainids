@@ -45,8 +45,19 @@ def digest(path: Path) -> str:
     return h.hexdigest()
 
 
+def standard_capture_locations() -> list[Path]:
+    """Usual Windows install directories for Wireshark's capture tools.
+
+    The installer does not add them to PATH, so a present tool is otherwise reported as missing.
+    This only looks; it never installs, elevates or changes any system setting.
+    """
+    roots = [os.environ.get("ProgramFiles"), os.environ.get("ProgramFiles(x86)"),
+             r"C:\Program Files", r"C:\Program Files (x86)"]
+    return [Path(root) / "Wireshark" for root in dict.fromkeys(r for r in roots if r)]
+
+
 def discover_tool(explicit: str | None = None) -> str | None:
-    """Find an explicit capture executable or a PATH tool; never install one."""
+    """Find an explicit capture executable, a PATH tool, or a standard install; never install one."""
     choices = [explicit] if explicit else ["dumpcap", "tshark"]
     for choice in choices:
         if not choice:
@@ -57,6 +68,13 @@ def discover_tool(explicit: str | None = None) -> str | None:
         path = Path(choice).expanduser()
         if path.is_file() and os.access(path, os.X_OK):
             return str(path.resolve())
+    if explicit:
+        return None
+    for folder in standard_capture_locations():
+        for name in ("dumpcap.exe", "tshark.exe"):
+            candidate = folder / name
+            if candidate.is_file() and os.access(candidate, os.X_OK):
+                return str(candidate.resolve())
     return None
 
 

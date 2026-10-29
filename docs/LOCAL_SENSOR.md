@@ -71,3 +71,32 @@ Run `doctor` first. A missing tool/driver, rejected permission, converter timeou
 Automated tests cover command bounds, local-only interfaces/destinations, strict validation, converter execution with a harmless fixture, batch limits and multipart metadata without real capture. Real owned-network verification still needs a short operator-selected session, interface/driver evidence, matching extractor semantics, packet/drop logs, API acknowledgement and a visible local-sensor result. A successfully displayed alert is a model output, not proof of compromise or proven operational effectiveness.
 
 Capture flags follow the official [dumpcap manual](https://www.wireshark.org/docs/man-pages/dumpcap.html). The project interface contract is in [local_sensor.md](specs/local_sensor.md).
+
+## Windows capture and conversion path
+
+Two prerequisites sit between a Windows host and a scored flow. `doctor` reports each one.
+
+**Conversion — working.** The corrected extractor is built inside WSL (`data/lab/tools/EXTRACTOR_SETUP.md`)
+and only understands WSL paths, while the sensor substitutes resolved Windows paths into the converter
+argv. `scripts/wsl_convert.py` bridges the two: it translates `H:\dir\file` to `/mnt/h/dir/file`, invokes
+the extractor through `wsl.exe` with `shell=False`, a timeout and captured logs, and requires exactly one
+nonempty CSV. Use it as the trusted converter:
+
+```
+--converter-argv "[\"<python>\", \"scripts/wsl_convert.py\", \"{pcap}\", \"{output}\"]"
+```
+
+Verified on 29 October 2026 against a recorded lab capture (`data/lab/run_20261025T051149Z/traffic.pcap`):
+**305 rows emitted, matching the 305 rows recorded for that run, with all 83 model-card features present
+and none missing after alignment.** That establishes schema compatibility and reproduction of the earlier
+extraction; it is not evidence about live capture conditions.
+
+**Capture — not yet available on this host.** `doctor` finds no `dumpcap` or `tshark`. Discovery checks
+PATH and the standard Wireshark install directories, so installing Wireshark (which bundles Npcap) is
+sufficient; no PATH edit is needed. That install requires administrator rights and a driver, so it is an
+operator action and is deliberately not automated here. WSL2 runs in its own network namespace and cannot
+observe host traffic, so capturing the host network needs the Windows-side tool.
+
+After installing, confirm with `doctor`, list adapters with `interfaces`, and capture only from an
+interface you are authorised to observe, with an explicit duration and byte bound. Passive capture sees
+only traffic present at that observation point.
