@@ -146,6 +146,52 @@ Attack labels remain oracle class-balanced draws, so annotation cost is still un
 seeds per condition show the result is stable here; they do not bound its variance. Whether thirty flows
 suffice on a production network with far more service diversity is untested.
 
+### Live capture pilot: what the detector does on a real network
+
+**Method.** Passive capture on 30 October 2026 (UTC 29 October) through the sensor path: `dumpcap` →
+[`scripts/wsl_convert.py`](../scripts/wsl_convert.py) → corrected extractor → strict validation →
+[`scripts/score_capture.py`](../scripts/score_capture.py). Two authorised observation points were recorded
+simultaneously: a home WiFi network under normal use (household consent obtained), and the internal
+switch of an owned Active Directory lab whose guests had just resumed. No attack traffic was generated on
+either. With no labels, every alert is a **candidate false alarm for review**. Per-flow traces are kept
+privately with keyed host pseudonyms; only aggregates appear here.
+
+| Observation point | Duration actually captured | Usable flows | Unusable (single-packet) | Alerts | Alert rate (95% interval) |
+|---|---|---:|---:|---:|---|
+| Home WiFi, pilot | 60 s | 51 | 18 | 7 | 13.7% (6.8–25.7) |
+| Home WiFi | 52.5 s, stopped at byte cap | 171 | 4 | 18 | 10.5% (6.8–16.0) |
+| AD lab switch | 66.3 s, stopped at byte cap | 102 | 2 | 4 | 3.9% (1.5–9.7) |
+
+**What we found.**
+- **Real traffic produces alerts the benchmarks never could.** In the pilot, 6 of 7 alerts were SSDP, the
+  UPnP discovery traffic every household and office device emits, called *PortScan* at confidence 0.43–0.49
+  with `Dst Port = 1900` as a leading SHAP driver. The CIC datasets contain no consumer device-discovery
+  traffic.
+- **Most WiFi alerts came from the anomaly detector on ordinary downloads.** 12 of the 18 were HTTP or HTTPS
+  transfers the classifier itself called benign.
+- **The two highest-confidence attack alerts** (*Infiltration*, 1.00 and 0.99) were both long-lived
+  connections already open when recording started (first packet within 0.2 s of capture start). That is
+  consistent with the extractor orienting a mid-stream flow from its first observed packet; two flows
+  support the explanation without proving it.
+- **The same traffic receives different verdicts at different observation points.** The lab guests reach
+  the internet through NAT that leaves via the WiFi link: 18 of the lab's 19 external servers also appear in
+  the WiFi capture, and 42% of WiFi flows go to them. Transfers starting at the same instant to the same
+  server were called *BENIGN* (anomaly) on the lab switch and *Heartbleed* (0.53) on WiFi. Oversized
+  coalesced packets occur on both interfaces (10% and 37% of flows) and in 25% of CIC-IDS2017 training flows,
+  so offload alone does not explain the difference; the mechanism is not established.
+
+**Method findings.**
+- **Header-only capture is invalid for this extractor.** Truncating the same capture to 128 bytes per packet
+  changed 25 of the 83 features in 113 of 175 flows: the extractor sizes packets from captured, not wire,
+  length. Captures must keep full packets, so the byte bound, not the time bound, limits session length on a
+  busy link.
+- **The two captures are not independent environments.** The lab capture is largely the lab's NAT traffic,
+  which the WiFi capture also contains. The host's view of an internal virtual switch also excludes most
+  guest-to-guest traffic (no Kerberos or LDAP was visible).
+
+**Limits.** About one minute per observation point, from one evening; these establish that the failure
+modes exist on real traffic, not their rates. Alerts are unreviewed candidates.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.

@@ -92,7 +92,10 @@ def score_session(folder: Path, det, explainer, top_k: int = 3) -> tuple[pd.Data
     if len(idx):
         explained = explainer.top_features(X.iloc[idx], [pred[i] for i in idx], k=top_k)
         for i, feats in zip(idx, explained):
-            reasons[i] = "; ".join(f"{f['feature']}={f['value']:.4g} ({f['contribution']:+.2f})" for f in feats)
+            text = "; ".join(f"{f['feature']}={f['value']:.4g} ({f['contribution']:+.2f})" for f in feats)
+            # SHAP explains the classifier. For an alert raised only by the anomaly detector the classifier
+            # said BENIGN, so its SHAP values explain that verdict, not why the flow looked unusual.
+            reasons[i] = text if pred[i] != BENIGN else f"anomaly detector only; classifier BENIGN because {text}"
     table = pd.DataFrame({
         "session": manifest.get("session_id", folder.name),
         "time": flows.get("Timestamp"),
