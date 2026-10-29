@@ -62,15 +62,34 @@ def calibration_note(res: dict) -> str:
 
 
 def few_shot_note(res: dict) -> str:
-    """How far a few labelled local incidents per attack type close the worst transfer gap."""
-    worst = res["focus"]
-    base = next(r for r in res["runs"] if r["config"].startswith("single") and worst not in r["config"])
-    shots = [r for r in res["runs"] if r.get("target") == worst]
-    k = min(r["k"] for r in shots)
-    det = float(np.mean([r["tests"][worst]["macro_detection"] for r in shots if r["k"] == k]))
-    return (f"Adding just {k} labelled local flows per attack type lifts detection on {worst} from "
-            f"{base['tests'][worst]['macro_detection']:.0%} to {det:.0%}, but those labels must come from outside the "
-            "model's own alerts (it never flagged the missed attacks). Source: docs/results/multi_env.md")
+    """What the matched-control run shows about limited-label adaptation and legitimate services."""
+    runs, benign = res["runs"], [k for k in res["runs"][0]["tests"] if k.startswith("benign:")]
+    if not benign:                                      # legacy run without service profiles
+        shots = [r for r in runs if r.get("target")]
+        k = min(r["k"] for r in shots)
+        return (f"Adding {k} labelled local flows per attack type raises target detection, but the run measured "
+                "no legitimate-service traffic. Source: docs/results/multi_env.md")
+
+    def rates(run):
+        return [run["tests"][b]["fpr"] for b in benign]
+
+    def pick(prefix, k=None):
+        return [r for r in runs if r["config"].startswith(prefix) and (k is None or r.get("k") == k)]
+
+    both = pick("both environments")[0]
+    base = next(r for r in runs if r["config"].startswith("single") and "2017" in r["config"])
+    shots = [r for r in runs if r["config"].startswith("few-shot") and r.get("k")]
+    worst_k = max(r["k"] for r in shots)
+    worst = [r for r in shots if r["k"] == worst_k]
+    only = [r for r in runs if r["config"].startswith("target-only")]
+    target = next(k for k in both["tests"] if k not in ("2017", "lab") and not k.startswith("benign:"))
+    span = [min(min(rates(r)) for r in worst), max(max(rates(r)) for r in worst)]
+    return (f"Training on both environments reaches {both['tests'][target]['macro_detection']:.1%} detection on "
+            f"{target} and halves legitimate-service false alerts to {min(rates(both)):.0%}, against "
+            f"{max(rates(base)):.0%} for the source-only model. Limited local labels raise detection but push "
+            f"service false alerts to {span[0]:.0%}-{span[1]:.0%} at k={worst_k}, and the matched target-only "
+            f"control flags up to {max(max(rates(r)) for r in only):.0%} of legitimate flows. "
+            "Source: docs/results/multi_env_matched.md")
 
 
 def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
@@ -124,7 +143,7 @@ def main():
     calib = load(r / "local_calibration.json")
     if out["transfer"] and calib:
         out["transfer"]["tip"] += " " + calibration_note(calib)
-    multi = load(r / "multi_env.json")
+    multi = load(r / "multi_env_matched.json") or load(r / "multi_env.json")
     if out["transfer"] and multi:
         out["transfer"]["tip"] += " " + few_shot_note(multi)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)

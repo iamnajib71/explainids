@@ -4,7 +4,7 @@ Most published ML intrusion detectors report about 99% on a single benchmark. Th
 
 | | Question | Answer | One-line takeaway |
 |---|---|---|---|
-| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; 10–50 labelled local incidents per attack type restore detection (0.55 → 0.94–0.98). |
+| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget. Training on both environments restores detection (0.60 → 0.996) and halves service false alerts; limited-label adaptation restores detection but degrades legitimate service traffic. |
 | **RQ2** | Do SHAP explanations stay the same when the model is retrained? | **4 of 5** top features shared per alert (median overlap 0.67); model-wide top-10 overlap 0.82–1.0 | The "why" is stable enough to guide an analyst, but individual ranks are not. |
 | **RQ3** | Can it flag an attack type it never saw in training? | **52%** median (2017), 57% with a log-scaled anomaly detector; **7%** on 2018 | Unseen attacks are mostly caught by resembling a known class. The anomaly layer helps scans, not brute force. |
 
@@ -59,26 +59,39 @@ Common setup: data deduplicated globally (no feature vector appears in two split
 
 ### Follow-up: more environments, or a few labelled local incidents?
 
-**Method.** [`scripts/multi_env_eval.py`](../scripts/multi_env_eval.py). Train on one dataset, on both together, or on one dataset plus **k labelled flows per attack type** (k = 10, 50, 200; two random samples each) and 1,000 benign flows from the *earliest* period of the other. Score every model on the later test period of both datasets and on our lab traffic, a third environment no model trains on. Result: [`results/multi_env.md`](results/multi_env.md).
+**Method.** [`scripts/multi_env_eval.py`](../scripts/multi_env_eval.py) with `--target-only`. Train on one dataset, on both together, or on one dataset plus **k labelled flows per attack type** (k = 10, 50, 200; two label-selection seeds) and 1,000 benign flows from the *earliest* period of the other. A matched **target-only control** trains on exactly the same local annotation budget with the source data removed, so the contribution of the source is measurable rather than assumed. Every model is scored on the later test period of both datasets, on lab traffic, and on **two all-benign service captures** of 330 flows each (200 HTTP, 40 TLS, 30 FTP control, 30 FTP data, 30 successful SSH). Result: [`results/multi_env_matched.md`](results/multi_env_matched.md), 27 conditions with full per-class metrics, supports and confusion matrices.
 
-| Training | 2017 test | 2018 test | Lab traffic |
+| Training | 2018 detection | Service profile 1 | Service profile 2 |
 |---|---|---|---|
-| 2017 only (deployed situation) | 0.98 / 1.5% | **0.55 / 3.4%** | 0.60 / 0% |
-| 2017 + **10** labelled 2018 flows per attack type | 0.99 / 1.5% | **0.94 / 0.6%** | 0.60 / 0% |
-| 2017 + **50** labelled 2018 flows per attack type | 0.99 / 1.5% | **0.98 / 0.7%** | 0.60 / 0% |
-| 2017 and 2018 together | 0.95 / 1.8% | 0.996 / 0.7% | 0.40 / 0% |
-| Ceiling: 2018 only, on 2018 | — | 0.98 / 0.9% | — |
+| 2017 only (deployed situation) | 0.598 | 18.2% (60/330) | 9.1% (30/330) |
+| **2017 and 2018 together** | **0.996** | **9.1% (30/330)** | **9.1% (30/330)** |
+| 2017 + 10 labelled 2018 flows per attack type | 0.943 | 39.4% / 24.2% | 30.3% / 6.1% |
+| 2017 + 50 labelled 2018 flows per attack type | 0.982 | 39.4% / 42.7% | 30.3% / 60.6% |
+| 2017 + 200 labelled 2018 flows per attack type | 0.991 | 48.5% / 25.8% | 69.7% / 69.4% |
+| Target-only control, 50 labels per attack type | 0.980 | 100% (330/330) | 100% (330/330) |
 
-Each cell is class-balanced detection / benign false-positive rate.
+Detection is class-balanced; service columns are benign false-alert rates, one figure per label-selection seed.
 
 **What we found.**
-- **A handful of labelled local incidents closes the gap.** With 10 labelled flows per attack type, class-balanced detection on 2018 rises from 0.55 to 0.94 and false alarms fall from 3.4% to 0.6%. With 50 it matches a model trained entirely on 2018 (0.98). DoS-Hulk, missed completely before, goes 0% → 85% (k = 10) → 95% (k = 50) → 99.6% (k = 200).
-- **Nothing is forgotten.** Performance on 2017 stays at 0.97–0.99.
-- **Training on more environments does not reach a new one.** The model trained on both datasets is excellent on both, but on the lab traffic it is no better than the 2017-only model (0.40 vs 0.60 class-balanced detection, i.e. 2 vs 3 of the 5 lab attack types). Only labels from the site itself helped.
+- **Training on both environments is the only condition that improves both axes.** It reaches 0.996 detection on 2018 while *halving* service false alerts, from 18.2% to 9.1%. No limited-label condition matches that.
+- **Limited-label adaptation buys detection at the cost of legitimate traffic.** Detection rises with k (0.943 → 0.991), but service false alerts rise too, to between 25.8% and 69.7% at k = 200. The earlier result in [`results/multi_env.md`](results/multi_env.md) measured only attack detection and so recorded the gain without its cost; the detection figures still hold, the conclusion drawn from them does not.
+- **The source data is what protects benign behaviour.** Removing it and training on the same local budget reaches 0.980 detection and flags *every* legitimate flow in both profiles at k = 50. This is the control the experiment existed to run.
+- **The method is unstable in which labels are drawn.** At k = 10 the second profile gives 30.3% on one seed and 6.1% on the other; at k = 200 the first gives 48.5% against 25.8%. Two seeds show the spread exists; they do not bound it.
 
-**The catch (critical for real-world use).** These labels include attacks the deployed model *missed*: DoS-Hulk raised no alerts on 2018. An analyst confirming alerts in the console would only ever label what the model already catches. In practice the missing labels must come from another source: an incident the site actually suffered, a signature-based IDS such as Snort or Suricata running alongside, or a controlled test of the site's own systems (like our lab). The experiment shows how *few* such labels are needed, not that they come for free.
+**Mechanism.** The errors are structured by service, not scattered. Reading the confusion matrices on the all-benign captures:
 
-**Limits.** The lab traffic is a small deterministic emulation (304 flows, 40 benign), so its detection rates (0.6 = 3 of 5 attack types) carry wide intervals and its 0% false alarms means at most about 9%. Two random few-shot samples per k is enough to see the trend, not to bound its variance tightly.
+| Model | Legitimate flows called an attack |
+|---|---|
+| 2017 only | 30 → PortScan, 30 → SSH-BruteForce |
+| Both environments | 30 → PortScan |
+| Few-shot, k = 50 | 98–111 → PortScan, 30 → SSH-BruteForce |
+| Target-only, k = 50 | 130 → DoS-Hulk, 100 → Web-XSS, 60 → SSH-BruteForce (one seed) |
+
+The baseline has two specific, interpretable faults: FTP data transfers resemble port scans, and successful SSH sessions resemble SSH brute force. Multi-environment training **removes the SSH fault**, which is the whole of its improvement. Limited-label adaptation instead **amplifies the PortScan fault** from 30 flows to roughly 100, spreading it into HTTP traffic. The target-only control loses class structure on benign traffic altogether.
+
+**What this means.** Where data from more than one environment can be obtained, train on it: the limited-label shortcut is a worse trade than its attack-detection numbers suggest, and local labels alone are unusable for a network that must keep serving its users. This supersedes the earlier "a handful of labelled local incidents closes the gap" conclusion.
+
+**Limits.** Two service profiles, one capture each, on a single topology; the profiles are not independent environments. Labels are oracle class-balanced draws from the target's training period, not the incidents a site would actually accumulate, so the annotation cost is understated. Wilson intervals in the JSON are nominal flow-level intervals and do not account for clustering within a capture. The lab column remains a small deterministic emulation (304 flows, 40 benign).
 
 ## RQ2: Stability of explanations
 
@@ -130,7 +143,7 @@ Each cell is class-balanced detection / benign false-positive rate.
 | Anomaly layer blind on skewed features | RQ3 results plus EDA skewness | Optional signed-log input (`Detector(anomaly_log=True)`) | Unseen PortScan 0% → 93% at a lower false-alarm rate |
 | Port "shortcut" suspected (D'hooge et al., 2022) | Literature | Portable feature-set ablation | Not the cause here; transfer got worse without these features |
 | False-alarm rate drifts on a new network (3.4% vs ~1% intended) | Local-calibration experiment | Threshold set on local benign flows | Promised 1% budget restored (1.0–1.2%; 2018 → 2017 needs ~20,000 flows), at a cost in detection |
-| Transfer misses whole attack tools (DoS-Hulk 0%) | Calibration could not recover them | 10–50 labelled local flows per attack type added to training | 2018 class-balanced detection 0.55 → 0.94–0.98; 2017 unaffected |
+| Transfer misses whole attack tools (DoS-Hulk 0%) | Calibration could not recover them | Training on both environments; limited-label adaptation measured against a matched target-only control | Both-environment training: 2018 detection 0.60 → 0.996 with service false alerts halved. Limited labels raise detection but worsen service false alerts; local labels alone flag all legitimate traffic |
 | "0% false alarms" in a 40-flow lab capture | Wilson intervals added to every metric | Intervals and alert burden reported; small captures labelled as pipeline checks | 0/40 shown honestly as up to 876 false alarms per 10k benign flows |
 
 ## Reproduce
