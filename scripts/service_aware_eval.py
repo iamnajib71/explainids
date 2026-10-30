@@ -40,6 +40,7 @@ from ids.data import BENIGN, LABEL_COL, dedup_global, feature_columns, stratifie
 from ids.evaluate import binary_report, report, wilson_interval
 from ids.envelope import ExemplarEnvelope, TwoEnvelope
 from ids.models import Detector
+from ids.repair import service_key, triage_sample
 from ids.scoring import align_columns
 
 
@@ -64,12 +65,6 @@ def load_profile(path: str, feats: list[str]) -> pd.DataFrame:
     out = aligned.loc[valid].copy()
     out[feats] = numeric.loc[valid]
     return out.reset_index(drop=True)
-
-
-def service_key(df: pd.DataFrame) -> pd.Series:
-    """Group flows by destination port so a sample covers every service, not just the common one."""
-    port = next((c for c in df.columns if c.strip().lower() in {"dst port", "destination port"}), None)
-    return df[port].astype(int).astype(str) if port else pd.Series("all", index=df.index)
 
 
 def split_profile(profile: pd.DataFrame, n_fit: int, seed: int) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -146,6 +141,8 @@ def main():
                     help="also score each adaptation model with the two-envelope anomaly rule, fitted on its local benign flows")
     ap.add_argument("--exemplar-envelope", action="store_true",
                     help="also score with the exemplar (nearest-normal) two-envelope rule")
+    ap.add_argument("--triage", action="store_true",
+                    help="also repair with the same number of flows chosen from the unrepaired model's alerts on the fit profile")
     ap.add_argument("--results", default="docs/results/service_aware.md")
     args = ap.parse_args()
     shots = [int(s) for s in args.shots.split(",")]
@@ -175,6 +172,9 @@ def main():
     run(f"source only: {src['name']}", src["train"], src["val"], fit_profile)
     run("both environments", pd.concat([src["train"], tgt["train"]]),
         pd.concat([src["val"], tgt["val"]]), fit_profile)
+    if args.triage and services[0] != 0:
+        raise SystemExit("--triage needs 0 as the first --service-flows value (the unrepaired model chooses the flows)")
+    unrepaired: dict = {}
     for k in shots:
         for n_service in services:
             for seed in seeds:
@@ -184,7 +184,21 @@ def main():
                 name = "few-shot" + (f" + {n_service} service flows" if n_service else " (no service flows)")
                 det = run(name, train, src["val"], held_in, k=k, service_flows=n_service,
                           service_added=int(len(service_fit)), seed=seed)
+                if n_service == 0:
+                    unrepaired[(k, seed)] = det
                 site_normal = pd.concat([local[local[LABEL_COL] == BENIGN], service_fit])[feats]
+                if args.triage and n_service:
+                    # Same budget, chosen by what the unrepaired model alerted on: an analyst's benign confirmations.
+                    triaged, confirmed = triage_sample(unrepaired[(k, seed)], fit_profile, feats, len(service_fit), seed)
+                    t_train = pd.concat([src["train"], local, triaged])
+                    t_det = run(f"few-shot + {n_service} triaged flows", t_train,
+                                src["val"], fit_profile.drop(index=triaged.index), k=k, service_flows=n_service,
+                                service_added=int(len(triaged)), triaged_alerts=confirmed, seed=seed)
+                    if args.exemplar_envelope:
+                        t_normal = pd.concat([local[local[LABEL_COL] == BENIGN], triaged])[feats]
+                        run(f"few-shot + {n_service} triaged flows + exemplar envelope", t_train, src["val"],
+                            fit_profile.drop(index=triaged.index), det=ExemplarEnvelope(t_det, t_normal), k=k,
+                            service_flows=n_service, service_added=int(len(triaged)), triaged_alerts=confirmed, seed=seed)
                 if args.exemplar_envelope:
                     run(name + " + exemplar envelope", train, src["val"], held_in, det=ExemplarEnvelope(det, site_normal),
                         k=k, service_flows=n_service, service_added=int(len(service_fit)), seed=seed)

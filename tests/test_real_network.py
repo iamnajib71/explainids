@@ -3,7 +3,8 @@ import json
 import numpy as np
 import pandas as pd
 
-from scripts.real_network_eval import block_bootstrap, local_sample, study_sessions
+from ids.repair import local_sample
+from scripts.real_network_eval import block_bootstrap, study_sessions
 
 
 def test_local_sample_has_exact_budget_and_covers_services():
@@ -59,7 +60,7 @@ class _StubDetector:
 
 
 def test_triage_prefers_confirmed_alerts_then_tops_up():
-    from scripts.real_network_eval import triage_sample
+    from ids.repair import triage_sample
     pool = pd.DataFrame({"Dst Port": [1900] * 4 + [443] * 40})
     got, confirmed = triage_sample(_StubDetector(), pool, ["Dst Port"], 10, seed=42)
     assert confirmed == 4 and len(got) == 10 and got.index.is_unique

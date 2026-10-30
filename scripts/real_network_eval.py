@@ -39,11 +39,12 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from service_aware_eval import (  # noqa: E402
-    fit_detector, few_shot, load_dataset, load_profile, score_attacks, service_key, split_profile)
+    fit_detector, few_shot, load_dataset, load_profile, score_attacks, split_profile)
 
 from ids import SEED  # noqa: E402
 from ids.data import BENIGN, LABEL_COL, feature_columns  # noqa: E402
 from ids.envelope import ExemplarEnvelope, TwoEnvelope  # noqa: E402
+from ids.repair import local_sample, service_key, triage_sample  # noqa: E402
 from ids.scoring import align_columns  # noqa: E402
 
 N_BOOT = 2000
@@ -128,36 +129,6 @@ def score_blocks(det, blocks: list[pd.DataFrame], feats: list[str]) -> dict:
             "alerts_per_hour": float(a.sum() / hours) if hours > 0 else None,
             "called": called, "alerts_by_port": top,
             "service_concentration": service_concentration(port_flows, by_port)}
-
-
-def local_sample(pool: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
-    """Exactly n local flows spread across services: one per destination port in turn, busiest first.
-
-    Real traffic has many one-off ports, so proportional stratification would either overshoot n or
-    miss services; a round-robin draw keeps the budget fixed and the sample diverse.
-    """
-    rng = np.random.default_rng(seed)
-    groups = {port: list(rng.permutation(np.asarray(idx)))
-              for port, idx in pool.groupby(service_key(pool)).groups.items()}
-    order = sorted(groups, key=lambda p: (-len(groups[p]), p))
-    picked: list = []
-    while len(picked) < min(n, len(pool)):
-        for port in order:
-            if groups[port] and len(picked) < n:
-                picked.append(groups[port].pop())
-    return pool.loc[picked]
-
-
-def triage_sample(det, pool: pd.DataFrame, feats: list[str], n: int, seed: int) -> tuple[pd.DataFrame, int]:
-    """The repair set an analyst produces by triage: the model's own alerts on earlier local traffic,
-    confirmed benign, spread across services; topped up with ordinary local flows if there are fewer
-    than n alerts. Returns the sample and how many of its flows were alerts."""
-    X = pool[feats]
-    flagged = np.asarray((det.predict(X) != BENIGN) | det.anomaly(X)[1])
-    alerted = local_sample(pool.loc[flagged], n, seed) if flagged.any() else pool.iloc[:0]
-    rest = pool.drop(index=alerted.index)
-    top_up = local_sample(rest, n - len(alerted), seed) if len(alerted) < n else rest.iloc[:0]
-    return pd.concat([alerted, top_up]), int(len(alerted))
 
 
 def main() -> None:
