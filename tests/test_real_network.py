@@ -83,3 +83,21 @@ def test_two_envelope_only_flags_what_both_envelopes_reject():
     two = TwoEnvelope(Source(), local)
     X = pd.DataFrame({"a": [5.0, 100.0, 10_000.0]})
     assert two.anomaly(X)[1].tolist() == [False, False, True]
+
+
+def test_exemplar_envelope_vetoes_a_service_seen_once():
+    from ids.envelope import ExemplarEnvelope
+
+    class Source:
+        features = ["a", "b"]
+        def predict(self, X):
+            return np.array(["BENIGN"] * len(X))
+        def anomaly(self, X):                       # benchmark envelope: big transfers are unusual
+            return -X["a"].to_numpy(), (X["a"] > 1e4).to_numpy()
+
+    rng = np.random.default_rng(0)
+    local = pd.DataFrame({"a": rng.uniform(100, 1000, 300), "b": rng.uniform(1, 10, 300)})
+    local.loc[len(local)] = {"a": 5e6, "b": 5.0}          # one confirmed bulk download
+    env = ExemplarEnvelope(Source(), local)
+    X = pd.DataFrame({"a": [500.0, 5.1e6, 5e9], "b": [5.0, 5.0, 5.0]})
+    assert env.anomaly(X)[1].tolist() == [False, False, True]

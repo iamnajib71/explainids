@@ -38,7 +38,7 @@ import pandas as pd
 from ids import SEED
 from ids.data import BENIGN, LABEL_COL, dedup_global, feature_columns, stratified_sample, temporal_split
 from ids.evaluate import binary_report, report, wilson_interval
-from ids.envelope import TwoEnvelope
+from ids.envelope import ExemplarEnvelope, TwoEnvelope
 from ids.models import Detector
 from ids.scoring import align_columns
 
@@ -144,6 +144,8 @@ def main():
     ap.add_argument("--local-benign", type=int, default=1000)
     ap.add_argument("--two-envelope", action="store_true",
                     help="also score each adaptation model with the two-envelope anomaly rule, fitted on its local benign flows")
+    ap.add_argument("--exemplar-envelope", action="store_true",
+                    help="also score with the exemplar (nearest-normal) two-envelope rule")
     ap.add_argument("--results", default="docs/results/service_aware.md")
     args = ap.parse_args()
     shots = [int(s) for s in args.shots.split(",")]
@@ -182,8 +184,11 @@ def main():
                 name = "few-shot" + (f" + {n_service} service flows" if n_service else " (no service flows)")
                 det = run(name, train, src["val"], held_in, k=k, service_flows=n_service,
                           service_added=int(len(service_fit)), seed=seed)
+                site_normal = pd.concat([local[local[LABEL_COL] == BENIGN], service_fit])[feats]
+                if args.exemplar_envelope:
+                    run(name + " + exemplar envelope", train, src["val"], held_in, det=ExemplarEnvelope(det, site_normal),
+                        k=k, service_flows=n_service, service_added=int(len(service_fit)), seed=seed)
                 if args.two_envelope:
-                    site_normal = pd.concat([local[local[LABEL_COL] == BENIGN], service_fit])[feats]
                     run(name + " + two-envelope anomaly", train, src["val"], held_in, det=TwoEnvelope(det, site_normal),
                         k=k, service_flows=n_service, service_added=int(len(service_fit)), seed=seed)
 

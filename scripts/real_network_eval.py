@@ -43,7 +43,7 @@ from service_aware_eval import (  # noqa: E402
 
 from ids import SEED  # noqa: E402
 from ids.data import BENIGN, LABEL_COL, feature_columns  # noqa: E402
-from ids.envelope import TwoEnvelope  # noqa: E402
+from ids.envelope import ExemplarEnvelope, TwoEnvelope  # noqa: E402
 from ids.scoring import align_columns  # noqa: E402
 
 N_BOOT = 2000
@@ -220,6 +220,7 @@ def main() -> None:
     source = run("source only", src["train"], src["val"])
     local_threshold("source only + local anomaly threshold", source)
     rescore("source only + two-envelope anomaly", TwoEnvelope(source, fit_pool[feats]))
+    rescore("source only + exemplar envelope", ExemplarEnvelope(source, fit_pool[feats]))
     run("both environments", pd.concat([src["train"], tgt["train"]]), pd.concat([src["val"], tgt["val"]]))
     n = args.service_flows
     for seed in seeds:
@@ -235,6 +236,8 @@ def main() -> None:
         local_threshold(f"few-shot + {n} triaged local flows + local anomaly threshold", repaired, seed=seed)
         rescore(f"few-shot + {n} triaged local flows + two-envelope anomaly",
                 TwoEnvelope(repaired, fit_pool[feats]), seed=seed)
+        rescore(f"few-shot + {n} triaged local flows + exemplar envelope",
+                ExemplarEnvelope(repaired, fit_pool[feats]), seed=seed)
         run(f"source only + {n} local flows", pd.concat([src["train"], local]), src["val"], seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "source": src["name"],
