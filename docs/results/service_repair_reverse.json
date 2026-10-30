@@ -1,0 +1,4664 @@
+{
+ "generated": "2026-10-31",
+ "model": "lgbm",
+ "data_seed": 42,
+ "source": "csecicids2018",
+ "target": "cicids2017",
+ "local_benign": 1000,
+ "fit_profile": "data/lab/run_20261025T051701Z/flows_labelled.csv",
+ "held_profile": "data/lab/run_20261025T051751Z/flows_labelled.csv",
+ "fit_profile_flows": 330,
+ "held_profile_flows": 330,
+ "shots": [
+  50
+ ],
+ "service_flows": [
+  0,
+  10,
+  30
+ ],
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "runs": [
+  {
+   "config": "source only: csecicids2018",
+   "training_rows": 359982,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.7029013443434357,
+    "recall_ci": [
+     0.699733102847312,
+     0.7060501997215513
+    ],
+    "fpr": 0.030876632882097896,
+    "macro_detection": 0.6299114581084451,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9087,
+     "DoS-GoldenEye": 0.9445,
+     "DoS-Hulk": 0.7896,
+     "DoS-SlowHTTPTest": 0.5489,
+     "DoS-Slowloris": 0.6503,
+     "FTP-BruteForce": 0.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 0.25,
+     "PortScan": 0.4457,
+     "SSH-BruteForce": 0.9477,
+     "Web-BruteForce": 0.0,
+     "Web-SQLInjection": 0.3333,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 60,
+    "fpr": 0.18181818181818182,
+    "fpr_ci": [
+     0.14394370813860094,
+     0.22701545333198866
+    ],
+    "called": {
+     "PortScan": 60
+    },
+    "by_service_port": {
+     "21": 1.0,
+     "22": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 214,
+    "fpr": 0.6484848484848484,
+    "fpr_ci": [
+     0.5955314508230322,
+     0.6980209404906926
+    ],
+    "called": {
+     "Bot": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30006": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 0.92,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "both environments",
+   "training_rows": 614668,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.996890972628123,
+    "recall_ci": [
+     0.996481713267194,
+     0.9972527567637709
+    ],
+    "fpr": 0.020012826053618482,
+    "macro_detection": 0.9419604258447393,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 1.0,
+     "DoS-GoldenEye": 1.0,
+     "DoS-Hulk": 1.0,
+     "DoS-SlowHTTPTest": 0.5747,
+     "DoS-Slowloris": 0.9909,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9973,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 0.6667,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 30,
+    "fpr": 0.09090909090909091,
+    "fpr_ci": [
+     0.06442087679728196,
+     0.12681233080776186
+    ],
+    "called": {
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 130,
+    "fpr": 0.3939393939393939,
+    "fpr_ci": [
+     0.3427302924725302,
+     0.4475894280176663
+    ],
+    "called": {
+     "Heartbleed": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30006": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows)",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 42,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9909589484025817,
+    "recall_ci": [
+     0.9902808516959662,
+     0.9915901366565121
+    ],
+    "fpr": 0.02363758033710215,
+    "macro_detection": 0.9820080104920313,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9974,
+     "DoS-Hulk": 0.991,
+     "DoS-SlowHTTPTest": 0.8218,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9873,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows) + exemplar envelope",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 42,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9909589484025817,
+    "recall_ci": [
+     0.9902808516959662,
+     0.9915901366565121
+    ],
+    "fpr": 0.005952961842490485,
+    "macro_detection": 0.9820080104920313,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9974,
+     "DoS-Hulk": 0.991,
+     "DoS-SlowHTTPTest": 0.8218,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9873,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows)",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 1,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9950504284239718,
+    "recall_ci": [
+     0.9945411438250238,
+     0.99551241365161
+    ],
+    "fpr": 0.027722399587335664,
+    "macro_detection": 0.9897045170172634,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 130,
+    "fpr": 0.3939393939393939,
+    "fpr_ci": [
+     0.3427302924725302,
+     0.4475894280176663
+    ],
+    "called": {
+     "Heartbleed": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 230,
+    "fpr": 0.696969696969697,
+    "fpr_ci": [
+     0.6453522991691987,
+     0.7440539342061507
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30006": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows) + exemplar envelope",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 1,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9950504284239718,
+    "recall_ci": [
+     0.9945411438250238,
+     0.99551241365161
+    ],
+    "fpr": 0.009891396785121779,
+    "macro_detection": 0.9897045170172634,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 130,
+    "fpr": 0.3939393939393939,
+    "fpr_ci": [
+     0.3427302924725302,
+     0.4475894280176663
+    ],
+    "called": {
+     "Heartbleed": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 230,
+    "fpr": 0.696969696969697,
+    "fpr_ci": [
+     0.6453522991691987,
+     0.7440539342061507
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100,
+     "PortScan": 30
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 1.0,
+     "30001": 1.0,
+     "30002": 1.0,
+     "30003": 1.0,
+     "30004": 1.0,
+     "30005": 1.0,
+     "30006": 1.0,
+     "30007": 1.0,
+     "30008": 1.0,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows)",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 2,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934959147380333,
+    "recall_ci": [
+     0.9929162369506556,
+     0.9940284416794146
+    ],
+    "fpr": 0.02603549470925288,
+    "macro_detection": 0.9873522333479243,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9969,
+     "DoS-SlowHTTPTest": 0.9023,
+     "DoS-Slowloris": 0.9806,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows) + exemplar envelope",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 2,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934959147380333,
+    "recall_ci": [
+     0.9929162369506556,
+     0.9940284416794146
+    ],
+    "fpr": 0.009455729202972298,
+    "macro_detection": 0.9873522333479243,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9969,
+     "DoS-SlowHTTPTest": 0.9023,
+     "DoS-Slowloris": 0.9806,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows)",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 3,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9902749623807688,
+    "recall_ci": [
+     0.9895728526677335,
+     0.9909302289922569
+    ],
+    "fpr": 0.02658966387374702,
+    "macro_detection": 0.9857900425281318,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9997,
+     "DoS-GoldenEye": 0.9947,
+     "DoS-Hulk": 0.9879,
+     "DoS-SlowHTTPTest": 0.8822,
+     "DoS-Slowloris": 0.9909,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9878,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "DoS-Hulk": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "DoS-Hulk": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows) + exemplar envelope",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 3,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9902749623807688,
+    "recall_ci": [
+     0.9895728526677335,
+     0.9909302289922569
+    ],
+    "fpr": 0.009330256939313249,
+    "macro_detection": 0.9857900425281318,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9997,
+     "DoS-GoldenEye": 0.9947,
+     "DoS-Hulk": 0.9879,
+     "DoS-SlowHTTPTest": 0.8822,
+     "DoS-Slowloris": 0.9909,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9878,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "DoS-Hulk": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100,
+     "DoS-Hulk": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows)",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 4,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9932098842198207,
+    "recall_ci": [
+     0.9926182275147998,
+     0.9937544174075027
+    ],
+    "fpr": 0.026269012533285004,
+    "macro_detection": 0.9896548408747137,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.998,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9966,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9867,
+     "SSH-BruteForce": 0.9629,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 205,
+    "fpr": 0.6212121212121212,
+    "fpr_ci": [
+     0.5677626195174463,
+     0.6718719856366147
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100,
+     "PortScan": 5
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.4,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot (no service flows) + exemplar envelope",
+   "k": 50,
+   "service_flows": 0,
+   "service_added": 0,
+   "seed": 4,
+   "training_rows": 361535,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9932098842198207,
+    "recall_ci": [
+     0.9926182275147998,
+     0.9937544174075027
+    ],
+    "fpr": 0.010180680059669033,
+    "macro_detection": 0.9896548408747137,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.998,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9966,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9867,
+     "SSH-BruteForce": 0.9629,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 205,
+    "fpr": 0.6212121212121212,
+    "fpr_ci": [
+     0.5677626195174463,
+     0.6718719856366147
+    ],
+    "called": {
+     "Bot": 100,
+     "Heartbleed": 100,
+     "PortScan": 5
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.4,
+     "30009": 1.0,
+     "30010": 1.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 42,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9936202758329085,
+    "recall_ci": [
+     0.993045889920837,
+     0.9941474990169583
+    ],
+    "fpr": 0.0264397942254876,
+    "macro_detection": 0.9873835182205736,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.996,
+     "DoS-SlowHTTPTest": 0.8879,
+     "DoS-Slowloris": 0.9935,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9885,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 97,
+    "fpr": 0.3108974358974359,
+    "fpr_ci": [
+     0.2620985120070426,
+     0.36429649105778494
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 42,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9926626954023703,
+    "recall_ci": [
+     0.9920488193782162,
+     0.9932295001900957
+    ],
+    "fpr": 0.025362823962414086,
+    "macro_detection": 0.9874837785216778,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.9946,
+     "DoS-SlowHTTPTest": 0.8994,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9873,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 82,
+    "fpr": 0.26282051282051283,
+    "fpr_ci": [
+     0.21707546402725603,
+     0.3143352177828666
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4505
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 42,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9926626954023703,
+    "recall_ci": [
+     0.9920488193782162,
+     0.9932295001900957
+    ],
+    "fpr": 0.008110387709294706,
+    "macro_detection": 0.9874837785216778,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.9946,
+     "DoS-SlowHTTPTest": 0.8994,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9873,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 42,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9936202758329085,
+    "recall_ci": [
+     0.993045889920837,
+     0.9941474990169583
+    ],
+    "fpr": 0.008221918610324973,
+    "macro_detection": 0.9873835182205736,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.996,
+     "DoS-SlowHTTPTest": 0.8879,
+     "DoS-Slowloris": 0.9935,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9885,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 1,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.02655829580783226,
+    "macro_detection": 0.9894040956357022,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 100,
+    "fpr": 0.32051282051282054,
+    "fpr_ci": [
+     0.27118195594442707,
+     0.3742099113713415
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5155
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 125,
+    "fpr": 0.3787878787878788,
+    "fpr_ci": [
+     0.32812801436338523,
+     0.43223738048255367
+    ],
+    "called": {
+     "Heartbleed": 100,
+     "Bot": 25
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.625,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 1,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.026962595324066974,
+    "macro_detection": 0.9893101790771945,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 1.0,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9883,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 98,
+    "fpr": 0.3141025641025641,
+    "fpr_ci": [
+     0.2651235442936036,
+     0.3676037468548709
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "443": 0.0,
+     "80": 0.4949
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 101,
+    "fpr": 0.30606060606060603,
+    "fpr_ci": [
+     0.258805170936007,
+     0.3577794608174952
+    ],
+    "called": {
+     "Bot": 1
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.505,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 1,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.009640452257803678,
+    "macro_detection": 0.9893101790771945,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 1.0,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9883,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 1,
+    "fpr": 0.0030303030303030303,
+    "fpr_ci": [
+     0.0005351095557256189,
+     0.01696300931262392
+    ],
+    "called": {
+     "Bot": 1
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.005,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 1,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.009215240697625787,
+    "macro_detection": 0.9894040956357022,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 100,
+    "fpr": 0.32051282051282054,
+    "fpr_ci": [
+     0.27118195594442707,
+     0.3742099113713415
+    ],
+    "called": {
+     "Heartbleed": 100
+    },
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5155
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 125,
+    "fpr": 0.3787878787878788,
+    "fpr_ci": [
+     0.32812801436338523,
+     0.43223738048255367
+    ],
+    "called": {
+     "Heartbleed": 100,
+     "Bot": 25
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.625,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 2,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934834786285458,
+    "recall_ci": [
+     0.9929032744998887,
+     0.9940165330994088
+    ],
+    "fpr": 0.02539419202832885,
+    "macro_detection": 0.9880540434051884,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9968,
+     "DoS-SlowHTTPTest": 0.908,
+     "DoS-Slowloris": 0.9845,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 77,
+    "fpr": 0.2467948717948718,
+    "fpr_ci": [
+     0.20222547195511742,
+     0.2975237694367703
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.3969
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 86,
+    "fpr": 0.2606060606060606,
+    "fpr_ci": [
+     0.21619168815993323,
+     0.3105299666607962
+    ],
+    "called": {
+     "Bot": 3
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.43,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 2,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934710425190584,
+    "recall_ci": [
+     0.992890312560736,
+     0.9940046240077891
+    ],
+    "fpr": 0.02176943774484518,
+    "macro_detection": 0.9883616552433859,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9967,
+     "DoS-SlowHTTPTest": 0.9109,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 82,
+    "fpr": 0.26282051282051283,
+    "fpr_ci": [
+     0.21707546402725603,
+     0.3143352177828666
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4505
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 200
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 2,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934710425190584,
+    "recall_ci": [
+     0.992890312560736,
+     0.9940046240077891
+    ],
+    "fpr": 0.0059425058205188975,
+    "macro_detection": 0.9883616552433859,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9967,
+     "DoS-SlowHTTPTest": 0.9109,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 200
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 2,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9934834786285458,
+    "recall_ci": [
+     0.9929032744998887,
+     0.9940165330994088
+    ],
+    "fpr": 0.008929442763735727,
+    "macro_detection": 0.9880540434051884,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9968,
+     "DoS-SlowHTTPTest": 0.908,
+     "DoS-Slowloris": 0.9845,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 3,
+    "fpr": 0.00909090909090909,
+    "fpr_ci": [
+     0.0030963958569047694,
+     0.026383453269147823
+    ],
+    "called": {
+     "Bot": 3
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.015,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 3,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.992190123241845,
+    "recall_ci": [
+     0.9915577303920431,
+     0.9927754900069135
+    ],
+    "fpr": 0.023989599743478928,
+    "macro_detection": 0.988481573691213,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9927,
+     "DoS-SlowHTTPTest": 0.9138,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9879,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 98,
+    "fpr": 0.3141025641025641,
+    "fpr_ci": [
+     0.2651235442936036,
+     0.3676037468548709
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.5052
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 3,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9894541791545933,
+    "recall_ci": [
+     0.9887243751026881,
+     0.990137218526317
+    ],
+    "fpr": 0.023776993963389982,
+    "macro_detection": 0.9866513114639829,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9991,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.986,
+     "DoS-SlowHTTPTest": 0.8966,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9562,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 82,
+    "fpr": 0.26282051282051283,
+    "fpr_ci": [
+     0.21707546402725603,
+     0.3143352177828666
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4505
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 3,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9894541791545933,
+    "recall_ci": [
+     0.9887243751026881,
+     0.990137218526317
+    ],
+    "fpr": 0.007148433687908656,
+    "macro_detection": 0.9866513114639829,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9991,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.986,
+     "DoS-SlowHTTPTest": 0.8966,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9562,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 3,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.992190123241845,
+    "recall_ci": [
+     0.9915577303920431,
+     0.9927754900069135
+    ],
+    "fpr": 0.007002049380306431,
+    "macro_detection": 0.988481573691213,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9927,
+     "DoS-SlowHTTPTest": 0.9138,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9879,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 4,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9926129509644203,
+    "recall_ci": [
+     0.9919970976258582,
+     0.9931817378193638
+    ],
+    "fpr": 0.02505959932523805,
+    "macro_detection": 0.9880318809565202,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9795,
+     "DoS-Hulk": 0.9954,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 96,
+    "fpr": 0.3076923076923077,
+    "fpr_ci": [
+     0.2590762927489413,
+     0.3609864222322393
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4948
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 4,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9923020482272326,
+    "recall_ci": [
+     0.9916739879625849,
+     0.9928830717133243
+    ],
+    "fpr": 0.02614005492896876,
+    "macro_detection": 0.9860419683109292,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9511,
+     "DoS-Hulk": 0.9961,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9868,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 82,
+    "fpr": 0.26282051282051283,
+    "fpr_ci": [
+     0.21707546402725603,
+     0.3143352177828666
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4505
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 118,
+    "fpr": 0.3575757575757576,
+    "fpr_ci": [
+     0.3077746200760442,
+     0.4106547188679341
+    ],
+    "called": {
+     "Bot": 18
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.59,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "triaged_alerts": 18,
+   "seed": 4,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9923020482272326,
+    "recall_ci": [
+     0.9916739879625849,
+     0.9928830717133243
+    ],
+    "fpr": 0.010407227202386762,
+    "macro_detection": 0.9860419683109292,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9511,
+     "DoS-Hulk": 0.9961,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9868,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 18,
+    "fpr": 0.05454545454545454,
+    "fpr_ci": [
+     0.0347774905027539,
+     0.0845653355560716
+    ],
+    "called": {
+     "Bot": 18
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.09,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 10 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 10,
+   "service_added": 18,
+   "seed": 4,
+   "training_rows": 361553,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9926129509644203,
+    "recall_ci": [
+     0.9919970976258582,
+     0.9931817378193638
+    ],
+    "fpr": 0.008783058456133502,
+    "macro_detection": 0.9880318809565202,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9795,
+     "DoS-Hulk": 0.9954,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 312,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012163058951069143
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 42,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9938316896941961,
+    "recall_ci": [
+     0.9932664220015821,
+     0.9943497744593459
+    ],
+    "fpr": 0.02567650462156171,
+    "macro_detection": 0.9884921596582792,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.997,
+     "DoS-SlowHTTPTest": 0.908,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 90,
+    "fpr": 0.30716723549488056,
+    "fpr_ci": [
+     0.25712331183385406,
+     0.36220228134446064
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4945
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 42,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9940057952270211,
+    "recall_ci": [
+     0.9934481568025036,
+     0.9945162340892394
+    ],
+    "fpr": 0.022480447238913133,
+    "macro_detection": 0.9858239748009235,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9992,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9977,
+     "DoS-SlowHTTPTest": 0.8678,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 63,
+    "fpr": 0.2150170648464164,
+    "fpr_ci": [
+     0.17182296232317046,
+     0.2655874275952238
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.3865
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 42,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9940057952270211,
+    "recall_ci": [
+     0.9934481568025036,
+     0.9945162340892394
+    ],
+    "fpr": 0.005869313666717785,
+    "macro_detection": 0.9858239748009235,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9992,
+     "DoS-GoldenEye": 0.9987,
+     "DoS-Hulk": 0.9977,
+     "DoS-SlowHTTPTest": 0.8678,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 42,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9938316896941961,
+    "recall_ci": [
+     0.9932664220015821,
+     0.9943497744593459
+    ],
+    "fpr": 0.008120843731266293,
+    "macro_detection": 0.9884921596582792,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.997,
+     "DoS-SlowHTTPTest": 0.908,
+     "DoS-Slowloris": 0.9922,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9877,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 1,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948017062342217,
+    "recall_ci": [
+     0.9942804720529715,
+     0.9952756648082121
+    ],
+    "fpr": 0.02697305134603856,
+    "macro_detection": 0.9895864111943602,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9998,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.968,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 93,
+    "fpr": 0.3174061433447099,
+    "fpr_ci": [
+     0.2667644747068866,
+     0.3727739188336415
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.511
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 1,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.0263561460497149,
+    "macro_detection": 0.9890442410877661,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 1.0,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 93,
+    "fpr": 0.3174061433447099,
+    "fpr_ci": [
+     0.2667644747068866,
+     0.3727739188336415
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "443": 0.0,
+     "80": 0.4819
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 104,
+    "fpr": 0.3151515151515151,
+    "fpr_ci": [
+     0.2673972837684808,
+     0.367159943371576
+    ],
+    "called": {
+     "Bot": 4
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.52,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 1,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948141423437092,
+    "recall_ci": [
+     0.9942934986632181,
+     0.9952875092287381
+    ],
+    "fpr": 0.009410419774428753,
+    "macro_detection": 0.9890442410877661,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 1.0,
+     "DoS-Hulk": 0.9999,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 4,
+    "fpr": 0.012121212121212121,
+    "fpr_ci": [
+     0.004723447259738547,
+     0.03074726699516557
+    ],
+    "called": {
+     "Bot": 4
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.02,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 1,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9948017062342217,
+    "recall_ci": [
+     0.9942804720529715,
+     0.9952756648082121
+    ],
+    "fpr": 0.01006566381798157,
+    "macro_detection": 0.9895864111943602,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9998,
+     "DoS-SlowHTTPTest": 0.9167,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.968,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 2,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9936948924898334,
+    "recall_ci": [
+     0.9931237069519951,
+     0.9942189081704351
+    ],
+    "fpr": 0.022368916337882863,
+    "macro_detection": 0.9876179952153804,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9975,
+     "DoS-SlowHTTPTest": 0.9052,
+     "DoS-Slowloris": 0.9806,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 88,
+    "fpr": 0.3003412969283277,
+    "fpr_ci": [
+     0.25071241945197137,
+     0.3551379734848678
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.4835
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 102,
+    "fpr": 0.3090909090909091,
+    "fpr_ci": [
+     0.2616667555573939,
+     0.3609087413249599
+    ],
+    "called": {
+     "Bot": 2
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.51,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 2,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9939063063511211,
+    "recall_ci": [
+     0.9933442947490705,
+     0.9944211278964925
+    ],
+    "fpr": 0.022117971810564765,
+    "macro_detection": 0.9868895898156352,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9979,
+     "DoS-SlowHTTPTest": 0.8908,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 63,
+    "fpr": 0.2150170648464164,
+    "fpr_ci": [
+     0.17182296232317046,
+     0.2655874275952238
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.3865
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 101
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 2,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9939063063511211,
+    "recall_ci": [
+     0.9933442947490705,
+     0.9944211278964925
+    ],
+    "fpr": 0.007280876632882098,
+    "macro_detection": 0.9868895898156352,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9989,
+     "DoS-GoldenEye": 0.9993,
+     "DoS-Hulk": 0.9979,
+     "DoS-SlowHTTPTest": 0.8908,
+     "DoS-Slowloris": 0.9858,
+     "FTP-BruteForce": 0.9987,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9871,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 101,
+    "fpr": 0.30606060606060603,
+    "fpr_ci": [
+     0.258805170936007,
+     0.3577794608174952
+    ],
+    "called": {
+     "Bot": 101
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.505,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 2,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9936948924898334,
+    "recall_ci": [
+     0.9931237069519951,
+     0.9942189081704351
+    ],
+    "fpr": 0.006137684897321864,
+    "macro_detection": 0.9876179952153804,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9988,
+     "DoS-GoldenEye": 0.998,
+     "DoS-Hulk": 0.9975,
+     "DoS-SlowHTTPTest": 0.9052,
+     "DoS-Slowloris": 0.9806,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 2,
+    "fpr": 0.006060606060606061,
+    "fpr_ci": [
+     0.0016635784091979904,
+     0.021825405588003076
+    ],
+    "called": {
+     "Bot": 2
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.01,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 3,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9931974481103332,
+    "recall_ci": [
+     0.9926052764763688,
+     0.9937424974151613
+    ],
+    "fpr": 0.026701194774777285,
+    "macro_detection": 0.9863412549050314,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9985,
+     "DoS-GoldenEye": 0.9848,
+     "DoS-Hulk": 0.9959,
+     "DoS-SlowHTTPTest": 0.8937,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9884,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 95,
+    "fpr": 0.3242320819112628,
+    "fpr_ci": [
+     0.2732081290841668,
+     0.3798054646978368
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.522
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 3,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.990623173446419,
+    "recall_ci": [
+     0.9899331759443527,
+     0.991266294577268
+    ],
+    "fpr": 0.02454725424863026,
+    "macro_detection": 0.988226380878175,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9999,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.9882,
+     "DoS-SlowHTTPTest": 0.9138,
+     "DoS-Slowloris": 0.9909,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9878,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 63,
+    "fpr": 0.2150170648464164,
+    "fpr_ci": [
+     0.17182296232317046,
+     0.2655874275952238
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.3865
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 101
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 3,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.990623173446419,
+    "recall_ci": [
+     0.9899331759443527,
+     0.991266294577268
+    ],
+    "fpr": 0.009201299334997002,
+    "macro_detection": 0.988226380878175,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9999,
+     "DoS-GoldenEye": 0.9967,
+     "DoS-Hulk": 0.9882,
+     "DoS-SlowHTTPTest": 0.9138,
+     "DoS-Slowloris": 0.9909,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9878,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 101,
+    "fpr": 0.30606060606060603,
+    "fpr_ci": [
+     0.258805170936007,
+     0.3577794608174952
+    ],
+    "called": {
+     "Bot": 101
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.505,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 3,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9931974481103332,
+    "recall_ci": [
+     0.9926052764763688,
+     0.9937424974151613
+    ],
+    "fpr": 0.009375566367856794,
+    "macro_detection": 0.9863412549050314,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9985,
+     "DoS-GoldenEye": 0.9848,
+     "DoS-Hulk": 0.9959,
+     "DoS-SlowHTTPTest": 0.8937,
+     "DoS-Slowloris": 0.9896,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9884,
+     "SSH-BruteForce": 0.9578,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 4,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.993707328599321,
+    "recall_ci": [
+     0.9931366783287472,
+     0.9942308078244555
+    ],
+    "fpr": 0.027732855609307255,
+    "macro_detection": 0.9888890054257301,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9875,
+     "DoS-Hulk": 0.9977,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 93,
+    "fpr": 0.3174061433447099,
+    "fpr_ci": [
+     0.2667644747068866,
+     0.3727739188336415
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.511
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 4,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9931850120008456,
+    "recall_ci": [
+     0.9925923259178878,
+     0.9937305769428696
+    ],
+    "fpr": 0.026066862775167645,
+    "macro_detection": 0.9876327377060241,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9986,
+     "DoS-GoldenEye": 0.9723,
+     "DoS-Hulk": 0.9976,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9865,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 63,
+    "fpr": 0.2150170648464164,
+    "fpr_ci": [
+     0.17182296232317046,
+     0.2655874275952238
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.3865
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 200,
+    "fpr": 0.6060606060606061,
+    "fpr_ci": [
+     0.5524105719823336,
+     0.6572697075274698
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 1.0,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "triaged_alerts": 37,
+   "seed": 4,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.9931850120008456,
+    "recall_ci": [
+     0.9925923259178878,
+     0.9937305769428696
+    ],
+    "fpr": 0.010720907861534386,
+    "macro_detection": 0.9876327377060241,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9986,
+     "DoS-GoldenEye": 0.9723,
+     "DoS-Hulk": 0.9976,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.9865,
+     "SSH-BruteForce": 0.9595,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 100,
+    "fpr": 0.30303030303030304,
+    "fpr_ci": [
+     0.2559460657938493,
+     0.3546477008308015
+    ],
+    "called": {
+     "Bot": 100
+    },
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.5,
+     "8443": 0.0
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 service flows + exemplar envelope",
+   "k": 50,
+   "service_flows": 30,
+   "service_added": 37,
+   "seed": 4,
+   "training_rows": 361572,
+   "target_test": {
+    "flows": 367327,
+    "recall": 0.993707328599321,
+    "recall_ci": [
+     0.9931366783287472,
+     0.9942308078244555
+    ],
+    "fpr": 0.0107941000153355,
+    "macro_detection": 0.9888890054257301,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9987,
+     "DoS-GoldenEye": 0.9875,
+     "DoS-Hulk": 0.9977,
+     "DoS-SlowHTTPTest": 0.9253,
+     "DoS-Slowloris": 0.987,
+     "FTP-BruteForce": 1.0,
+     "Heartbleed": 1.0,
+     "Infiltration": 1.0,
+     "PortScan": 0.987,
+     "SSH-BruteForce": 0.9612,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "held_in_profile": {
+    "flows": 293,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.012941582311913155
+    ],
+    "called": {},
+    "by_service_port": {
+     "21": 0.0,
+     "22": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "443": 0.0,
+     "80": 0.0
+    }
+   },
+   "held_out_profile": {
+    "flows": 330,
+    "false_alerts": 0,
+    "fpr": 0.0,
+    "fpr_ci": [
+     0.0,
+     0.011507253739498012
+    ],
+    "called": {},
+    "by_service_port": {
+     "2121": 0.0,
+     "2222": 0.0,
+     "30000": 0.0,
+     "30001": 0.0,
+     "30002": 0.0,
+     "30003": 0.0,
+     "30004": 0.0,
+     "30005": 0.0,
+     "30006": 0.0,
+     "30007": 0.0,
+     "30008": 0.0,
+     "30009": 0.0,
+     "30010": 0.0,
+     "8080": 0.0,
+     "8443": 0.0
+    }
+   }
+  }
+ ],
+ "minutes": 36.67143479833346
+}
