@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -72,11 +73,13 @@ def paired(orig: pd.DataFrame, reseg: pd.DataFrame) -> dict:
             "alerts_on_normal_original": int((both["alert_o"] & ~sp).sum())}
 
 
-def run_session(session: Path, det, features: list[str], distro: str) -> dict:
-    out = session / "resegmented"
-    out.mkdir(exist_ok=True)
+def run_session(session: Path, det, features: list[str], distro: str, spacing_us: int = 1) -> dict:
+    out = session / f"resegmented_{spacing_us}us"
+    if out.exists():                      # derived by this script only; rebuilt so reruns are clean
+        shutil.rmtree(out)
+    out.mkdir()
     pcap = out / "capture_resegmented.pcap"
-    stats = resegment(session / "capture.pcap", pcap)
+    stats = resegment(session / "capture.pcap", pcap, spacing_us=spacing_us)
     produced = convert(pcap, out / "converted", distro, timeout=1800, log=out / "converter.log")
     kept, dropped = sensor.validate_csv(produced, out / "validated.csv", features)
     orig, reseg = verdicts(det, session / "validated.csv"), verdicts(det, out / "validated.csv")
@@ -87,7 +90,7 @@ def run_session(session: Path, det, features: list[str], distro: str) -> dict:
 def to_markdown(res: dict) -> str:
     md = ["# Offload counterfactual: same traffic, wire-sized packets", "",
           f"Generated on {res['generated']}. Frozen detector {res['model']}. Each capture is rewritten with "
-          "segmentation offload undone and re-extracted; both versions are scored by the same model. Alerts "
+          f"segmentation offload undone (pieces {res['spacing_us']} µs apart) and re-extracted; both versions are scored by the same model. Alerts "
           "are on unlabelled traffic from networks in ordinary use, so they are candidate false alerts.", "",
           "| Session | Packets split | Flows (orig → reseg) | Alerts orig | Alerts reseg | Anomaly-only orig → reseg | "
           "Paired flows | Alert → clear | Clear → alert |", "|---|---:|---|---:|---:|---|---:|---:|---:|"]
@@ -118,6 +121,7 @@ def main() -> None:
     ap.add_argument("sessions", nargs="+", type=Path)
     ap.add_argument("--model-dir", type=Path, default=ROOT / "models")
     ap.add_argument("--distro", default="Ubuntu-24.04")
+    ap.add_argument("--spacing-us", type=int, default=1, help="gap between the pieces of a split segment")
     ap.add_argument("--results", default="docs/results/offload_counterfactual.md")
     args = ap.parse_args()
     t0 = time.perf_counter()
@@ -125,7 +129,7 @@ def main() -> None:
     features = sensor.load_features(args.model_dir / "model_card.json")
     sessions = []
     for s in args.sessions:
-        r = run_session(s, det, features, args.distro)
+        r = run_session(s, det, features, args.distro, args.spacing_us)
         sessions.append(r)
         print(json.dumps({k: r[k] for k in ("session", "original", "resegmented", "paired")}), flush=True)
     fo = sum(s["original"]["flows"] for s in sessions)
@@ -141,7 +145,7 @@ def main() -> None:
               "a2c_super": sum(s["paired"]["alert_to_clear_super"] for s in sessions),
               "mcnemar_p": binomtest(a2c, a2c + c2a, 0.5).pvalue if a2c + c2a else float("nan")}
     card = json.loads((args.model_dir / "model_card.json").read_text(encoding="utf-8"))
-    res = {"generated": time.strftime("%Y-%m-%d"), "model": f"{det.name.upper()} trained on {card.get('dataset')}",
+    res = {"generated": time.strftime("%Y-%m-%d"), "spacing_us": args.spacing_us, "model": f"{det.name.upper()} trained on {card.get('dataset')}",
            "sessions": sessions, "totals": totals, "minutes": (time.perf_counter() - t0) / 60}
     out = Path(args.results)
     out.parent.mkdir(parents=True, exist_ok=True)

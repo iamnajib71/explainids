@@ -1,0 +1,615 @@
+{
+ "generated": "2026-10-31",
+ "spacing_us": 12,
+ "model": "LGBM trained on cicids2017",
+ "sessions": [
+  {
+   "session": "a31813fe874a",
+   "resegment": {
+    "packets_in": 19589,
+    "packets_out": 73308,
+    "split": 5481,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 1,
+   "original": {
+    "flows": 171,
+    "alerts": 18,
+    "classifier_alerts": 6,
+    "anomaly_only_alerts": 12,
+    "flows_with_super_packets": 64,
+    "alert_rate": 0.10526315789473684,
+    "alert_rate_ci": [
+     0.06762647375458761,
+     0.16024606916426007
+    ]
+   },
+   "resegmented": {
+    "flows": 166,
+    "alerts": 18,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 17,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.10843373493975904,
+    "alert_rate_ci": [
+     0.06969712284719078,
+     0.16488380432259564
+    ]
+   },
+   "paired": {
+    "pairs": 161,
+    "alert_to_clear": 2,
+    "clear_to_alert": 2,
+    "alert_both": 14,
+    "super_packet_pairs": 63,
+    "alert_to_clear_super": 1,
+    "alert_to_clear_normal": 1,
+    "alerts_on_super_original": 14,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "18040510ab5a",
+   "resegment": {
+    "packets_in": 32136,
+    "packets_out": 40640,
+    "split": 1236,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 97,
+   "original": {
+    "flows": 628,
+    "alerts": 73,
+    "classifier_alerts": 52,
+    "anomaly_only_alerts": 21,
+    "flows_with_super_packets": 66,
+    "alert_rate": 0.11624203821656051,
+    "alert_rate_ci": [
+     0.09347465297900535,
+     0.14367592400104784
+    ]
+   },
+   "resegmented": {
+    "flows": 597,
+    "alerts": 86,
+    "classifier_alerts": 50,
+    "anomaly_only_alerts": 36,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.1440536013400335,
+    "alert_rate_ci": [
+     0.11815964130980566,
+     0.1744991892372137
+    ]
+   },
+   "paired": {
+    "pairs": 568,
+    "alert_to_clear": 0,
+    "clear_to_alert": 12,
+    "alert_both": 69,
+    "super_packet_pairs": 65,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 11,
+    "alerts_on_normal_original": 58
+   }
+  },
+  {
+   "session": "fd7c18aee195",
+   "resegment": {
+    "packets_in": 24950,
+    "packets_out": 31510,
+    "split": 1310,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 14,
+   "original": {
+    "flows": 511,
+    "alerts": 23,
+    "classifier_alerts": 13,
+    "anomaly_only_alerts": 10,
+    "flows_with_super_packets": 175,
+    "alert_rate": 0.04500978473581213,
+    "alert_rate_ci": [
+     0.030176801426751294,
+     0.06663278039414275
+    ]
+   },
+   "resegmented": {
+    "flows": 488,
+    "alerts": 38,
+    "classifier_alerts": 5,
+    "anomaly_only_alerts": 33,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.0778688524590164,
+    "alert_rate_ci": [
+     0.057255372488013045,
+     0.10507656527406323
+    ]
+   },
+   "paired": {
+    "pairs": 454,
+    "alert_to_clear": 0,
+    "clear_to_alert": 12,
+    "alert_both": 14,
+    "super_packet_pairs": 173,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 7,
+    "alerts_on_normal_original": 7
+   }
+  },
+  {
+   "session": "bb41af7a1a40",
+   "resegment": {
+    "packets_in": 6091,
+    "packets_out": 9290,
+    "split": 270,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 22,
+   "original": {
+    "flows": 193,
+    "alerts": 5,
+    "classifier_alerts": 2,
+    "anomaly_only_alerts": 3,
+    "flows_with_super_packets": 19,
+    "alert_rate": 0.025906735751295335,
+    "alert_rate_ci": [
+     0.011115289552693669,
+     0.059203179713965395
+    ]
+   },
+   "resegmented": {
+    "flows": 182,
+    "alerts": 6,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 5,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.03296703296703297,
+    "alert_rate_ci": [
+     0.015194772981161508,
+     0.07004771309300058
+    ]
+   },
+   "paired": {
+    "pairs": 175,
+    "alert_to_clear": 0,
+    "clear_to_alert": 1,
+    "alert_both": 4,
+    "super_packet_pairs": 19,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 2,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "7445697e96da",
+   "resegment": {
+    "packets_in": 4729,
+    "packets_out": 5256,
+    "split": 73,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 33,
+   "original": {
+    "flows": 195,
+    "alerts": 5,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 4,
+    "flows_with_super_packets": 12,
+    "alert_rate": 0.02564102564102564,
+    "alert_rate_ci": [
+     0.011000777633825627,
+     0.05861041036707559
+    ]
+   },
+   "resegmented": {
+    "flows": 190,
+    "alerts": 8,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 7,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.042105263157894736,
+    "alert_rate_ci": [
+     0.0214870522061478,
+     0.08087281275575922
+    ]
+   },
+   "paired": {
+    "pairs": 187,
+    "alert_to_clear": 0,
+    "clear_to_alert": 3,
+    "alert_both": 5,
+    "super_packet_pairs": 12,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 2,
+    "alerts_on_normal_original": 3
+   }
+  },
+  {
+   "session": "959fd2ad1492",
+   "resegment": {
+    "packets_in": 4075,
+    "packets_out": 4627,
+    "split": 84,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 18,
+   "original": {
+    "flows": 146,
+    "alerts": 5,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 4,
+    "flows_with_super_packets": 10,
+    "alert_rate": 0.03424657534246575,
+    "alert_rate_ci": [
+     0.014714906477450593,
+     0.07765997473043827
+    ]
+   },
+   "resegmented": {
+    "flows": 137,
+    "alerts": 7,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 6,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.051094890510948905,
+    "alert_rate_ci": [
+     0.024967626448697156,
+     0.10171085490908352
+    ]
+   },
+   "paired": {
+    "pairs": 127,
+    "alert_to_clear": 0,
+    "clear_to_alert": 1,
+    "alert_both": 5,
+    "super_packet_pairs": 9,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 1,
+    "alerts_on_normal_original": 4
+   }
+  },
+  {
+   "session": "275e098c3de1",
+   "resegment": {
+    "packets_in": 4050,
+    "packets_out": 4549,
+    "split": 68,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 16,
+   "original": {
+    "flows": 140,
+    "alerts": 4,
+    "classifier_alerts": 2,
+    "anomaly_only_alerts": 2,
+    "flows_with_super_packets": 8,
+    "alert_rate": 0.02857142857142857,
+    "alert_rate_ci": [
+     0.011165596206339352,
+     0.07115829340556709
+    ]
+   },
+   "resegmented": {
+    "flows": 135,
+    "alerts": 6,
+    "classifier_alerts": 2,
+    "anomaly_only_alerts": 4,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.044444444444444446,
+    "alert_rate_ci": [
+     0.020525829072354243,
+     0.09357253914005473
+    ]
+   },
+   "paired": {
+    "pairs": 127,
+    "alert_to_clear": 0,
+    "clear_to_alert": 2,
+    "alert_both": 4,
+    "super_packet_pairs": 8,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 2,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "490dada0883f",
+   "resegment": {
+    "packets_in": 3257,
+    "packets_out": 3772,
+    "split": 69,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 15,
+   "original": {
+    "flows": 121,
+    "alerts": 4,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 3,
+    "flows_with_super_packets": 6,
+    "alert_rate": 0.03305785123966942,
+    "alert_rate_ci": [
+     0.0129289722168894,
+     0.08192402550181974
+    ]
+   },
+   "resegmented": {
+    "flows": 113,
+    "alerts": 5,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 4,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.04424778761061947,
+    "alert_rate_ci": [
+     0.019045587730049336,
+     0.09941906869369016
+    ]
+   },
+   "paired": {
+    "pairs": 102,
+    "alert_to_clear": 0,
+    "clear_to_alert": 0,
+    "alert_both": 4,
+    "super_packet_pairs": 5,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 2,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "e1b65b1b6eed",
+   "resegment": {
+    "packets_in": 3989,
+    "packets_out": 4507,
+    "split": 67,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 30,
+   "original": {
+    "flows": 150,
+    "alerts": 5,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 4,
+    "flows_with_super_packets": 7,
+    "alert_rate": 0.03333333333333333,
+    "alert_rate_ci": [
+     0.014320220695575196,
+     0.07565284250709559
+    ]
+   },
+   "resegmented": {
+    "flows": 145,
+    "alerts": 6,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 5,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.041379310344827586,
+    "alert_rate_ci": [
+     0.01910002030012347,
+     0.08733258993787449
+    ]
+   },
+   "paired": {
+    "pairs": 144,
+    "alert_to_clear": 1,
+    "clear_to_alert": 1,
+    "alert_both": 4,
+    "super_packet_pairs": 7,
+    "alert_to_clear_super": 1,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 3,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "1f3f824dff1e",
+   "resegment": {
+    "packets_in": 4914,
+    "packets_out": 6273,
+    "split": 186,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 14,
+   "original": {
+    "flows": 136,
+    "alerts": 8,
+    "classifier_alerts": 2,
+    "anomaly_only_alerts": 6,
+    "flows_with_super_packets": 11,
+    "alert_rate": 0.058823529411764705,
+    "alert_rate_ci": [
+     0.03010472430974894,
+     0.11178152413134437
+    ]
+   },
+   "resegmented": {
+    "flows": 127,
+    "alerts": 9,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 8,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.07086614173228346,
+    "alert_rate_ci": [
+     0.037727631027679204,
+     0.12920398705097466
+    ]
+   },
+   "paired": {
+    "pairs": 119,
+    "alert_to_clear": 1,
+    "clear_to_alert": 2,
+    "alert_both": 6,
+    "super_packet_pairs": 11,
+    "alert_to_clear_super": 1,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 5,
+    "alerts_on_normal_original": 2
+   }
+  },
+  {
+   "session": "48d155ff5719",
+   "resegment": {
+    "packets_in": 3650,
+    "packets_out": 4202,
+    "split": 75,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 18,
+   "original": {
+    "flows": 136,
+    "alerts": 7,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 6,
+    "flows_with_super_packets": 8,
+    "alert_rate": 0.051470588235294115,
+    "alert_rate_ci": [
+     0.025152853298995935,
+     0.10243149928278228
+    ]
+   },
+   "resegmented": {
+    "flows": 131,
+    "alerts": 9,
+    "classifier_alerts": 1,
+    "anomaly_only_alerts": 8,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.06870229007633588,
+    "alert_rate_ci": [
+     0.03656213057709769,
+     0.12541755521719722
+    ]
+   },
+   "paired": {
+    "pairs": 123,
+    "alert_to_clear": 0,
+    "clear_to_alert": 2,
+    "alert_both": 7,
+    "super_packet_pairs": 6,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 3,
+    "alerts_on_normal_original": 4
+   }
+  },
+  {
+   "session": "e195702ebf11",
+   "resegment": {
+    "packets_in": 42219,
+    "packets_out": 51329,
+    "split": 2080,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 26,
+   "original": {
+    "flows": 567,
+    "alerts": 28,
+    "classifier_alerts": 7,
+    "anomaly_only_alerts": 21,
+    "flows_with_super_packets": 124,
+    "alert_rate": 0.04938271604938271,
+    "alert_rate_ci": [
+     0.03438426010437423,
+     0.07044622176660364
+    ]
+   },
+   "resegmented": {
+    "flows": 521,
+    "alerts": 34,
+    "classifier_alerts": 7,
+    "anomaly_only_alerts": 27,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.06525911708253358,
+    "alert_rate_ci": [
+     0.04707254072197457,
+     0.08980990152345718
+    ]
+   },
+   "paired": {
+    "pairs": 500,
+    "alert_to_clear": 2,
+    "clear_to_alert": 5,
+    "alert_both": 26,
+    "super_packet_pairs": 121,
+    "alert_to_clear_super": 2,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 17,
+    "alerts_on_normal_original": 11
+   }
+  },
+  {
+   "session": "cb52327ed7f5",
+   "resegment": {
+    "packets_in": 49186,
+    "packets_out": 85569,
+    "split": 2620,
+    "truncated_skipped": 0
+   },
+   "dropped_unusable": 12,
+   "original": {
+    "flows": 384,
+    "alerts": 23,
+    "classifier_alerts": 4,
+    "anomaly_only_alerts": 19,
+    "flows_with_super_packets": 68,
+    "alert_rate": 0.059895833333333336,
+    "alert_rate_ci": [
+     0.040239658639945164,
+     0.08827053727508821
+    ]
+   },
+   "resegmented": {
+    "flows": 349,
+    "alerts": 33,
+    "classifier_alerts": 2,
+    "anomaly_only_alerts": 31,
+    "flows_with_super_packets": 0,
+    "alert_rate": 0.09455587392550144,
+    "alert_rate_ci": [
+     0.06812170243506635,
+     0.12981867647717074
+    ]
+   },
+   "paired": {
+    "pairs": 339,
+    "alert_to_clear": 0,
+    "clear_to_alert": 8,
+    "alert_both": 21,
+    "super_packet_pairs": 67,
+    "alert_to_clear_super": 0,
+    "alert_to_clear_normal": 0,
+    "alerts_on_super_original": 8,
+    "alerts_on_normal_original": 13
+   }
+  }
+ ],
+ "totals": {
+  "flows_o": 3478,
+  "flows_r": 3281,
+  "alerts_o": 208,
+  "alerts_r": 265,
+  "rate_o": 0.05980448533640023,
+  "rate_r": 0.08076805851874429,
+  "ci_o": [
+   0.05239880800906327,
+   0.06818151936711606
+  ],
+  "ci_r": [
+   0.07192727484239239,
+   0.09058942002654741
+  ],
+  "pairs": 3126,
+  "a2c": 6,
+  "c2a": 51,
+  "alert_pairs": 189,
+  "a2c_super": 5,
+  "mcnemar_p": 5.676193126635808e-10
+ },
+ "minutes": 2.4788853699998676
+}

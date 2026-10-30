@@ -7,7 +7,8 @@ A host captures its own traffic above the NIC, so with large-send / generic-rece
 packet counts, inter-arrival times) then depend on where the sensor sits rather than on the traffic.
 This rewrites each TCP segment whose payload exceeds the MSS into consecutive MSS-sized segments with
 the same headers, advancing the sequence number, carrying FIN/PSH only on the last piece and keeping the
-original timestamp (plus 1 µs per piece to preserve order). IPv4 header checksums are recomputed; TCP
+original timestamp plus `spacing_us` per piece (default 1 µs, which only preserves order; a
+realistic value is the link's serialisation time, about 12 µs per full-size frame at 1 Gbit/s). IPv4 header checksums are recomputed; TCP
 checksums are left stale, which the flow extractor does not read. Everything else is copied unchanged.
 
 Supports classic pcap (micro- or nanosecond), Ethernet link type, optional 802.1Q tag, IPv4 and IPv6
@@ -79,7 +80,7 @@ def split_frame(frame: bytes, mss: int) -> list[bytes]:
     return pieces
 
 
-def resegment(src: Path, dst: Path, mss: int = 1460) -> dict:
+def resegment(src: Path, dst: Path, mss: int = 1460, spacing_us: int = 1) -> dict:
     stats = {"packets_in": 0, "packets_out": 0, "split": 0, "truncated_skipped": 0}
     with src.open("rb") as fin, dst.open("wb") as fout:
         header = fin.read(24)
@@ -100,7 +101,7 @@ def resegment(src: Path, dst: Path, mss: int = 1460) -> dict:
                 stats["truncated_skipped"] += 1
             if len(pieces) > 1:
                 stats["split"] += 1
-            step = units // 1_000_000                         # 1 µs in the file's units
+            step = spacing_us * (units // 1_000_000)          # spacing in the file's units
             for i, p in enumerate(pieces):
                 f = frac + i * step
                 s, f = sec + f // units, f % units
@@ -114,8 +115,9 @@ def main() -> None:
     ap.add_argument("src", type=Path)
     ap.add_argument("dst", type=Path)
     ap.add_argument("--mss", type=int, default=1460)
+    ap.add_argument("--spacing-us", type=int, default=1)
     args = ap.parse_args()
-    print(resegment(args.src, args.dst, args.mss))
+    print(resegment(args.src, args.dst, args.mss, args.spacing_us))
 
 
 if __name__ == "__main__":
