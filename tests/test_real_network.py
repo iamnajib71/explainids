@@ -67,7 +67,7 @@ def test_triage_prefers_confirmed_alerts_then_tops_up():
 
 
 def test_two_envelope_only_flags_what_both_envelopes_reject():
-    from scripts.real_network_eval import TwoEnvelope
+    from ids.envelope import TwoEnvelope
 
     class Source:
         features = ["a"]

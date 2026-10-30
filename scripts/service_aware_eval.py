@@ -38,6 +38,7 @@ import pandas as pd
 from ids import SEED
 from ids.data import BENIGN, LABEL_COL, dedup_global, feature_columns, stratified_sample, temporal_split
 from ids.evaluate import binary_report, report, wilson_interval
+from ids.envelope import TwoEnvelope
 from ids.models import Detector
 from ids.scoring import align_columns
 
@@ -141,6 +142,8 @@ def main():
     ap.add_argument("--service-flows", default="0,30,100")
     ap.add_argument("--seeds", default="42,1")
     ap.add_argument("--local-benign", type=int, default=1000)
+    ap.add_argument("--two-envelope", action="store_true",
+                    help="also score each adaptation model with the two-envelope anomaly rule, fitted on its local benign flows")
     ap.add_argument("--results", default="docs/results/service_aware.md")
     args = ap.parse_args()
     shots = [int(s) for s in args.shots.split(",")]
@@ -154,8 +157,8 @@ def main():
     held_profile = load_profile(args.held_profile, feats)
     rows = []
 
-    def run(config: str, train: pd.DataFrame, val: pd.DataFrame, held_in: pd.DataFrame, **meta):
-        det = fit_detector(train, val, feats, args.model)
+    def run(config: str, train: pd.DataFrame, val: pd.DataFrame, held_in: pd.DataFrame, det=None, **meta):
+        det = det if det is not None else fit_detector(train, val, feats, args.model)
         row = {"config": config, **meta, "training_rows": int(len(train)),
                "target_test": score_attacks(det, tgt["test"], feats),
                "held_in_profile": score_benign(det, held_in, feats),
@@ -165,6 +168,7 @@ def main():
         print(f"{config} {meta}: target det {row['target_test']['macro_detection']:.3f} | "
               f"held-in FPR {hi['fpr'] if hi['fpr'] is None else format(hi['fpr'], '.3f')} | "
               f"held-out FPR {ho['fpr']:.3f}", flush=True)
+        return det
 
     run(f"source only: {src['name']}", src["train"], src["val"], fit_profile)
     run("both environments", pd.concat([src["train"], tgt["train"]]),
@@ -175,9 +179,13 @@ def main():
                 local = few_shot(tgt, k, args.local_benign, seed)
                 service_fit, held_in = split_profile(fit_profile, n_service, seed)
                 train = pd.concat([src["train"], local, service_fit]) if n_service else pd.concat([src["train"], local])
-                run("few-shot" + (f" + {n_service} service flows" if n_service else " (no service flows)"),
-                    train, src["val"], held_in, k=k, service_flows=n_service, service_added=int(len(service_fit)),
-                    seed=seed)
+                name = "few-shot" + (f" + {n_service} service flows" if n_service else " (no service flows)")
+                det = run(name, train, src["val"], held_in, k=k, service_flows=n_service,
+                          service_added=int(len(service_fit)), seed=seed)
+                if args.two_envelope:
+                    site_normal = pd.concat([local[local[LABEL_COL] == BENIGN], service_fit])[feats]
+                    run(name + " + two-envelope anomaly", train, src["val"], held_in, det=TwoEnvelope(det, site_normal),
+                        k=k, service_flows=n_service, service_added=int(len(service_fit)), seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "data_seed": SEED,
            "source": src["name"], "target": tgt["name"], "local_benign": args.local_benign,
