@@ -176,7 +176,8 @@ def main():
                 service_fit, held_in = split_profile(fit_profile, n_service, seed)
                 train = pd.concat([src["train"], local, service_fit]) if n_service else pd.concat([src["train"], local])
                 run("few-shot" + (f" + {n_service} service flows" if n_service else " (no service flows)"),
-                    train, src["val"], held_in, k=k, service_flows=n_service, seed=seed)
+                    train, src["val"], held_in, k=k, service_flows=n_service, service_added=int(len(service_fit)),
+                    seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "data_seed": SEED,
            "source": src["name"], "target": tgt["name"], "local_benign": args.local_benign,
@@ -200,7 +201,7 @@ def to_markdown(res: dict) -> str:
           f"the held-out profile ({res['held_profile_flows']} flows, different service configuration) is never "
           "trained on. Detection is class-balanced; service columns are benign false-alert rates with 95% Wilson "
           "intervals.", "",
-          "| Training | k | Service flows | Target detection | Held-in FPR | Held-out FPR |",
+          "| Training | k | Service flows requested (actually added) | Target detection | Held-in FPR | Held-out FPR |",
           "|---|---|---|---|---|---|"]
     frame = pd.DataFrame(res["runs"])
     for (config, k, n), group in frame.groupby(
@@ -214,11 +215,14 @@ def to_markdown(res: dict) -> str:
             lo = min(min(r["fpr_ci"]) for r in group[col] if r["fpr"] is not None)
             hi = max(max(r["fpr_ci"]) for r in group[col] if r["fpr"] is not None)
             return f"{np.mean(vals):.1%} ({lo:.1%}-{hi:.1%})"
-        md.append(f"| {config} | {'' if pd.isna(k) else int(k)} | {'' if pd.isna(n) else int(n)} | "
+        added = sorted({int(a) for a in group.get("service_added", pd.Series(dtype=float)).dropna()})
+        n_text = "" if pd.isna(n) else f"{int(n)}" + (f" ({'/'.join(map(str, added))})" if added else "")
+        md.append(f"| {config} | {'' if pd.isna(k) else int(k)} | {n_text} | "
                   f"{det:.3f} | {rate('held_in_profile')} | {rate('held_out_profile')} |")
     md += ["", "Benign flows carry no attack denominator, so detection is not defined for the profile columns. "
-           "Service flows used for training are excluded from the held-in evaluation. Accuracy is not reported "
-           "(rule 4).", "", f"Total run time {res['minutes']:.1f} min."]
+           "Service flows used for training are excluded from the held-in evaluation. The sampler takes at "
+           "least one flow from every destination port with two or more flows, so the number actually added can exceed "
+           "the number requested. Accuracy is not reported (rule 4).", "", f"Total run time {res['minutes']:.1f} min."]
     return "\n".join(md) + "\n"
 
 

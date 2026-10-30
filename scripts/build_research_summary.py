@@ -102,7 +102,7 @@ def service_aware_note(res: dict) -> str:
         return ""
     best = min(repaired, key=lambda r: r["service_flows"])
     hi = best["held_in_profile"]
-    return (f"Adding {best['service_flows']} local benign service flows cuts false alerts on legitimate traffic "
+    return (f"Adding {best.get('service_added', best['service_flows'])} local benign service flows cuts false alerts on legitimate traffic "
             f"from {worst['held_in_profile']['fpr']:.0%} to {hi['fpr']:.0%} observed (95% interval to "
             f"{max(hi['fpr_ci']):.1%}) while detection holds at {best['target_test']['macro_detection']:.3f}, "
             "and it transfers to a service configuration never trained on. "

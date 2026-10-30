@@ -32,7 +32,7 @@ Each link is a script in this repository with a committed result file. Status re
 | E2 | Local benign traffic restores the false-alarm budget but not detection | 1,000 local flows: FPR 3.4% → 1.2%, detection 0.55 → 0.32 ([local_calibration](results/local_calibration.md)) | Measured |
 | E3 | A few labelled local attacks restore detection but break legitimate services | k = 50: detection 0.98, service false alerts 26–70%; matched target-only control 100% ([multi_env_matched](results/multi_env_matched.md)) | Measured |
 | E4 | The breakage is whole-service: a port is flagged entirely or not at all | Port 22 → SSH-BruteForce, FTP data → PortScan, half of port 80 after adaptation ([service_aware](results/service_aware.md)) | Measured, lab services |
-| E5 | ~30 benign service flows repair it at no detection cost, and transfer to an unseen configuration | 41.1% → 0/293, held-out 33.6% → 0/330, detection 0.979 → 0.982 ([service_aware](results/service_aware.md)) | Measured, 2 seeds; 10-seed and dose–response replication running |
+| E5 | About one benign flow per service repairs it at no detection cost, and transfers to an unseen configuration | 10 seeds: held-out 38.5% → 0/3,300 with 18 flows (upper bound 0.11%); 15 flows (one per port) fails on 1 seed in 10; detection 0.981 → 0.982, Wilcoxon p = 0.19 ([service_aware_seeds](results/service_aware_seeds.md)) | Measured, 10 seeds |
 | E6 | The result holds in the reverse direction | 2018 → 2017 replication ([service_aware_reverse](results/service_aware_reverse.md)) | Running |
 | E7 | On a real network, the dominant false-alarm source shifts to the anomaly layer | Live WiFi: 12 of 18 alerts anomaly-only; each lies outside the benchmark benign range on 11–20 volume features, against ~1 for quiet flows | Measured, 3 short captures |
 | E8 | Sensor position changes attack labels, not alert volume | Undoing segmentation offload: classifier alerts 6 → 1, total alerts 18 → 18, 14 of 16 paired alerts persist ([offload_counterfactual](results/offload_counterfactual.md)) | Measured, 1 capture; extending to the study blocks |
@@ -58,7 +58,7 @@ Each link is a script in this repository with a committed result file. Status re
 |---|---|
 | Real traffic is unlabelled | Alerts are reported as candidate false alerts (an upper bound); no attacks are generated on the home network |
 | One home network, one evening | Stated as a case study; block-level bootstrap, not flow-level intervals; earlier-day sessions for fitting, later blocks for evaluation |
-| Few label seeds | 10-seed replication with dose–response (0, 5, 10, 30 service flows) |
+| Few label seeds | 10-seed replication with dose–response (0, 15, 18, 37 flows actually added) |
 | One transfer direction | Reverse-direction replication |
 | Oracle attack labels understate annotation cost | Stated; the triage condition uses only benign confirmations, which an analyst can give cheaply |
 | Lab services are not a real network | E9 tests the lab-derived repair on real traffic directly |

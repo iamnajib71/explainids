@@ -4,7 +4,7 @@ Most published ML intrusion detectors report about 99% on a single benchmark. Th
 
 | | Question | Answer | One-line takeaway |
 |---|---|---|---|
-| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; training on both environments restores detection (0.60 → 0.996). Limited-label adaptation restores detection but degrades legitimate service traffic, and adding ~30 local benign service flows removes that regression at no cost to detection. |
+| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; training on both environments restores detection (0.60 → 0.996). Limited-label adaptation restores detection but degrades legitimate service traffic, and adding about one benign flow per local service (18 flows) removes that regression at no cost to detection, across 10 label seeds. |
 | **RQ2** | Do SHAP explanations stay the same when the model is retrained? | **4 of 5** top features shared per alert (median overlap 0.67); model-wide top-10 overlap 0.82–1.0 | The "why" is stable enough to guide an analyst, but individual ranks are not. |
 | **RQ3** | Can it flag an attack type it never saw in training? | **52%** median (2017), 57% with a log-scaled anomaly detector; **7%** on 2018 | Unseen attacks are mostly caught by resembling a known class. The anomaly layer helps scans, not brute force. |
 
@@ -112,20 +112,22 @@ training. Result: [`results/service_aware.md`](results/service_aware.md).
 | Source only | — | — | 0.548 | 18.2% (14.4–22.7) | 9.1% (6.4–12.7) |
 | Both environments | — | — | **0.996** | 9.1% (6.4–12.7) | 9.1% (6.4–12.7) |
 | Few-shot | 50 | 0 | 0.979 | **41.1%** (34.3–48.1) | **33.6%** (25.0–42.9) |
-| **Few-shot + 30 service flows** | 50 | 30 | **0.982** | **0.0%** (0.0–1.3) | **0.0%** (0.0–1.2) |
-| Few-shot + 100 service flows | 50 | 100 | 0.981 | 0.0% (0.0–1.7) | 0.0% (0.0–1.2) |
+| **Few-shot + 37 service flows** | 50 | 37 | **0.982** | **0.0%** (0.0–1.3) | **0.0%** (0.0–1.2) |
+| Few-shot + 102 service flows | 50 | 102 | 0.981 | 0.0% (0.0–1.7) | 0.0% (0.0–1.2) |
 
-Detection is class-balanced; service columns are benign false-alert rates with 95% Wilson intervals.
+Detection is class-balanced; service columns are benign false-alert rates with 95% Wilson intervals. The service-flow
+counts are the flows actually added: the sampler takes at least one flow from every destination port, so the
+requested 30 and 100 became 37 and 102 (the result file was first written with the requested figures).
 
 **What we found.**
-- **Thirty benign service flows remove the regression at no cost to detection.** False alerts fall from
+- **A few dozen benign service flows remove the regression at no cost to detection.** False alerts fall from
   41.1% to zero observed in 293 held-in flows, while target detection rises slightly, 0.979 to 0.982.
-  A hundred flows add nothing over thirty.
+  A hundred flows add nothing over 37.
 - **The repair transfers to a configuration it never saw.** The held-out capture, using alternate ports,
   falls from 33.6% to zero observed in 330 flows. The model is not memorising the exact flows it was
   given.
 - **It beats multi-environment training on this axis.** Training on both datasets leaves 9.1% false
-  alerts; thirty local service flows leave none observed. Multi-environment training still wins on raw
+  alerts; 37 local service flows leave none observed. Multi-environment training still wins on raw
   detection, 0.996 against 0.982, so the two remain a genuine choice rather than one dominating.
 
 **Mechanism, by destination port.** The source-only model flags *every* flow on port 22 as
@@ -135,16 +137,34 @@ spreads a new one into **half of all port 80 traffic**. Adding service flows cle
 errors are whole-service failures throughout: a model either flags a service entirely or not at all,
 which is why so few examples are enough to correct it.
 
+**How few is enough? Ten label seeds.** [`results/service_aware_seeds.md`](results/service_aware_seeds.md)
+repeats the k = 50 condition over 10 label-selection seeds with four repair sizes. The fit profile contains 15
+distinct service ports, so the smallest possible stratified repair is one flow per port.
+
+| Service flows added | Target detection, mean (range) | Held-in false alerts, mean (seed range) | Held-out false alerts, pooled over seeds | Seeds with zero held-out false alerts |
+|---|---|---|---|---|
+| 0 | 0.981 (0.976–0.986) | 38.3% (19.7–42.7) | 1,272 / 3,300 = 38.5% | 0 of 10 |
+| 15 (one per port) | 0.982 (0.976–0.987) | 0.0% (0.0–0.0) | 100 / 3,300 = 3.0% | 9 of 10 |
+| **18** | **0.982** (0.976–0.986) | 0.1% (0.0–1.0) | **0 / 3,300** (95% upper bound 0.11%) | **10 of 10** |
+| 37 | 0.982 (0.978–0.987) | 0.0% (0.0–0.0) | 0 / 3,300 (upper bound 0.11%) | 10 of 10 |
+
+- **The repair is reliable, not lucky.** Without it, every one of the 10 seeds breaks legitimate services
+  (held-out rates from 5% to 66%: the regression itself is highly seed-dependent). With 18 flows, none of
+  the 3,300 held-out flows alerts on any seed.
+- **One flow per service is the threshold, and it is visible when it fails.** At 15 flows, one seed in ten
+  calls half of the held-out HTTP traffic on alternate port 8080 *Bot*; three more flows remove it.
+- **Detection does not move.** The paired per-seed difference between 37 flows and none is between
+  −0.09 and +0.40 points (Wilcoxon p = 0.19).
+
 **What this means.** The deployment recipe is: watch local normal traffic to set an honest alert budget,
-seed the model with a few dozen confirmed local incidents per attack type, **and include a few dozen
-flows of ordinary local service traffic**. The third step costs almost nothing and is what makes the
+seed the model with a few dozen confirmed local incidents per attack type, **and include a couple of
+flows of ordinary traffic from every local service**. The third step costs almost nothing and is what makes the
 second step safe to use.
 
 **Limits.** Both service captures come from one lab topology on one day; "a different configuration" is
 not an independent network. Zero observed false alerts is not zero: the intervals allow up to about 1.3%.
-Attack labels remain oracle class-balanced draws, so annotation cost is still understated. Two label
-seeds per condition show the result is stable here; they do not bound its variance. Whether thirty flows
-suffice on a production network with far more service diversity is untested.
+Attack labels remain oracle class-balanced draws, so annotation cost is still understated. Ten label
+seeds bound the variance for this pair of captures only. Whether the same per-service budget suffices on a production network with far more service diversity is untested.
 
 ### Live capture pilot: what the detector does on a real network
 
@@ -243,7 +263,7 @@ modes exist on real traffic, not their rates. Alerts are unreviewed candidates.
 | Port "shortcut" suspected (D'hooge et al., 2022) | Literature | Portable feature-set ablation | Not the cause here; transfer got worse without these features |
 | False-alarm rate drifts on a new network (3.4% vs ~1% intended) | Local-calibration experiment | Threshold set on local benign flows | Promised 1% budget restored (1.0–1.2%; 2018 → 2017 needs ~20,000 flows), at a cost in detection |
 | Transfer misses whole attack tools (DoS-Hulk 0%) | Calibration could not recover them | Training on both environments; limited-label adaptation measured against a matched target-only control | Both-environment training: 2018 detection 0.60 → 0.996 with service false alerts halved. Limited labels raise detection but worsen service false alerts; local labels alone flag all legitimate traffic |
-| Adaptation raised false alerts on legitimate SSH/FTP/HTTP to 41% | Service-regression profiles in the matched run | Added ~30 benign local service flows, stratified by port, to the adaptation set | Held-in false alerts 41.1% → 0.0% observed, held-out 33.6% → 0.0% observed, detection 0.979 → 0.982 |
+| Adaptation raised false alerts on legitimate SSH/FTP/HTTP to 41% | Service-regression profiles in the matched run | Added a few benign local flows per service port (18–37 in total) to the adaptation set | Held-in false alerts 41.1% → 0.0% observed, held-out 33.6% → 0.0% observed, detection 0.979 → 0.982 |
 | "0% false alarms" in a 40-flow lab capture | Wilson intervals added to every metric | Intervals and alert burden reported; small captures labelled as pipeline checks | 0/40 shown honestly as up to 876 false alarms per 10k benign flows |
 
 ## Reproduce
