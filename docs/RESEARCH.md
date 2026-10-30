@@ -4,7 +4,7 @@ Most published ML intrusion detectors report about 99% on a single benchmark. Th
 
 | | Question | Answer | One-line takeaway |
 |---|---|---|---|
-| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; training on both environments restores detection (0.60 → 0.996). Limited-label adaptation restores detection but degrades legitimate service traffic, and adding about one benign flow per local service (18 flows) removes that regression at no cost to detection, across 10 label seeds. |
+| **RQ1** | Does a detector trained on one network work on another? | **8%** of attack flows caught after moving 2017 → 2018 (70% the other way) | Near-perfect in-domain scores do not transfer. Local normal traffic restores the false-alarm budget; training on both environments restores detection (0.60 → 0.996). Limited-label adaptation restores detection but degrades legitimate service traffic, and adding about one benign flow per local service (18 flows) removes that regression at no cost to detection, across 10 label seeds. On a real home network, triaged local flows plus a local exemplar envelope cut alerts from 254 to 66 per hour, lower in all 12 blocks, at no detection cost. |
 | **RQ2** | Do SHAP explanations stay the same when the model is retrained? | **4 of 5** top features shared per alert (median overlap 0.67); model-wide top-10 overlap 0.82–1.0 | The "why" is stable enough to guide an analyst, but individual ranks are not. |
 | **RQ3** | Can it flag an attack type it never saw in training? | **52%** median (2017), 57% with a log-scaled anomaly detector; **7%** on 2018 | Unseen attacks are mostly caught by resembling a known class. The anomaly layer helps scans, not brute force. |
 
@@ -166,6 +166,40 @@ not an independent network. Zero observed false alerts is not zero: the interval
 Attack labels remain oracle class-balanced draws, so annotation cost is still understated. Ten label
 seeds bound the variance for this pair of captures only. Whether the same per-service budget suffices on a production network with far more service diversity is untested.
 
+### Follow-up: does the repair hold in the other direction?
+
+**Method.** The same design run 2018 → 2017 (k = 50, 5 seeds), plus two additions that the reverse
+direction turned out to need. **Triage** chooses the repair flows from what the unrepaired model alerts on in the
+fit capture, as an analyst confirming false alarms would, at exactly the same budget as port-stratified
+sampling. The **exemplar envelope** ([`src/ids/envelope.py`](../src/ids/envelope.py)) lets a benchmark anomaly
+alert stand only if the flow is also far from every known-normal local flow (signed-log features, robust
+scaling, leave-one-out nearest-neighbour threshold at a 1% budget). Results:
+[`service_aware_reverse`](results/service_aware_reverse.md), [`service_envelope_reverse`](results/service_envelope_reverse.md),
+[`service_repair_reverse`](results/service_repair_reverse.md), [`service_repair_forward`](results/service_repair_forward.md).
+
+| 18 local flows, k = 50, 5 seeds | 2017 → 2018: seeds with clean held-in / held-out services | 2018 → 2017: seeds clean held-in / held-out | 2018 → 2017 held-out false alerts, pooled |
+|---|---|---|---|
+| No repair | 0 / 0 | 0 / 0 | 62.7% |
+| Port-stratified flows | 4 / 5 | 0 / 0 | 31.0% |
+| Triaged flows | **5 / 5** | 0 / 0 | 43.6% |
+| Port-stratified flows + exemplar envelope | 4 / 5 | 4 / 3 | **7.8%** |
+| Triaged flows + exemplar envelope | **5 / 5** | **5** / 1 | 19.3% |
+
+**What we found.**
+- **In the reverse direction the classifier repair alone fails.** After it, the classifier makes almost no
+  attack calls on legitimate traffic, but the anomaly detector, fitted on 2018's benign traffic, still flags
+  about half of all HTTP flows. Two failure mechanisms separate cleanly: service flows fix the classifier,
+  and the benchmark's benign envelope needs a local correction.
+- **The envelope must be exemplar-based.** An isolation forest fitted on the same local flows cleared
+  legitimate traffic on only 3 of 5 seeds: a service seen once or twice still looks isolated to a density
+  model. The nearest-normal rule needs one example per behaviour and never lowered target detection by more
+  than 0.001.
+- **Triage is precise; port coverage generalises.** Triaged flows clean every seed on the services the
+  site has seen, in both directions. On a configuration never seen, port-stratified flows generalise better
+  (7.8% against 19.3% pooled). The flows that fail are bulk HTTP downloads that port sampling under-represents.
+
+**Limits.** Five seeds; the held-out capture is a second configuration of the same lab, not a new network.
+
 ### Live capture pilot: what the detector does on a real network
 
 **Method.** Passive capture on 30 October 2026 (UTC 29 October) through the sensor path: `dumpcap` →
@@ -211,6 +245,58 @@ privately with keyed host pseudonyms; only aggregates appear here.
 
 **Limits.** About one minute per observation point, from one evening; these establish that the failure
 modes exist on real traffic, not their rates. Alerts are unreviewed candidates.
+
+### Real-network study: does the recipe hold on a network in ordinary use?
+
+**Method.** [`scripts/capture_blocks.py`](../scripts/capture_blocks.py) recorded the same home WiFi network in
+12 bounded blocks across one evening (30 October 2026, 12:20–15:12 UTC, 3,307 usable flows, 0.93 h of observed
+traffic), with household consent and no traffic generated. [`scripts/real_network_eval.py`](../scripts/real_network_eval.py)
+trains each condition and scores every block. Local flows offered to training come only from two sessions
+recorded the **previous day** (222 flows), so no evaluated flow, block or day is trained on. The traffic is
+unlabelled and no attack was generated, so every alert is counted as a false alert, an upper bound. Each block
+is the unit of analysis. Result: [`results/real_network.md`](results/real_network.md).
+
+| Training (5 seeds where seed-dependent) | Target detection | Real-network alerts | Alerts per hour | Blocks lower than few-shot |
+|---|---|---|---|---|
+| Source only (deployed situation) | 0.548 | 5.7% | 204 | — |
+| Both environments | 0.996 | 5.8% | 207 | — |
+| Few-shot, k = 50 | 0.980 | 7.2% | 254 | reference |
+| Few-shot + 30 **lab** service flows | 0.982 | 7.5% | 266 | 1 of 12 (higher in 11, sign test p = 0.006) |
+| Few-shot + 30 local flows (port-spread) | 0.982 | 5.1% | 182 | 12 of 12 (p = 0.0005) |
+| Few-shot + 30 triaged local flows | 0.981 | 4.9% | 172 | 12 of 12 (p = 0.0005) |
+| **Few-shot + 30 triaged local flows + exemplar envelope** | **0.980** | **1.9%** (seeds 1.5–2.0) | **66** | **12 of 12** (p = 0.0005) |
+| Source only + exemplar envelope (no labels at all) | 0.546 | 2.8% | 101 | 12 of 12 vs source only |
+
+**What we found.**
+- **The full recipe cuts the alert load by about three-quarters at no cost to detection.** From 254 to 66
+  alerts per hour; lower in every one of the 12 blocks; benchmark detection 0.980 in both.
+- **A repair built in the lab does not transfer to a real network; it makes things worse.** Lab service flows
+  raised alerts in 11 of 12 blocks. The evidence has to come from the site itself.
+- **The exemplar envelope does the most work on its own.** With no labels at all it halves the deployed
+  model's alerts (5.7% → 2.8%). It removes the anomaly alerts on ordinary HTTPS transfers, which dominate
+  the unrepaired models.
+- **Real-network failures are service-concentrated but not whole-service.** Alerts gather on HTTPS, NAT-PMP
+  (5351), SSDP (1900) and mDNS (5353), but no service is flagged entirely, unlike the lab captures. What remains
+  after repair is mostly classifier *Infiltration* and *PortScan* calls on device-discovery protocols the
+  previous day's 222 flows barely contained.
+
+**Sensor position: an offload counterfactual.** [`scripts/offload_counterfactual.py`](../scripts/offload_counterfactual.py)
+rewrites all 13 WiFi captures with segmentation offload undone and scores both versions with the same frozen
+model ([`results/offload_counterfactual_12us.md`](results/offload_counterfactual_12us.md)). Only packetisation
+differs. Classifier attack alerts fall from 93 to 74, anomaly-only alerts rise from 115 to 191, and total
+alerts rise from 6.0% to 8.1% (51 flows newly alert, 6 clear; McNemar p = 6 × 10⁻¹⁰). Spacing the split
+packets 1, 12 or 100 µs apart gives the same result, so it is not a timing artefact of the rewrite. Where a
+sensor sits relative to NIC offload systematically changes verdicts, in opposite directions for the two
+detector components. The earlier single-capture result (no change in alert volume) did not hold at scale.
+
+**Why the anomaly layer fires.** Over the whole study ([`results/envelope_audit_study.md`](results/envelope_audit_study.md)),
+anomaly-only alerts lie outside the benchmark's benign range on 11.5 features on average, against 2.0 for quiet
+flows: packet-size maxima and variance, active data packets and bulk volume. Ordinary modern transfers are larger
+than anything in the 2017 benign traffic.
+
+**Limits.** One network, one evening, 56 minutes of observed traffic in 12 blocks; one previous day for local
+flows. Unlabelled, so alert rates are upper bounds on false alerts and detection is measured only on the
+benchmark. Seeds share the same blocks, so per-block sign tests, not flow-level tests, are reported.
 
 ## RQ2: Stability of explanations
 
@@ -276,6 +362,11 @@ python scripts/unseen_attack_eval.py data/processed/cicids2017.parquet [--anomal
 python scripts/service_aware_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --fit-profile data/lab/<standard>/flows_labelled.csv --held-profile data/lab/<alternate>/flows_labelled.csv
 python scripts/local_calibration_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --sizes 1000,5000,20000 --seeds 42,1,2
 python scripts/multi_env_eval.py data/processed/cicids2017.parquet data/processed/csecicids2018.parquet --lab data/lab/<run>/flows_labelled.csv --shots 10,50,200 --seeds 42,1
+python scripts/service_aware_eval.py <2018> <2017> --fit-profile ... --held-profile ... --shots 50 --service-flows 0,10,30 --seeds 42,1,2,3,4 --triage --exemplar-envelope --results docs/results/service_repair_reverse.md
+python scripts/capture_blocks.py --interface <npf-id> --converter-argv <json> --blocks 12 --block-seconds 300 --gap-seconds 600 --study data/sensor/study_<date>.json
+python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessions <previous-day sessions> --study data/sensor/study_<date>.json --results docs/results/real_network.md
+python scripts/offload_counterfactual.py <sessions> --spacing-us 12 --results docs/results/offload_counterfactual_12us.md
+python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelope_audit_study.md
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
 
