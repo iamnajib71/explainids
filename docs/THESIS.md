@@ -41,8 +41,9 @@ Each link is a script in this repository with a committed result file.
 
 ## Contributions
 
-1. **A matched-control result** that the standard limited-label adaptation trades legitimate services for detection,
-   with the source-removed control that isolates why (E3).
+1. **A benign-service outcome for limited-label adaptation** (E3). The matched target-only control itself is not new
+   (Rayamajhi, 2026, preprint, on NetFlow); what is added is the outcome an operator pays for, false alerts on legitimate
+   services, with the mechanism, on the corrected CICFlowMeter benchmark pair.
 2. **A decomposition of false alarms into separable mechanisms**, each with its own diagnostic: per-service confusion
    for the classifier (E4), a benign-envelope audit for the anomaly layer (E7), and a paired offload counterfactual for
    sensor position (E8).
@@ -66,13 +67,14 @@ Each link is a script in this repository with a committed result file.
 | Oracle attack labels understate annotation cost | Stated; the repair itself uses only benign confirmations, which an analyst can give cheaply |
 | Lab services are not a real network | E9 tests the lab-derived repair on real traffic directly, and it fails |
 | Counterfactual rewrite could add artefacts | Packet spacing varied 1–100 µs with no change in results |
-| Novelty claims | Related-work check before any "first" claim |
+| Port is a known shortcut feature (D'hooge et al., 2022) | Service-repair experiment rerun without port and TCP window features (`--portable`) |
+| Novelty claims | Checked against 2019–2026 work in [RELATED_WORK.md](RELATED_WORK.md); claims limited to what was not found |
 
 ## Remaining work to 18 December 2026
 
 | By | Work |
 |---|---|
-| Week 8 | Related-work check against E3–E9; second real-network study on another day (independence) |
-| Week 9 | Real-network seeds and k sensitivity; feed console triage decisions into the repair set |
+| Week 8 | Second real-network study (scheduled 1 Nov); shortcut-free rerun of the service repair |
+| Week 9 | Comparison arms the literature asks for: uncertainty sampling beside triage (Vu et al., 2026), and an OWAD-style normality-shift adaptation beside the exemplar envelope (Han et al., 2023) |
 | Week 10 | Exemplar envelope as a deployable console option, with its alert budget shown |
 | Week 11–12 | Thesis write-up from the result files; reproduce every number from a clean checkout |

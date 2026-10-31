@@ -41,6 +41,9 @@ from ids.evaluate import binary_report, report, wilson_interval
 from ids.envelope import ExemplarEnvelope, TwoEnvelope
 from ids.models import Detector
 from ids.repair import service_key, triage_sample
+
+# Features that encode the capture environment rather than behaviour (see cross_dataset_eval.py).
+ENV_SPECIFIC = ["Dst Port", "FWD Init Win Bytes", "Bwd Init Win Bytes", "Fwd Seg Size Min"]
 from ids.scoring import align_columns
 
 
@@ -143,6 +146,8 @@ def main():
                     help="also score with the exemplar (nearest-normal) two-envelope rule")
     ap.add_argument("--triage", action="store_true",
                     help="also repair with the same number of flows chosen from the unrepaired model's alerts on the fit profile")
+    ap.add_argument("--portable", action="store_true",
+                    help="drop destination port and TCP initial-window/segment-size features (the shortcut set)")
     ap.add_argument("--results", default="docs/results/service_aware.md")
     args = ap.parse_args()
     shots = [int(s) for s in args.shots.split(",")]
@@ -152,6 +157,8 @@ def main():
     t0 = time.perf_counter()
     src, tgt = load_dataset(args.source, args.cap), load_dataset(args.target, args.cap)
     feats = [f for f in feature_columns(src["test"]) if f in set(feature_columns(tgt["test"]))]
+    if args.portable:
+        feats = [f for f in feats if f not in ENV_SPECIFIC]
     fit_profile = load_profile(args.fit_profile, feats)
     held_profile = load_profile(args.held_profile, feats)
     rows = []
@@ -207,6 +214,7 @@ def main():
                         k=k, service_flows=n_service, service_added=int(len(service_fit)), seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "data_seed": SEED,
+           "features": len(feats), "portable": args.portable,
            "source": src["name"], "target": tgt["name"], "local_benign": args.local_benign,
            "fit_profile": args.fit_profile, "held_profile": args.held_profile,
            "fit_profile_flows": int(len(fit_profile)), "held_profile_flows": int(len(held_profile)),
