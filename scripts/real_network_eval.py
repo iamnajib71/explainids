@@ -39,7 +39,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from service_aware_eval import (  # noqa: E402
-    fit_detector, few_shot, load_dataset, load_profile, score_attacks, split_profile)
+    ENV_SPECIFIC, fit_detector, few_shot, load_dataset, load_profile, score_attacks, split_profile)
 
 from ids import SEED  # noqa: E402
 from ids.data import BENIGN, LABEL_COL, feature_columns  # noqa: E402
@@ -59,6 +59,9 @@ def load_session(folder: Path, feats: list[str]) -> pd.DataFrame:
     numeric = aligned[feats].apply(pd.to_numeric, errors="coerce")
     valid = np.isfinite(numeric.to_numpy(dtype=float)).all(axis=1)
     out = numeric.loc[valid].reset_index(drop=True)
+    if "Dst Port" not in out and "Dst Port" in aligned:
+        # Kept as metadata for per-service sampling and reporting even when it is not a model feature.
+        out["Dst Port"] = pd.to_numeric(aligned.loc[valid, "Dst Port"], errors="coerce").fillna(-1).astype(int).to_numpy()
     out[LABEL_COL] = BENIGN
     times = pd.to_datetime(aligned.loc[valid, "Timestamp"], errors="coerce", dayfirst=True) \
         if "Timestamp" in aligned else pd.Series(dtype="datetime64[ns]")
@@ -144,6 +147,8 @@ def main() -> None:
     ap.add_argument("--service-flows", type=int, default=30)
     ap.add_argument("--seeds", default="42,1,2,3,4")
     ap.add_argument("--local-benign", type=int, default=1000)
+    ap.add_argument("--portable", action="store_true",
+                    help="drop destination port and TCP initial-window/segment-size features (the shortcut set)")
     ap.add_argument("--results", default="docs/results/real_network.md")
     args = ap.parse_args()
     seeds = [int(s) for s in args.seeds.split(",")]
@@ -151,6 +156,8 @@ def main() -> None:
     t0 = time.perf_counter()
     src, tgt = load_dataset(args.source, args.cap), load_dataset(args.target, args.cap)
     feats = [f for f in feature_columns(src["test"]) if f in set(feature_columns(tgt["test"]))]
+    if args.portable:
+        feats = [f for f in feats if f not in ENV_SPECIFIC]
     lab = load_profile(args.lab_profile, feats)
     fit_pool = pd.concat([load_session(Path(s), feats) for s in args.fit_sessions], ignore_index=True)
     eval_dirs = study_sessions(args.study)
@@ -212,6 +219,7 @@ def main() -> None:
         run(f"source only + {n} local flows", pd.concat([src["train"], local]), src["val"], seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "source": src["name"],
+           "features": len(feats), "portable": args.portable,
            "target": tgt["name"], "k": args.k, "service_flows": n, "seeds": seeds,
            "fit_sessions": len(args.fit_sessions), "fit_pool_flows": int(len(fit_pool)),
            "eval_blocks": len(blocks), "eval_flows": int(sum(len(b) for b in blocks)),

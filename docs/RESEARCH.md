@@ -186,7 +186,7 @@ scaling, leave-one-out nearest-neighbour threshold at a 1% budget). Results:
 | Triaged flows + exemplar envelope | **5 / 5** | **5** / 1 | 19.3% |
 
 **What we found.**
-- **In the reverse direction the classifier repair alone fails.** After it, the classifier makes almost no
+- **In the reverse direction the classifier repair alone fails** (with all 83 features; see the robustness section below, where this turns out to be a fingerprint effect). After it, the classifier makes almost no
   attack calls on legitimate traffic, but the anomaly detector, fitted on 2018's benign traffic, still flags
   about half of all HTTP flows. Two failure mechanisms separate cleanly: service flows fix the classifier,
   and the benchmark's benign envelope needs a local correction.
@@ -297,6 +297,43 @@ than anything in the 2017 benign traffic.
 **Limits.** One network, one evening, 56 minutes of observed traffic in 12 blocks; one previous day for local
 flows. Unlabelled, so alert rates are upper bounds on false alerts and detection is measured only on the
 benchmark. Seeds share the same blocks, so per-block sign tests, not flow-level tests, are reported.
+
+### Robustness: are these results a port shortcut?
+
+**Why it matters.** Destination port and TCP initial-window features are known shortcuts that encode the capture
+environment rather than behaviour (D'hooge et al., 2022). A reader could fairly ask whether "whole-service failure"
+is just the model reading port numbers. Every repair experiment was rerun with those four features removed
+(`--portable`, 79 features): [`service_repair_forward_portable`](results/service_repair_forward_portable.md),
+[`service_repair_reverse_portable`](results/service_repair_reverse_portable.md), [`real_network_portable`](results/real_network_portable.md).
+
+| k = 50, 5 seeds | All 83 features | Without port and window features |
+|---|---|---|
+| FTP data transfers, unrepaired | whole service called PortScan | **still the whole service** called PortScan, both directions |
+| Few-shot service regression, 2017 → 2018 held-in | 34.2% | 7.8% |
+| 18 triaged flows, seeds with clean services, 2017 → 2018 | 5 / 5 | 5 / 5 |
+| 18 triaged flows, seeds clean held-in / held-out, 2018 → 2017 | 0 / 0 without envelope; 5 / 1 with it | **5 / 5 without any envelope** |
+| Real network: few-shot → triaged flows + exemplar envelope | 7.2% → 1.9%, 12/12 blocks | **6.9% → 2.0%, 12/12 blocks** (p = 0.0005) |
+| Real network: 30 lab service flows vs few-shot | worse in 11/12 blocks | no consistent effect (lower in 5/12) |
+| Benchmark detection after the full repair | 0.980 | 0.958 (per-seed change −0.024 to +0.002) |
+
+**What we found.**
+- **Whole-service failure is behaviour, not a port shortcut.** With port removed, FTP data transfers still look like
+  port scans to the model, as a whole service, in both directions.
+- **The shortcut features did two specific things.** Port features carried the few-shot *amplification* into HTTP
+  (34% → 8% without them). Window features caused the reverse direction's anomaly-layer failure on HTTP: without
+  them, 18 triaged flows clean every seed in both directions with no envelope at all. The earlier reverse-direction
+  conclusion, that the lab repair needs the envelope, was a fingerprint effect.
+- **On the real network the envelope still does the work.** Without fingerprint features the exemplar envelope still
+  cuts alerts by about 70%, so the real-network anomaly problem is traffic volume, as the envelope audit showed, not
+  fingerprinting.
+- **The lab repair's harm on the real network was also a fingerprint effect.** Without those features it is neutral:
+  it neither helps nor hurts. Only local evidence helps.
+- **Removing the shortcuts has a price.** Benchmark detection falls about two points (0.980 → 0.958–0.963). On one
+  real-network seed the repair cost 2.4 points; the median cost is zero.
+
+**What this means.** The repair recipe does not depend on shortcut features. Removing them makes the mechanisms
+cleaner: classifier failures become pure behaviour (FTP data as scans), and the anomaly envelope matters only where
+traffic volume genuinely differs, on the real network.
 
 ## RQ2: Stability of explanations
 

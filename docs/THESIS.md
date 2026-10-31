@@ -32,12 +32,12 @@ Each link is a script in this repository with a committed result file.
 | E1 | Benchmark scores do not transfer between networks | 2017 → 2018 catches 8.2% of attacks; 2018 → 2017 70.3% ([cross_dataset](results/cross_dataset.md)) | Measured |
 | E2 | Local benign traffic restores the false-alarm budget but not detection | 1,000 local flows: FPR 3.4% → 1.2%, detection 0.55 → 0.32 ([local_calibration](results/local_calibration.md)) | Measured |
 | E3 | A few labelled local attacks restore detection but break legitimate services | k = 50: detection 0.98, service false alerts 26–70%; matched target-only control 100% ([multi_env_matched](results/multi_env_matched.md)) | Measured |
-| E4 | Classifier breakage is concentrated by service | Lab: whole services flagged (port 22 → SSH-BruteForce, FTP data → PortScan). Real network: concentrated on HTTPS, NAT-PMP, SSDP and mDNS but no service flagged entirely ([service_aware](results/service_aware.md), [real_network](results/real_network.md)) | Measured; whole-service in the lab only |
+| E4 | Classifier breakage is concentrated by service, and is behaviour rather than a port shortcut | Lab: whole services flagged (port 22 → SSH-BruteForce, FTP data → PortScan). Real network: concentrated on HTTPS, NAT-PMP, SSDP and mDNS but no service flagged entirely Without port and window features FTP data is still flagged as a whole service ([service_aware](results/service_aware.md), [real_network](results/real_network.md), [portable](results/service_repair_forward_portable.md)) | Measured; whole-service in the lab only |
 | E5 | About one benign flow per service repairs the classifier at no detection cost | 10 seeds: held-out 38.5% → 0/3,300 with 18 flows (upper bound 0.11%); 15 flows fails on 1 seed in 10; detection 0.981 → 0.982, Wilcoxon p = 0.19 ([service_aware_seeds](results/service_aware_seeds.md)) | Measured, 10 seeds |
-| E6 | In the reverse direction the anomaly envelope is a second, separate failure; an exemplar envelope repairs it | 2018 → 2017: classifier repair alone leaves 23–31%; with exemplar envelope, triaged flows clean 5/5 seeds held-in; isolation-forest envelope only 3/5; triage 5/5 in both directions ([service_repair_reverse](results/service_repair_reverse.md), [service_repair_forward](results/service_repair_forward.md)) | Measured, 5 seeds |
+| E6 | Triage-chosen flows repair the classifier in both directions; the reverse direction's anomaly failure is a TCP-window fingerprint | 2018 → 2017: classifier repair alone leaves 23–31%; with exemplar envelope, triaged flows clean 5/5 seeds held-in; isolation-forest envelope only 3/5; triage 5/5 in both directions Without fingerprint features, 18 triaged flows clean 5/5 seeds held-in and held-out in both directions with no envelope ([service_repair_reverse](results/service_repair_reverse.md), [service_repair_reverse_portable](results/service_repair_reverse_portable.md)) | Measured, 5 seeds |
 | E7 | On a real network the anomaly layer flags ordinary transfers because they exceed the benchmark's benign envelope | 3,307 flows: anomaly-only alerts outside the range on 11.5 features against 2.0 for quiet flows ([envelope_audit_study](results/envelope_audit_study.md)) | Measured, 12 blocks |
 | E8 | Sensor position systematically shifts verdicts | Undoing segmentation offload on 13 captures: classifier alerts 93 → 74, anomaly-only 115 → 191, total 6.0% → 8.1%, McNemar p = 6 × 10⁻¹⁰, identical at 1/12/100 µs spacing ([offload_counterfactual_12us](results/offload_counterfactual_12us.md)) | Measured, 13 captures |
-| E9 | The local recipe holds on a real network; a lab repair does not | 12 blocks, local flows from the previous day: 254 → 66 alerts per hour, lower in 12/12 blocks (sign test p = 0.0005), detection 0.980 → 0.980; lab service flows worse in 11/12 blocks ([real_network](results/real_network.md)) | Measured, one network, one evening |
+| E9 | The local recipe holds on a real network; a lab repair does not | 12 blocks, local flows from the previous day: 254 → 66 alerts per hour, lower in 12/12 blocks (sign test p = 0.0005), detection 0.980 → 0.980; lab service flows worse in 11/12 blocks. Without fingerprint features: 6.9% → 2.0%, 12/12 blocks, detection 0.962 → 0.958; lab flows neutral ([real_network](results/real_network.md), [real_network_portable](results/real_network_portable.md)) | Measured, one network, one evening; day 2 scheduled |
 
 ## Contributions
 
@@ -67,14 +67,14 @@ Each link is a script in this repository with a committed result file.
 | Oracle attack labels understate annotation cost | Stated; the repair itself uses only benign confirmations, which an analyst can give cheaply |
 | Lab services are not a real network | E9 tests the lab-derived repair on real traffic directly, and it fails |
 | Counterfactual rewrite could add artefacts | Packet spacing varied 1–100 µs with no change in results |
-| Port is a known shortcut feature (D'hooge et al., 2022) | Service-repair experiment rerun without port and TCP window features (`--portable`) |
+| Port is a known shortcut feature (D'hooge et al., 2022) | Every repair experiment rerun without port and TCP window features; conclusions hold and two earlier findings were reattributed to fingerprints |
 | Novelty claims | Checked against 2019–2026 work in [RELATED_WORK.md](RELATED_WORK.md); claims limited to what was not found |
 
 ## Remaining work to 18 December 2026
 
 | By | Work |
 |---|---|
-| Week 8 | Second real-network study (scheduled 1 Nov); shortcut-free rerun of the service repair |
+| Week 8 | Second real-network study (scheduled 1 Nov) |
 | Week 9 | Comparison arms the literature asks for: uncertainty sampling beside triage (Vu et al., 2026), and an OWAD-style normality-shift adaptation beside the exemplar envelope (Han et al., 2023) |
 | Week 10 | Exemplar envelope as a deployable console option, with its alert budget shown |
 | Week 11–12 | Thesis write-up from the result files; reproduce every number from a clean checkout |
