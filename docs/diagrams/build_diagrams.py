@@ -405,8 +405,62 @@ def w7_evaluation():
     return d
 
 
+def w7_repair_loop():
+    d = Diagram("w7_repair_loop")
+    d.zone("Site network (authorised, passive)", 20, 20, 300, 340, "blue")
+    d.zone("Detection and triage", 360, 20, 330, 340, "green")
+    d.zone("Local repair (no attack labels needed)", 730, 20, 330, 340, "orange", size=13)
+    cap = d.box(f"{b('Bounded capture')}<br>{small('dumpcap · full packets · time and byte limits')}", 40, 70, 260, 62)
+    ext = d.box(f"{b('Flow extraction')}<br>{small('corrected CICFlowMeter in WSL · 83 features')}", 40, 170, 260, 62)
+    val = d.box(f"{b('Validation')}<br>{small('schema, finite values · unusable rows counted')}", 40, 270, 260, 62)
+    d.edge(cap, ext, exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(ext, val, exit=(0.5, 1), entry=(0.5, 0))
+    score = d.box(f"{b('Score')}<br>{small('classifier + anomaly detector, vetoed by the site envelope')}", 380, 70, 290, 62, "green")
+    console = d.box(f"{b('Console alert')}<br>{small('SHAP reasons · candidate ATT&amp;CK technique')}", 380, 170, 290, 62, "green")
+    tri = d.box(f"{b('Analyst triage')}<br>{small('confirm · dismiss (false alarm) · reopen')}", 380, 270, 290, 62, "green")
+    d.edge(val, score, exit=(1, 0.5), entry=(0, 0.5), points=[(330, 301), (330, 101)])
+    d.edge(score, console, exit=(0.5, 1), entry=(0.5, 0))
+    d.edge(console, tri, exit=(0.5, 1), entry=(0.5, 0))
+    store = d.box(f"{b('Durable triage store')}<br>{small('SQLite · decision + model features · no addresses')}", 750, 270, 290, 62, "orange")
+    repair = d.box(f"{b('Repair set')}<br>{small('dismissed alerts = analyst-confirmed benign flows')}", 750, 170, 290, 62, "orange")
+    model = d.box(f"{b('repair_model.py')}<br>{small('retrain with repair set · attach site normal traffic as exemplar envelope')}", 750, 70, 290, 62, "orange")
+    d.edge(tri, store, exit=(1, 0.5), entry=(0, 0.5))
+    d.edge(store, repair, exit=(0.5, 0), entry=(0.5, 1))
+    d.edge(repair, model, exit=(0.5, 0), entry=(0.5, 1))
+    d.edge(model, score, label="served model", exit=(0, 0.5), entry=(1, 0.5))
+    d.box("Every repair is reported before and after on the benchmark test split (detection) and on local traffic (alert "
+          "rate), so a gain on one cannot hide a loss on the other.", 20, 380, 1040, 40, "grey", fill="#F5F6F8", size=11)
+    return d
+
+
+def w7_realnet_design():
+    d = Diagram("w7_realnet_design")
+    d.zone("Data (each used for one purpose only)", 20, 20, 1040, 150, "blue")
+    day0 = d.box(f"{b('Previous day')}<br>{small('2 sessions · 222 flows · local repair flows and site envelope only')}", 40, 60, 320, 86)
+    blocks = d.box(f"{b('Evaluation evening')}<br>{small('12 blocks · 5 min or 90 MB each · 10 min apart · scored only')}", 380, 60, 320, 86)
+    bench = d.box(f"{b('Benchmark test split')}<br>{small('later period, never trained on · attack detection')}", 720, 60, 320, 86)
+    d.zone("Conditions (5 label seeds each) · local flows come from the previous day", 20, 195, 640, 300, "green", size=13)
+    conds = ["Source only (deployed model)", "Few-shot: + k = 50 labelled target attacks per class",
+             "+ 30 lab service flows (does a lab repair transfer?)", "+ 30 local flows: port-spread · triaged · least confident",
+             "+ local anomaly rule: threshold · isolation forest · refit · exemplar envelope",
+             "All of the above again without port and TCP-window features"]
+    cids = [d.box(t, 40, 232 + i * 43, 600, 28, "green", size=11) for i, t in enumerate(conds)]
+    for a, z in zip(cids, cids[1:]):
+        d.edge(a, z, exit=(0.5, 1), entry=(0.5, 0))
+    d.zone("Measures (evening blocks · benchmark test)", 680, 195, 380, 300, "purple", size=13)
+    meas = [f"{b('Alert rate per block')}<br>{small('no attacks generated: alerts are upper bounds on false alerts')}",
+            f"{b('Per-block sign test')}<br>{small('blocks are the unit; seeds share blocks')}",
+            f"{b('Benchmark detection')}<br>{small('class-balanced, same conditions')}",
+            f"{b('Mechanism audits')}<br>{small('alerts by service · benign-envelope features · offload counterfactual')}"]
+    for t, i in zip(meas, range(len(meas))):
+        d.box(t, 700, 240 + i * 62, 340, 50, "purple", size=11)
+    d.box("Privacy: household consent · passive capture only · keyed pseudonyms · aggregates in shared outputs · "
+          "pcaps stay local. Repeated on a second evening for independence.", 20, 515, 1040, 40, "grey", fill="#F5F6F8", size=11)
+    return d
+
+
 BUILDERS = {f.__name__: f for f in (a1_architecture, w5_ml_pipeline, w5_attack_lab, w5_use_cases, w5_dashboard_wireframe,
-                                    w7_architecture, w7_sequence, w7_evaluation)}
+                                    w7_architecture, w7_sequence, w7_evaluation, w7_repair_loop, w7_realnet_design)}
 
 
 def export(drawio_path):
