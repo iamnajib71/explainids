@@ -35,6 +35,7 @@ from ids.explain import Explainer
 from ids.models import Detector
 from ids.scoring import align_columns, interleave_background, score_frame
 from ids.synthetic import make_flows
+from ids.triage_store import STATUSES, TriageStore
 
 MODEL_DIR = Path(os.environ.get("EXPLAINIDS_MODEL_DIR", "models"))
 API_KEY = os.environ.get("EXPLAINIDS_API_KEY")  # unset = open (local dev only)
@@ -51,6 +52,25 @@ FLOW_META = {"Src IP": "src", "Dst IP": "dst", "Dst Port": "dport", "Protocol": 
 app = FastAPI(title="ExplainIDS API", version="0.2.0",
               description="Explainable intrusion detection with candidate MITRE ATT&CK context.")
 _state: dict = {"alerts": []}
+_alert_features: dict[str, dict] = {}  # alert_id -> model features, kept only for triage
+TRIAGE_DB = Path(os.environ.get("EXPLAINIDS_TRIAGE_DB", "data/triage.sqlite"))
+_triage_store: TriageStore | None = None
+
+
+def triage() -> TriageStore:
+    global _triage_store
+    if _triage_store is None or _triage_store.path != TRIAGE_DB:
+        _triage_store = TriageStore(TRIAGE_DB)
+    return _triage_store
+
+
+def _remember(alerts: list[dict], frame: pd.DataFrame, flagged: list[int]) -> None:
+    """Keep each new alert's model features so a later triage decision can feed the repair set."""
+    feats = detector().features
+    for a, i in zip(alerts, flagged):
+        _alert_features[a["alert_id"]] = {f: float(frame[f].iat[i]) for f in feats}
+    while len(_alert_features) > MAX_KEPT_ALERTS:
+        _alert_features.pop(next(iter(_alert_features)))
 
 
 def require_key(key: str | None = Security(APIKeyHeader(name="X-API-Key", auto_error=False))):
@@ -231,6 +251,7 @@ async def sensor_ingest(file: UploadFile = File(...), sensor_session: str = Form
                               "model": state()["mode"]}
         _sensor["batches"] = (_sensor["batches"] + [{"key": batch_key, "checksum": checksum, "result": result}])[-128:]
         _state["alerts"] = (_state["alerts"] + new_alerts)[-MAX_KEPT_ALERTS:]
+        _remember(new_alerts, numeric, flagged)
         return result
 
 
@@ -344,8 +365,10 @@ def predict(body: Flows):
     missing = [f for f in det.features if f not in df]
     if missing:
         raise HTTPException(status_code=422, detail=f"missing features: {missing[:5]}")
-    _, alerts = score_frame(det, state()["explainer"], df)
+    scored, alerts = score_frame(det, state()["explainer"], df)
     _state["alerts"] = (_state["alerts"] + alerts)[-MAX_KEPT_ALERTS:]  # bounded memory in long-running workers
+    flagged = [i for i in range(len(scored)) if scored["predicted"].iat[i] != BENIGN or scored["outlier"].iat[i]]
+    _remember(alerts, df, flagged)
     return {"scored": len(df), "alerts": alerts}
 
 
@@ -361,13 +384,30 @@ def incidents(window_minutes: int = 10):
 
 @app.post("/alerts/{alert_id}/status", dependencies=[Depends(require_key)])
 def set_status(alert_id: str, status: str):
-    if status not in {"open", "confirmed", "dismissed"}:
+    """Record a triage decision durably. Dismissing an alert confirms the flow was benign, which adds
+    it to the repair set (see /triage/repair-set.csv)."""
+    if status not in STATUSES:
         raise HTTPException(status_code=422, detail="status must be open, confirmed or dismissed")
     for a in _state["alerts"]:
         if a["alert_id"] == alert_id:
             a["status"] = status
+            triage().record(alert_id, status, a.get("predicted_class"), a.get("outlier"),
+                            _alert_features.get(alert_id))
             return a
     raise HTTPException(status_code=404, detail="alert not found")
+
+
+@app.get("/triage/summary", dependencies=[Depends(require_key)])
+def triage_summary():
+    return triage().summary()
+
+
+@app.get("/triage/repair-set.csv", dependencies=[Depends(require_key)])
+def repair_set_csv():
+    """Analyst-confirmed benign flows as a labelled CSV, the input to scripts/repair_model.py."""
+    frame = triage().repair_set()
+    return Response(frame.to_csv(index=False), media_type="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=repair_set.csv"})
 
 
 @app.middleware("http")

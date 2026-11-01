@@ -36,31 +36,39 @@ class TwoEnvelope:
         return scores, source_out & local_out
 
 
-class ExemplarEnvelope:
-    """Two-envelope rule whose local envelope is exemplar-based: a flow is usual for the site if it lies
-    near *any* known-normal local flow.
+class LocalNormal:
+    """The site's own normal traffic as exemplars: a flow is usual if it lies near *any* of them.
 
     An isolation forest is density-based, so a service the site has shown only once or twice still looks
-    isolated and is not vetoed. A nearest-neighbour envelope needs only one example per service, which
-    matches a repair budget of one or two flows per service. Features are signed-log transformed and
-    scaled by the local median and IQR; the threshold is the (1 - budget) quantile of each local flow's
-    leave-one-out distance to its nearest neighbour, so at most `budget` of the site's own normal traffic
-    would count as unusual.
+    isolated. A nearest-neighbour envelope needs only one example per behaviour, which matches a repair
+    budget of one or two flows per service. Features are signed-log transformed and scaled by the local
+    median and IQR; the threshold is the (1 - budget) quantile of each local flow's leave-one-out distance
+    to its nearest neighbour, so at most `budget` of the site's own normal traffic counts as unusual.
     """
 
-    def __init__(self, det, local: pd.DataFrame, budget: float = 0.01):
-        self.det, self.features = det, det.features
+    def __init__(self, features: list[str], local: pd.DataFrame, budget: float = 0.01):
+        self.features = list(features)
         Z = np.asarray(signed_log(local[self.features]), dtype=float)
         self.center = np.median(Z, axis=0)
         iqr = np.subtract(*np.percentile(Z, [75, 25], axis=0))
         self.scale = np.where(iqr > 0, iqr, 1.0)
-        self.Z = (Z - self.center) / self.scale
-        self.nn = NearestNeighbors(n_neighbors=2).fit(self.Z)
-        loo = self.nn.kneighbors(self.Z)[0][:, 1]
+        self.nn = NearestNeighbors(n_neighbors=2).fit((Z - self.center) / self.scale)
+        loo = self.nn.kneighbors()[0][:, 0]                 # nearest *other* local flow
         self.threshold = float(np.quantile(loo, 1 - budget))
+        self.size = len(local)
 
-    def _transform(self, X: pd.DataFrame) -> np.ndarray:
-        return (np.asarray(signed_log(X[self.features]), dtype=float) - self.center) / self.scale
+    def usual(self, X: pd.DataFrame) -> np.ndarray:
+        Z = (np.asarray(signed_log(X[self.features]), dtype=float) - self.center) / self.scale
+        return self.nn.kneighbors(Z, n_neighbors=1)[0][:, 0] <= self.threshold
+
+
+class ExemplarEnvelope:
+    """Two-envelope rule with an exemplar local envelope: a benchmark anomaly alert stands only if the
+    flow is also unlike every known-normal local flow (see LocalNormal)."""
+
+    def __init__(self, det, local: pd.DataFrame, budget: float = 0.01):
+        self.det, self.features = det, det.features
+        self.local = LocalNormal(det.features, local, budget)
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         return self.det.predict(X)
@@ -70,8 +78,7 @@ class ExemplarEnvelope:
         out = np.zeros(len(X), dtype=bool)
         idx = np.flatnonzero(source_out)
         if len(idx):
-            dist = self.nn.kneighbors(self._transform(X.iloc[idx]), n_neighbors=1)[0][:, 0]
-            out[idx] = dist > self.threshold
+            out[idx] = ~self.local.usual(X.iloc[idx])
         return scores, out
 
 

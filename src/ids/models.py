@@ -73,7 +73,12 @@ class Detector:
 
     def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
         scores = self.iforest.score_samples(self._anomaly_input(X))
-        return scores, scores < self.anomaly_threshold
+        out = scores < self.anomaly_threshold
+        local = getattr(self, "local_normal", None)  # optional site envelope (ids.envelope.LocalNormal)
+        if local is not None and out.any():
+            idx = np.flatnonzero(out)
+            out[idx] = ~local.usual(X.iloc[idx])
+        return scores, out
 
     @property
     def classes(self) -> list[str]:

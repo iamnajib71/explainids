@@ -4,6 +4,7 @@ import tempfile
 import pytest
 
 os.environ["EXPLAINIDS_MODEL_DIR"] = tempfile.mkdtemp()  # hermetic: always the synthetic demo model
+os.environ["EXPLAINIDS_TRIAGE_DB"] = os.path.join(tempfile.mkdtemp(), "triage.sqlite")  # never the real store
 
 from fastapi.testclient import TestClient  # noqa: E402
 
@@ -196,3 +197,18 @@ def test_sensor_feed_pages_and_caps_history_without_mixing_replay(sensor_api, mo
     empty = client.get("/sensor/feed", params={"after": feed["cursor"]}).json()
     assert empty["flows"] == [] and empty["alerts"] == []
     assert all("truth" in row for row in client.get("/replay", params={"n": 2}).json()["flows"])
+
+
+def test_dismissed_alert_is_kept_durably_as_a_repair_flow(tmp_path, monkeypatch):
+    import api.main as main
+    monkeypatch.setattr(main, "TRIAGE_DB", tmp_path / "triage.sqlite")
+    flows = make_flows(8).drop(columns=["Label"]).to_dict("records")
+    alerts = client.post("/predict", json={"flows": flows}).json()["alerts"]
+    assert alerts
+    aid = alerts[0]["alert_id"]
+    assert client.post(f"/alerts/{aid}/status", params={"status": "dismissed"}).json()["status"] == "dismissed"
+    assert client.get("/triage/summary").json() == {"decisions": {"confirmed": 0, "dismissed": 1, "open": 0},
+                                                     "repair_set_flows": 1}
+    csv = client.get("/triage/repair-set.csv")
+    assert csv.status_code == 200 and "BENIGN" in csv.text and aid in csv.text
+    assert main.TriageStore(tmp_path / "triage.sqlite").status(aid) == "dismissed"   # survives a restart
