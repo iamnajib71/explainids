@@ -101,7 +101,8 @@ def dose_response() -> None:
     save(fig, "fig2_dose_response.png")
 
 
-def per_block(name: str = "real_network_portable.json", out: str = "fig3_real_network_blocks.png") -> None:
+def per_block(name: str = "real_network_portable.json", out: str = "fig3_real_network_blocks.png",
+              title: str = "Real home network: lower in every one of 12 blocks") -> None:
     res = load(name)
     series = {"few-shot": ("Few-shot adapted", ORANGE),
               "few-shot + 30 triaged local flows + exemplar envelope": ("+ triage repair + local envelope", BLUE)}
@@ -114,10 +115,10 @@ def per_block(name: str = "real_network_portable.json", out: str = "fig3_real_ne
                     color=INK, fontsize=7.5, va="center")
     ax.set_xticks(x)
     ax.set_xlim(0.6, 15.8)
-    ax.set_xlabel("Capture block (5 min each, one evening, previous day used for repair)")
+    ax.set_xlabel("Capture block (5 min each, one evening; an earlier evening used for repair)")
     ax.set_ylabel("Alerts on normal traffic")
     ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
-    ax.set_title("Real home network: lower in every one of 12 blocks")
+    ax.set_title(title)
     ax.set_ylim(0, None)
     ax.legend(loc="upper center", fontsize=7.5, ncol=2)
     save(fig, out)
@@ -195,3 +196,5 @@ def baselines() -> None:
 
 if __name__ == "__main__":
     transfer(); dose_response(); per_block(); offload(); envelope(); baselines()
+    per_block("real_network_day2_portable.json", "fig7_day2_blocks.png",
+              "Pre-registered second evening: lower again in all 12 blocks")

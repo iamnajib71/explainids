@@ -37,7 +37,7 @@ Each link is a script in this repository with a committed result file.
 | E6 | Triage-chosen flows repair the classifier in both directions; the reverse direction's anomaly failure is a TCP-window fingerprint | 2018 → 2017: classifier repair alone leaves 23–31%; with exemplar envelope, triaged flows clean 5/5 seeds held-in; isolation-forest envelope only 3/5; triage 5/5 in both directions Without fingerprint features, 18 triaged flows clean 5/5 seeds held-in and held-out in both directions with no envelope ([service_repair_reverse](results/service_repair_reverse.md), [service_repair_reverse_portable](results/service_repair_reverse_portable.md)) | Measured, 5 seeds |
 | E7 | On a real network the anomaly layer flags ordinary transfers because they exceed the benchmark's benign envelope | 3,307 flows: anomaly-only alerts outside the range on 11.5 features against 2.0 for quiet flows ([envelope_audit_study](results/envelope_audit_study.md)) | Measured, 12 blocks |
 | E8 | Sensor position systematically shifts verdicts | Undoing segmentation offload on 13 captures: classifier alerts 93 → 74, anomaly-only 115 → 191, total 6.0% → 8.1%, McNemar p = 6 × 10⁻¹⁰, identical at 1/12/100 µs spacing ([offload_counterfactual_12us](results/offload_counterfactual_12us.md)) | Measured, 13 captures |
-| E9 | The local recipe holds on a real network; a lab repair does not | 12 blocks, local flows from the previous day: 254 → 66 alerts per hour, lower in 12/12 blocks (sign test p = 0.0005), detection 0.980 → 0.980; lab service flows worse in 11/12 blocks. Without fingerprint features: 6.9% → 2.0%, 12/12 blocks, detection 0.962 → 0.958; lab flows neutral ([real_network](results/real_network.md), [real_network_portable](results/real_network_portable.md)) | Measured, one network, one evening; day 2 scheduled |
+| E9 | The local recipe holds on a real network; a lab repair does not | 12 blocks, local flows from the previous day: 254 → 66 alerts per hour, lower in 12/12 blocks (sign test p = 0.0005), detection 0.980 → 0.980; lab service flows worse in 11/12 blocks. Without fingerprint features: 6.9% → 2.0%, 12/12 blocks, detection 0.962 → 0.958; lab flows neutral ([real_network](results/real_network.md), [real_network_portable](results/real_network_portable.md)). **Pre-registered day 2** (untouched, 4,634 flows): 6.6% → 2.0% without fingerprint features and 6.2% → 1.0% with them, 12/12 blocks each (p = 0.0005), detection change −0.002 / +0.001; lab flows neutral / worse ([real_network_day2_portable](results/real_network_day2_portable.md), [PREREGISTRATION_DAY2](PREREGISTRATION_DAY2.md)) | Confirmed on a second evening, one network |
 
 ## Contributions
 
@@ -62,7 +62,7 @@ Each link is a script in this repository with a committed result file.
 | Threat | Handling |
 |---|---|
 | Real traffic is unlabelled | Alerts are reported as candidate false alerts (an upper bound); no attacks are generated on the home network |
-| One home network, one evening | Stated as a case study; per-block sign tests; previous-day sessions for fitting, later blocks for evaluation. A second study on another day or network is the next step |
+| One home network | Stated as a case study; per-block sign tests; day-1 sessions for fitting; a second, pre-registered evening confirmed the result (H1–H4). Another network is the next step |
 | Few label seeds | 10 seeds for the dose–response, 5 per direction for the repair comparison |
 | One transfer direction | Both directions measured; they fail differently (E6) |
 | Oracle attack labels understate annotation cost | Stated; the repair itself uses only benign confirmations, which an analyst can give cheaply |
@@ -75,7 +75,7 @@ Each link is a script in this repository with a committed result file.
 
 | By | Work |
 |---|---|
-| Week 8 | Second real-network study (scheduled 1 Nov) |
-| Week 9 | Comparison arms the literature asks for: uncertainty sampling beside triage (Vu et al., 2026), and an OWAD-style normality-shift adaptation beside the exemplar envelope (Han et al., 2023) |
+| Week 8 | Second real-network study: done 1 Nov, pre-registered, all four hypotheses confirmed |
+| Week 9 | Comparison arms (done): triage never worse than uncertainty sampling, better on day 2; local threshold, refit and exemplar veto not consistently separable |
 | Week 10 | Exemplar envelope as a deployable console option, with its alert budget shown |
 | Week 11–12 | Thesis write-up from the result files; reproduce every number from a clean checkout |

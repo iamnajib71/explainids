@@ -330,6 +330,34 @@ benchmark. Seeds share the same blocks, so per-block sign tests, not flow-level 
 
 **Limits.** One network and one evening; the second, pre-registered evening tests the primary comparison only.
 
+### Pre-registered confirmation: a second evening
+
+**Why it matters.** The recipe was chosen on the first evening, which had been examined. The hypotheses, data and
+decision rule for a second, untouched evening were committed before any of its flows were scored
+([PREREGISTRATION_DAY2.md](PREREGISTRATION_DAY2.md), commit `1e16194`). Local flows still come only from the first
+evening, two days earlier. Day 2: 12/12 blocks validated, 4,634 flows, 0.99 h of observed traffic
+([`real_network_day2_portable`](results/real_network_day2_portable.md), [`real_network_day2`](results/real_network_day2.md)).
+
+| Hypothesis (5 seeds, per-block sign test) | Result | Verdict |
+|---|---|---|
+| H1: triaged flows + exemplar envelope below few-shot, without port and window features | 6.6% → 2.0% (310 → 94 alerts per hour); lower in 12/12 blocks, p = 0.0005 | **Confirmed** |
+| H2: detection cost no more than 0.01 | 0.962 → 0.960; mean per-seed change −0.002 (−0.007 to +0.002) | **Confirmed** |
+| H3: the same with all 83 features | 6.2% → 1.0% (290 → 46 per hour), 12/12 blocks, p = 0.0005; detection change +0.001 | **Confirmed** |
+| H4: 30 lab service flows do not lower alerts | without shortcut features lower 5, higher 6, p = 1.0; with all features higher in 11/12, p = 0.006 | **Confirmed** (neutral, and worse with fingerprint features, as on day 1) |
+
+**Exploratory (not pre-registered), day 2 against triage + exemplar envelope:**
+- **Triage beats least-confident selection on the second evening:** lower in 12/12 blocks with either feature set
+  (p = 0.0005; 2.0% vs 4.3% without shortcut features). On day 1 the two were indistinguishable, so the claim is
+  that triage is never worse and sometimes much better, consistent with the lab result.
+- **The anomaly-side variants do not separate on day 2.** Local threshold, local refit and the forest veto are all
+  within 0.3 points of the exemplar envelope (sign tests p ≥ 0.11). On day 1 refit and the forest veto were worse.
+  The ranking among local models of normal is not stable across evenings; that a local model of normal is needed is.
+
+![Day 2 per block](figures/fig7_day2_blocks.png)
+
+**What this means.** The primary result replicated on untouched data, at the size seen on day 1, with the analysis
+fixed in advance. Two cautions remain: one network, and alerts on unlabelled traffic are upper bounds on false alerts.
+
 ### Robustness: are these results a port shortcut?
 
 **Why it matters.** Destination port and TCP initial-window features are known shortcuts that encode the capture
