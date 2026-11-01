@@ -298,6 +298,38 @@ than anything in the 2017 benign traffic.
 flows. Unlabelled, so alert rates are upper bounds on false alerts and detection is measured only on the
 benchmark. Seeds share the same blocks, so per-block sign tests, not flow-level tests, are reported.
 
+### Comparison arms: which flows, and which local model of normal?
+
+**Why it matters.** The literature asks for two comparisons before any novelty claim (see
+[RELATED_WORK.md](RELATED_WORK.md)): uncertainty sampling as the usual way to choose which flows an analyst labels
+(Vu et al., 2026, preprint), and distribution-level adaptation of the anomaly detector to the site's normal traffic
+(Han et al., 2023). Both were added to the real-network study (day 1, shortcut-free features, 5 seeds; result:
+[`results/real_network_baselines.md`](results/real_network_baselines.md); Figure 6 in `docs/figures/`).
+
+| 30 local flows chosen by … and anomaly layer | Alerts | Per hour | Detection | Against triage + exemplar envelope (per-block sign test) |
+|---|---|---|---|---|
+| Triage + exemplar envelope | **2.0%** | 72 | 0.958 | reference |
+| Triage + local threshold on the benchmark forest | 2.1% | 73 | 0.958 | no difference (lower 4, higher 2, p = 0.69) |
+| Least-confident + exemplar envelope | 2.2% | 78 | 0.957 | no difference (lower 6, higher 5, p = 1.0); seed range 1.7–3.2% vs 1.9–2.2% |
+| Triage + local refit (benchmark + local benign) | 3.8% | 135 | 0.959 | envelope lower in 11/12 blocks (p = 0.006) |
+| Triage + local isolation-forest veto | 4.7% | 165 | 0.960 | envelope lower in 12/12 (p = 0.0005) |
+| Triage, benchmark anomaly layer unchanged | 5.2% | 186 | 0.960 | envelope lower in 12/12 (p = 0.0005) |
+
+**What we found.**
+- **What matters on a real network is a local model of the site's normal traffic, set at the site's own alert
+  budget.** Re-setting the benchmark anomaly detector's threshold on the previous day's traffic works as well as
+  the exemplar envelope here. The exemplar envelope's advantage is over the density-based veto and over refitting the
+  detector on pooled benchmark and local traffic, which leaves the benchmark's notion of normal largely in place.
+- **How the 30 flows are chosen matters little once the anomaly layer is corrected.** Triage and least-confident
+  selection reach the same mean; triage is steadier across seeds. In the lab, triage was the more reliable choice
+  (5/5 seeds clean in both directions at 18 flows), so the platform's triage remains the recommended source.
+- **Revised claim.** Earlier sections present the exemplar envelope as the anomaly-side repair. The evidence supports
+  a narrower statement: either local rule (threshold or exemplar veto) repairs the anomaly layer; the exemplar veto
+  is preferable when the benchmark's own threshold must be kept, because it only removes alerts on flows the site has
+  seen as normal rather than moving the operating point for all traffic.
+
+**Limits.** One network and one evening; the second, pre-registered evening tests the primary comparison only.
+
 ### Robustness: are these results a port shortcut?
 
 **Why it matters.** Destination port and TCP initial-window features are known shortcuts that encode the capture

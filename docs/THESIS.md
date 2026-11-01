@@ -48,8 +48,9 @@ Each link is a script in this repository with a committed result file.
    for the classifier (E4), a benign-envelope audit for the anomaly layer (E7), and a paired offload counterfactual for
    sensor position (E8).
 3. **A repair protocol with a measured price**: analyst-confirmed benign flows chosen by triage for the classifier
-   (E5, E6) and an exemplar envelope of local normal traffic for the anomaly layer (E6, E9), each reported against
-   benchmark detection so no gain hides a loss. The console's triage records can supply the repair set directly.
+   (E5, E6) and a local model of the site's normal traffic for the anomaly layer (E9): a local threshold or the
+   exemplar veto, both clearly better than refitting the detector or a density-based veto, each reported against
+   benchmark detection so no gain hides a loss. The console's triage records supply the repair set directly.
 4. **Real-network evidence** with privacy controls: passive capture under consent, keyed pseudonymisation,
    aggregates only, block-level statistics, the previous day for fitting and the next for evaluation (E7–E9).
 5. **An honest method record**: header-only capture corrupts 25 of 83 features; NAT'd lab traffic is not an

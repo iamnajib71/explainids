@@ -168,7 +168,9 @@ def baselines() -> None:
     order = [("few-shot", "Few-shot adapted"),
              ("few-shot + 30 uncertain local flows", "+ 30 uncertain flows"),
              ("few-shot + 30 triaged local flows", "+ 30 triaged flows"),
+             ("few-shot + 30 triaged local flows + two-envelope anomaly", "+ triaged + local forest veto"),
              ("few-shot + 30 triaged local flows + local refit anomaly", "+ triaged + local refit"),
+             ("few-shot + 30 triaged local flows + local anomaly threshold", "+ triaged + local threshold"),
              ("few-shot + 30 uncertain local flows + exemplar envelope", "+ uncertain + local envelope"),
              ("few-shot + 30 triaged local flows + exemplar envelope", "+ triaged + local envelope")]
     rates, dets = [], []
@@ -176,9 +178,9 @@ def baselines() -> None:
         rows = [r for r in res["runs"] if r["config"] == cfg]
         rates.append(np.mean([r["real_network"]["rate"] for r in rows]))
         dets.append(np.mean([r["target_test"]["macro_detection"] for r in rows]))
-    fig, ax = plt.subplots(figsize=(6.2, 3.0))
+    fig, ax = plt.subplots(figsize=(6.4, 3.6))
     y = np.arange(len(order))[::-1]
-    bars = ax.barh(y, rates, 0.6, color=[BLUE if "envelope" in c else ORANGE for c, _ in order])
+    bars = ax.barh(y, rates, 0.6, color=[BLUE if ("exemplar" in c or "threshold" in c) else ORANGE for c, _ in order])
     for b, d in zip(bars, dets):
         ax.annotate(f"{b.get_width():.1%}  (detection {d:.3f})", (b.get_width(), b.get_y() + b.get_height() / 2),
                     xytext=(4, 0), textcoords="offset points", va="center", color=INK, fontsize=7.5)
@@ -186,7 +188,7 @@ def baselines() -> None:
     ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
     ax.set_xlim(0, max(rates) * 1.55)
     ax.set_xlabel("Alerts on normal traffic, real network (mean of 5 seeds)")
-    ax.set_title("Which repair: chosen flows and local normal model")
+    ax.set_title("A local model of normal traffic does the work (blue)")
     ax.grid(axis="y", visible=False)
     save(fig, "fig6_baselines.png")
 
