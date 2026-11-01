@@ -102,3 +102,34 @@ def test_exemplar_envelope_vetoes_a_service_seen_once():
     env = ExemplarEnvelope(Source(), local)
     X = pd.DataFrame({"a": [500.0, 5.1e6, 5e9], "b": [5.0, 5.0, 5.0]})
     assert env.anomaly(X)[1].tolist() == [False, False, True]
+
+
+def test_uncertainty_sample_takes_least_confident_flows():
+    from ids.repair import uncertainty_sample
+
+    class Det:
+        def predict_proba(self, X):
+            p = X["c"].to_numpy()
+            return np.column_stack([p, 1 - p])
+
+    pool = pd.DataFrame({"c": [0.99, 0.5, 0.9, 0.55, 0.6]})
+    got = uncertainty_sample(Det(), pool, ["c"], 2)
+    assert sorted(got["c"].tolist()) == [0.5, 0.55]
+
+
+def test_local_refit_learns_the_site_normal():
+    from ids.envelope import LocalRefit
+
+    class Source:
+        features = ["a"]
+        def _anomaly_input(self, X):
+            return X[["a"]]
+        def predict(self, X):
+            return np.array(["BENIGN"] * len(X))
+
+    rng = np.random.default_rng(0)
+    src = pd.DataFrame({"a": rng.normal(0, 1, 500)})
+    local = pd.DataFrame({"a": rng.normal(100, 1, 300)})
+    refit = LocalRefit(Source(), src, local)
+    X = pd.DataFrame({"a": [100.0, 1e6]})
+    assert refit.anomaly(X)[1].tolist() == [False, True]

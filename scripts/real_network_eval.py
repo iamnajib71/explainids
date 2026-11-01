@@ -43,8 +43,8 @@ from service_aware_eval import (  # noqa: E402
 
 from ids import SEED  # noqa: E402
 from ids.data import BENIGN, LABEL_COL, feature_columns  # noqa: E402
-from ids.envelope import ExemplarEnvelope, TwoEnvelope  # noqa: E402
-from ids.repair import local_sample, service_key, triage_sample  # noqa: E402
+from ids.envelope import ExemplarEnvelope, LocalRefit, TwoEnvelope  # noqa: E402
+from ids.repair import local_sample, service_key, triage_sample, uncertainty_sample  # noqa: E402
 from ids.scoring import align_columns  # noqa: E402
 
 N_BOOT = 2000
@@ -199,6 +199,9 @@ def main() -> None:
     local_threshold("source only + local anomaly threshold", source)
     rescore("source only + two-envelope anomaly", TwoEnvelope(source, fit_pool[feats]))
     rescore("source only + exemplar envelope", ExemplarEnvelope(source, fit_pool[feats]))
+    src_benign = src["train"][src["train"][LABEL_COL] == BENIGN].sample(
+        min(20000, int((src["train"][LABEL_COL] == BENIGN).sum())), random_state=SEED)
+    rescore("source only + local refit anomaly", LocalRefit(source, src_benign, fit_pool[feats]))
     run("both environments", pd.concat([src["train"], tgt["train"]]), pd.concat([src["val"], tgt["val"]]))
     n = args.service_flows
     for seed in seeds:
@@ -216,6 +219,13 @@ def main() -> None:
                 TwoEnvelope(repaired, fit_pool[feats]), seed=seed)
         rescore(f"few-shot + {n} triaged local flows + exemplar envelope",
                 ExemplarEnvelope(repaired, fit_pool[feats]), seed=seed)
+        rescore(f"few-shot + {n} triaged local flows + local refit anomaly",
+                LocalRefit(repaired, src_benign, fit_pool[feats]), seed=seed)
+        uncertain = uncertainty_sample(det, fit_pool, feats, n)
+        unsure = run(f"few-shot + {n} uncertain local flows", pd.concat([src["train"], labels, uncertain]),
+                     src["val"], seed=seed)
+        rescore(f"few-shot + {n} uncertain local flows + exemplar envelope",
+                ExemplarEnvelope(unsure, fit_pool[feats]), seed=seed)
         run(f"source only + {n} local flows", pd.concat([src["train"], local]), src["val"], seed=seed)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "source": src["name"],

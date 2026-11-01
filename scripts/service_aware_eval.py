@@ -40,7 +40,7 @@ from ids.data import BENIGN, LABEL_COL, dedup_global, feature_columns, stratifie
 from ids.evaluate import binary_report, report, wilson_interval
 from ids.envelope import ExemplarEnvelope, TwoEnvelope
 from ids.models import Detector
-from ids.repair import service_key, triage_sample
+from ids.repair import service_key, triage_sample, uncertainty_sample
 
 # Features that encode the capture environment rather than behaviour (see cross_dataset_eval.py).
 ENV_SPECIFIC = ["Dst Port", "FWD Init Win Bytes", "Bwd Init Win Bytes", "Fwd Seg Size Min"]
@@ -146,6 +146,8 @@ def main():
                     help="also score with the exemplar (nearest-normal) two-envelope rule")
     ap.add_argument("--triage", action="store_true",
                     help="also repair with the same number of flows chosen from the unrepaired model's alerts on the fit profile")
+    ap.add_argument("--uncertainty", action="store_true",
+                    help="also repair with the same number of flows the unrepaired model is least confident about")
     ap.add_argument("--portable", action="store_true",
                     help="drop destination port and TCP initial-window/segment-size features (the shortcut set)")
     ap.add_argument("--results", default="docs/results/service_aware.md")
@@ -179,7 +181,7 @@ def main():
     run(f"source only: {src['name']}", src["train"], src["val"], fit_profile)
     run("both environments", pd.concat([src["train"], tgt["train"]]),
         pd.concat([src["val"], tgt["val"]]), fit_profile)
-    if args.triage and services[0] != 0:
+    if (args.triage or args.uncertainty) and services[0] != 0:
         raise SystemExit("--triage needs 0 as the first --service-flows value (the unrepaired model chooses the flows)")
     unrepaired: dict = {}
     for k in shots:
@@ -194,6 +196,17 @@ def main():
                 if n_service == 0:
                     unrepaired[(k, seed)] = det
                 site_normal = pd.concat([local[local[LABEL_COL] == BENIGN], service_fit])[feats]
+                if args.uncertainty and n_service:
+                    unsure = uncertainty_sample(unrepaired[(k, seed)], fit_profile, feats, len(service_fit))
+                    u_train = pd.concat([src["train"], local, unsure])
+                    u_det = run(f"few-shot + {n_service} uncertain flows", u_train, src["val"],
+                                fit_profile.drop(index=unsure.index), k=k, service_flows=n_service,
+                                service_added=int(len(unsure)), seed=seed)
+                    if args.exemplar_envelope:
+                        u_normal = pd.concat([local[local[LABEL_COL] == BENIGN], unsure])[feats]
+                        run(f"few-shot + {n_service} uncertain flows + exemplar envelope", u_train, src["val"],
+                            fit_profile.drop(index=unsure.index), det=ExemplarEnvelope(u_det, u_normal), k=k,
+                            service_flows=n_service, service_added=int(len(unsure)), seed=seed)
                 if args.triage and n_service:
                     # Same budget, chosen by what the unrepaired model alerted on: an analyst's benign confirmations.
                     triaged, confirmed = triage_sample(unrepaired[(k, seed)], fit_profile, feats, len(service_fit), seed)

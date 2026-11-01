@@ -73,3 +73,29 @@ class ExemplarEnvelope:
             dist = self.nn.kneighbors(self._transform(X.iloc[idx]), n_neighbors=1)[0][:, 0]
             out[idx] = dist > self.threshold
         return scores, out
+
+
+class LocalRefit:
+    """Distribution-level baseline: refit the anomaly detector on benchmark and local benign traffic together.
+
+    In the spirit of normality-shift adaptation (Han et al., 2023): the model's notion of normal is
+    re-estimated with the site's traffic included, and its threshold is set on held-back local traffic at
+    the same budget. Unlike the exemplar envelope it replaces the benchmark envelope rather than vetoing it.
+    """
+
+    def __init__(self, det, source_benign: pd.DataFrame, local: pd.DataFrame, budget: float = 0.01,
+                 seed: int = SEED):
+        self.det, self.features = det, det.features
+        order = np.random.default_rng(seed).permutation(len(local))
+        cut = int(len(local) * 0.7)
+        fit, cal = local.iloc[order[:cut]], local.iloc[order[cut:]]
+        both = pd.concat([source_benign[self.features], fit[self.features]])
+        self.forest = IsolationForest(n_estimators=200, random_state=seed, n_jobs=-1).fit(det._anomaly_input(both))
+        self.threshold = float(np.quantile(self.forest.score_samples(det._anomaly_input(cal)), budget))
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.det.predict(X)
+
+    def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        scores = self.forest.score_samples(self.det._anomaly_input(X))
+        return scores, scores < self.threshold

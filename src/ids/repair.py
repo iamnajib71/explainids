@@ -42,3 +42,14 @@ def triage_sample(det, pool: pd.DataFrame, feats: list[str], n: int, seed: int) 
     rest = pool.drop(index=alerted.index)
     top_up = local_sample(rest, n - len(alerted), seed) if len(alerted) < n else rest.iloc[:0]
     return pd.concat([alerted, top_up]), int(len(alerted))
+
+
+def uncertainty_sample(det, pool: pd.DataFrame, feats: list[str], n: int) -> pd.DataFrame:
+    """The n local flows the classifier is least sure about (lowest top-class probability).
+
+    The usual active-learning choice, and the comparison arm for triage: it asks the analyst about the
+    flows nearest a decision boundary rather than about the flows that actually raised alerts.
+    """
+    confidence = det.predict_proba(pool[feats]).max(axis=1)
+    order = np.argsort(confidence, kind="stable")[: min(n, len(pool))]
+    return pool.iloc[order]
