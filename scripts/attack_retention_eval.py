@@ -30,6 +30,15 @@ Tests and decision rules, fixed in this file before the first run:
                  same detector with the benchmark anomaly layer. Feature interpolation is not a realisable
                  attack; it is a geometric stress test of where the veto sits relative to the classifier.
 
+Added after a one-seed smoke run (rules above unchanged; these are labelled exploratory in the output):
+
+  Vetoable share  The fraction of caught attacks caught by the anomaly layer alone. A veto on anomaly alerts can
+                  remove at most this much detection, so it bounds what R1 and R2 can show.
+  R5 gated triage The smoke run showed that a few attacks wrongly dismissed in triage blind the classifier to
+                  their type. Mitigation: a dismissed alert enters the repair set only if it resembles the site's
+                  earlier normal traffic (inside the local envelope). Compared with ungated triage at 3 and 10
+                  dismissed attacks; the gate must also leave the real-network false-alert rate unchanged.
+
 Outputs hold aggregates only. Accuracy is never reported (rule 4).
 """
 from __future__ import annotations
@@ -79,15 +88,29 @@ def flagged(det, X: pd.DataFrame) -> np.ndarray:
     return np.asarray((det.predict(X) != BENIGN) | det.anomaly(X)[1])
 
 
+def anomaly_only_share(det, X: pd.DataFrame) -> float | None:
+    """Of the flows flagged, the share flagged by the anomaly layer alone (the most a veto could remove)."""
+    clf = np.asarray(det.predict(X) != BENIGN)
+    anom = np.asarray(det.anomaly(X)[1])
+    caught = clf | anom
+    return float((anom & ~clf).sum() / caught.sum()) if caught.any() else None
+
+
+def gate(dismissed: pd.DataFrame, env: LocalNormal) -> pd.DataFrame:
+    """Keep only dismissals that resemble the site's earlier normal traffic."""
+    return dismissed.loc[env.usual(dismissed[env.features])] if len(dismissed) else dismissed
+
+
 def score_lab(det, lab: pd.DataFrame, feats: list[str]) -> dict:
     """Recall on lab attacks, overall and per attack type, and false alerts on the lab's benign flows."""
     hit = flagged(det, lab[feats])
     attack = (lab[LABEL_COL] != BENIGN).to_numpy()
     n, k = int(attack.sum()), int(hit[attack].sum())
+    vetoable = anomaly_only_share(det, lab.loc[attack, feats]) if n else None
     per_class = pd.Series(hit[attack], index=lab.index[attack]).groupby(lab.loc[attack, LABEL_COL]).mean()
     nb = int((~attack).sum())
     return {"attacks": n, "caught": k, "recall": k / n if n else None, "recall_ci": list(wilson_interval(k, n)),
-            "per_class": per_class.round(4).to_dict(), "benign": nb,
+            "per_class": per_class.round(4).to_dict(), "vetoable_share": vetoable, "benign": nb,
             "benign_fpr": float(hit[~attack].mean()) if nb else None}
 
 
@@ -109,12 +132,14 @@ def contaminate(pool: pd.DataFrame, attacks: pd.DataFrame, n: int, seed: int) ->
 
 
 def mislabel(triaged: pd.DataFrame, attacks: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
-    """The triage set with n of its flows replaced by attacks an analyst wrongly dismissed as benign."""
+    """The triage set with n of its flows replaced by attacks an analyst wrongly dismissed as benign.
+    `dismissed_attack` marks the replaced flows (bookkeeping only; never a model feature)."""
+    keep = triaged.sample(n=max(0, len(triaged) - n), random_state=seed).assign(dismissed_attack=False)
     if n == 0:
-        return triaged
+        return keep
     wrong = attacks.sample(n=min(n, len(attacks)), random_state=seed).copy()
     wrong[LABEL_COL] = BENIGN
-    keep = triaged.sample(n=max(0, len(triaged) - len(wrong)), random_state=seed)
+    wrong["dismissed_attack"] = True
     return pd.concat([keep, wrong[keep.columns.intersection(wrong.columns)]], ignore_index=True)
 
 
@@ -147,6 +172,8 @@ def main() -> None:
     blocks = [b for b in (load_session(p, feats) for p in study_sessions(args.study)) if len(b)]
     src_benign = src["train"][src["train"][LABEL_COL] == BENIGN].sample(
         min(20000, int((src["train"][LABEL_COL] == BENIGN).sum())), random_state=SEED)
+    bench_attacks = tgt["test"][tgt["test"][LABEL_COL] != BENIGN]
+    site_normal = LocalNormal(feats, fit_pool)
     n = args.service_flows
     rows: list[dict] = []
 
@@ -156,6 +183,7 @@ def main() -> None:
                "real_network_rate": score_blocks(det, blocks, feats)["rate"]}
         if bench:
             row["benchmark"] = score_attacks(det, tgt["test"], feats)
+            row["benchmark"]["vetoable_share"] = anomaly_only_share(det, bench_attacks[feats])
         rows.append(row)
         print(f"[{test}] {variant} {meta} seed {seed}: lab recall {row['lab']['recall']:.3f} | "
               f"real-net {row['real_network_rate']:.3f}"
@@ -184,11 +212,16 @@ def main() -> None:
             t.tune_anomaly_threshold(pool[feats])
             record("R2 poisoned pool", "triaged + local anomaly threshold", t, seed, held, bench=False,
                    attacks_in_pool=k, share_of_pool=k / len(pool))
-        for k in DISMISSED:                                                          # R2, analyst error
-            bad = fit_detector(pd.concat([src["train"], labels, mislabel(triaged, poison, k, seed)]),
-                               src["val"], feats, args.model)
+        for k in DISMISSED:                                                          # R2 analyst error, R5 gate
+            wrong = mislabel(triaged, poison, k, seed)
+            bad = fit_detector(pd.concat([src["train"], labels, wrong]), src["val"], feats, args.model)
             record("R2 dismissed attacks", "triaged + exemplar envelope", ExemplarEnvelope(bad, fit_pool[feats]),
                    seed, held, bench=False, dismissed=k)
+            kept = gate(wrong, site_normal)
+            gated = fit_detector(pd.concat([src["train"], labels, kept]), src["val"], feats, args.model)
+            record("R5 gated triage", "triaged + exemplar envelope", ExemplarEnvelope(gated, fit_pool[feats]),
+                   seed, held, bench=False, dismissed=k, kept=int(len(kept)),
+                   attacks_kept=int(kept["dismissed_attack"].sum()))
 
         rng = np.random.default_rng(seed)                                            # R3
         for size in POOL_SIZES:
@@ -220,8 +253,8 @@ def main() -> None:
            "runs": rows, "minutes": (time.perf_counter() - t0) / 60}
     out = Path(args.results)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(to_markdown(res), encoding="utf-8")
     out.with_suffix(".json").write_text(json.dumps(res, indent=1, default=float), encoding="utf-8")
+    out.write_text(to_markdown(res), encoding="utf-8")
     print(f"results in {out}")
 
 
@@ -242,13 +275,17 @@ def to_markdown(res: dict) -> str:
          f"{res['poison_attacks']} attacks and is scored on the other two ({res['held_attacks']} attacks). "
          "Means over seeds; decision rules are in the script docstring.", "",
          "## R1. Does the repair keep catching attacks?", "",
-         "| Variant | Lab attack recall | Benchmark detection | Lab benign false alerts | Real-network alerts |",
-         "|---|---|---|---|---|"]
+         "| Variant | Lab attack recall | Benchmark detection | Caught by anomaly layer alone: lab / benchmark | "
+         "Lab benign false alerts | Real-network alerts |",
+         "|---|---|---|---|---|---|"]
     variants = list(dict.fromkeys(r["variant"] for r in pick("R1 retention")))
+    share = lambda x: f"{x:.1%}" if x == x else "—"  # noqa: E731
     for v in variants:
         rs = pick("R1 retention", variant=v)
         L.append(f"| {v} | {_mean(rs, lambda r: r['lab']['recall']):.1%} | "
                  f"{_mean(rs, lambda r: r['benchmark']['macro_detection']):.3f} | "
+                 f"{share(_mean(rs, lambda r: r['lab']['vetoable_share'] if r['lab']['vetoable_share'] is not None else np.nan))} / "
+                 f"{share(_mean(rs, lambda r: r['benchmark']['vetoable_share'] if r['benchmark']['vetoable_share'] is not None else np.nan))} | "
                  f"{_mean(rs, lambda r: r['lab']['benign_fpr']):.1%} | {_mean(rs, lambda r: r['real_network_rate']):.1%} |")
     classes = sorted({c for r in pick("R1 retention") for c in r["lab"]["per_class"]})
     L += ["", "Lab recall by attack type:", "", "| Variant | " + " | ".join(classes) + " |",
@@ -269,11 +306,21 @@ def to_markdown(res: dict) -> str:
             L.append(f"| {k} attacks ({rs[0]['share_of_pool']:.1%}) | {v} | "
                      f"{_mean(rs, lambda r: r['lab']['recall']):.1%} | {_mean(rs, lambda r: r['real_network_rate']):.1%} |")
     clean = pick("R2 poisoned pool", variant="triaged + exemplar envelope", attacks_in_pool=0)
-    L += ["", "| Attacks wrongly dismissed in triage | Held-out lab recall | Real-network alerts |", "|---|---|---|",
-          f"| 0 | {_mean(clean, lambda r: r['lab']['recall']):.1%} | {_mean(clean, lambda r: r['real_network_rate']):.1%} |"]
+    held_classes = sorted({c for r in pick("R2 dismissed attacks") for c in r["lab"]["per_class"]})
+    pc = lambda rs: " | ".join(f"{_mean(rs, lambda r: r['lab']['per_class'].get(c, np.nan)):.0%}" for c in held_classes)  # noqa: E731
+    L += ["", "Attacks wrongly dismissed as benign during triage (R2), and the same with dismissals gated by the "
+          "local envelope (R5, exploratory):", "",
+          "| Dismissed attacks | Triage | Dismissals kept (attacks) | Held-out lab recall | " + " | ".join(held_classes)
+          + " | Real-network alerts |", "|---|---|---|---|" + "---|" * len(held_classes) + "---|",
+          f"| 0 | — | 30 (0) | {_mean(clean, lambda r: r['lab']['recall']):.1%} | {pc(clean)} | "
+          f"{_mean(clean, lambda r: r['real_network_rate']):.1%} |"]
     for k in DISMISSED:
-        rs = pick("R2 dismissed attacks", dismissed=k)
-        L.append(f"| {k} | {_mean(rs, lambda r: r['lab']['recall']):.1%} | {_mean(rs, lambda r: r['real_network_rate']):.1%} |")
+        for test, label in (("R2 dismissed attacks", "ungated"), ("R5 gated triage", "gated")):
+            rs = pick(test, dismissed=k)
+            kept = (f"{_mean(rs, lambda r: r['kept']):.0f} ({_mean(rs, lambda r: r['attacks_kept']):.1f})"
+                    if test.startswith("R5") else f"30 ({k})")
+            L.append(f"| {k} | {label} | {kept} | {_mean(rs, lambda r: r['lab']['recall']):.1%} | {pc(rs)} | "
+                     f"{_mean(rs, lambda r: r['real_network_rate']):.1%} |")
     L += ["", "## R3. How much local normal traffic is needed?", "",
           "| Fit pool flows | Variant | Real-network alerts | Lab recall | Benchmark detection |", "|---|---|---|---|---|"]
     full = {v: _mean(pick("R1 retention", variant=v), lambda r: r["real_network_rate"])

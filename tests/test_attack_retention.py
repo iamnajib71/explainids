@@ -64,3 +64,27 @@ def test_score_lab_separates_attacks_and_benign():
     assert (out["attacks"], out["caught"]) == (4, 3)
     assert out["per_class"] == {"PortScan": 1.0, "SYN-Burst": 0.5}
     assert out["benign_fpr"] == 0.5
+
+
+def test_mislabel_marks_dismissed_attacks():
+    out = ar.mislabel(frame([[1, 1]] * 30), frame([[9, 9]] * 20, "PortScan"), 3, 1)
+    assert int(out["dismissed_attack"].sum()) == 3
+    assert not ar.mislabel(frame([[1, 1]] * 30), frame([[9, 9]] * 20, "PortScan"), 0, 1)["dismissed_attack"].any()
+
+
+def test_gate_keeps_only_flows_near_site_normal():
+    env = LocalNormal(FEATS, frame([[1, 1], [2, 2], [3, 3], [4, 4]]))
+    dismissed = frame([[2, 2], [5000, 9000]])
+    assert ar.gate(dismissed, env)[FEATS].to_numpy().tolist() == [[2.0, 2.0]]
+
+
+class Split:
+    def predict(self, X):
+        return np.array(["PortScan", BENIGN, BENIGN, BENIGN])[: len(X)]
+
+    def anomaly(self, X):
+        return np.zeros(len(X)), np.array([True, True, False, False])[: len(X)]
+
+
+def test_anomaly_only_share():
+    assert ar.anomaly_only_share(Split(), frame([[0, 0]] * 4)) == 0.5
