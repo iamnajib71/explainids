@@ -38,6 +38,8 @@ Each link is a script in this repository with a committed result file.
 | E7 | On a real network the anomaly layer flags ordinary transfers because they exceed the benchmark's benign envelope | 3,307 flows: anomaly-only alerts outside the range on 11.5 features against 2.0 for quiet flows ([envelope_audit_study](results/envelope_audit_study.md)) | Measured, 12 blocks |
 | E8 | Sensor position systematically shifts verdicts | Undoing segmentation offload on 13 captures: classifier alerts 93 → 74, anomaly-only 115 → 191, total 6.0% → 8.1%, McNemar p = 6 × 10⁻¹⁰, identical at 1/12/100 µs spacing ([offload_counterfactual_12us](results/offload_counterfactual_12us.md)) | Measured, 13 captures |
 | E9 | The local recipe holds on a real network; a lab repair does not | 12 blocks, local flows from the previous day: 254 → 66 alerts per hour, lower in 12/12 blocks (sign test p = 0.0005), detection 0.980 → 0.980; lab service flows worse in 11/12 blocks. Without fingerprint features: 6.9% → 2.0%, 12/12 blocks, detection 0.962 → 0.958; lab flows neutral ([real_network](results/real_network.md), [real_network_portable](results/real_network_portable.md)). **Pre-registered day 2** (untouched, 4,634 flows): 6.6% → 2.0% without fingerprint features and 6.2% → 1.0% with them, 12/12 blocks each (p = 0.0005), detection change −0.002 / +0.001; lab flows neutral / worse ([real_network_day2_portable](results/real_network_day2_portable.md), [PREREGISTRATION_DAY2](PREREGISTRATION_DAY2.md)) | Confirmed on a second evening, one network |
+| E10 | The triage loop is the repair's attack surface; a local-normal gate closes it; the local veto costs nothing on known attacks | 792 isolated-lab attack flows, 5 seeds: the anomaly layer makes 0% of known-attack detections, so the veto cannot remove one, and 264 attacks hidden in the fit pool change nothing. 3 attacks wrongly dismissed in triage cut recall on other captures 86% → 55% (91% → 24% with all features); gating dismissals by the local envelope restores 86–91% with false alerts unchanged (exploratory). About 100 local flows suffice ([attack_retention_portable](results/attack_retention_portable.md)) | Measured, 5 seeds; gate exploratory |
+| E11 | On unseen attacks the local veto has a price, and the exemplar veto pays far less of it than a local threshold | Leave-one-class-out, rule fixed before running: of the unseen-attack flows only the anomaly layer catches, the exemplar envelope removes 32% (rule: > 10% is a cost), the local threshold 76–91%. The exemplar loss is concentrated in DoS-Slowloris and Infiltration; it keeps every Bot detection the threshold loses ([unseen_veto_portable](results/unseen_veto_portable.md), [unseen_veto](results/unseen_veto.md)) | Measured, one seed; rule failed |
 
 ## Contributions
 
@@ -48,9 +50,11 @@ Each link is a script in this repository with a committed result file.
    for the classifier (E4), a benign-envelope audit for the anomaly layer (E7), and a paired offload counterfactual for
    sensor position (E8).
 3. **A repair protocol with a measured price**: analyst-confirmed benign flows chosen by triage for the classifier
-   (E5, E6) and a local model of the site's normal traffic for the anomaly layer (E9): a local threshold or the
-   exemplar veto, both clearly better than refitting the detector or a density-based veto, each reported against
-   benchmark detection so no gain hides a loss. The console's triage records supply the repair set directly.
+   (E5, E6) and a local model of the site's normal traffic for the anomaly layer (E9). On false alerts a local threshold
+   and the exemplar veto tie; on unseen attacks the exemplar veto keeps far more of the anomaly layer's detections
+   (E11), which is the reason to prefer it. The triage loop that supplies the repair set can be poisoned by wrong
+   dismissals, and a local-normal gate on dismissals closes that path (E10). Every repair is reported against
+   detection so no gain hides a loss.
 4. **Real-network evidence** with privacy controls: passive capture under consent, keyed pseudonymisation,
    aggregates only, block-level statistics, the previous day for fitting and the next for evaluation (E7–E9).
 5. **An honest method record**: header-only capture corrupts 25 of 83 features; NAT'd lab traffic is not an
@@ -67,6 +71,7 @@ Each link is a script in this repository with a committed result file.
 | One transfer direction | Both directions measured; they fail differently (E6) |
 | Oracle attack labels understate annotation cost | Stated; the repair itself uses only benign confirmations, which an analyst can give cheaply |
 | Lab services are not a real network | E9 tests the lab-derived repair on real traffic directly, and it fails |
+| The repair could hide attacks or be poisoned | E10 tests known attacks, fit-pool poisoning, wrong dismissals and evasion toward normal; E11 tests unseen attacks, where the veto does cost detection and the price is reported |
 | Counterfactual rewrite could add artefacts | Packet spacing varied 1–100 µs with no change in results |
 | Port is a known shortcut feature (D'hooge et al., 2022) | Every repair experiment rerun without port and TCP window features; conclusions hold and two earlier findings were reattributed to fingerprints |
 | Novelty claims | Checked against 2019–2026 work in [RELATED_WORK.md](RELATED_WORK.md); claims limited to what was not found |

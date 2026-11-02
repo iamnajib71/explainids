@@ -443,6 +443,29 @@ smoke run are labelled exploratory (commit `55f3a66`). Results:
   variant, a detection gap of the model rather than of the repair. Feature interpolation in R4 is a geometric stress
   test, not a realisable attack. The gate result is exploratory and needs confirmation on new dismissals.
 
+**Unseen attacks: here the veto has a price.** The anomaly layer exists for attacks never seen in training, so the
+veto's real cost is measured there. Each attack class was left out of all training in turn, the deployment recipe
+rebuilt, and every flow of the class scored (`scripts/unseen_veto_eval.py`, rule committed before running in
+`041e8d9`: a cost if the local rule removes more than 10% of the unseen-attack flows that only the anomaly layer
+catches; one seed; [`unseen_veto_portable`](results/unseen_veto_portable.md), [`unseen_veto`](results/unseen_veto.md)).
+
+| Of the unseen-attack flows only the anomaly layer catches … | Without port and window features | All features |
+|---|---|---|
+| Removed by the exemplar envelope | 201 of 617 (32.6%) | 192 of 599 (32.1%) |
+| Removed by the local anomaly threshold | 562 of 617 (91.1%) | 452 of 599 (75.5%) |
+| Real-network false alerts: benchmark layer → exemplar → threshold | 3.8% → 1.6% → 1.9% | 2.8% → 1.1% → 1.3% |
+
+- **The rule failed for both local rules: the false-alert reduction is bought partly with unseen-attack detection.**
+  The anomaly layer catches few unseen attacks to begin with (617 flows across 21 class-split pairs, mostly Bot,
+  DoS-Slowloris and Infiltration), but the local veto removes a share of them.
+- **The exemplar veto pays far less than a threshold, and this is what separates them.** On false alerts the two tie
+  (E9). On unseen attacks the exemplar veto keeps every Bot detection (403 flows), of which the threshold loses 257–350; its
+  losses are DoS-Slowloris (186–195 of 186–198), whose slow, long-lived connections resemble the site's own idle
+  HTTPS sessions, and Infiltration (6 of 7–8). A threshold moves the operating point for all traffic; the exemplar
+  veto removes only alerts that resemble something the site has done before.
+- **What an operator should do.** Prefer the exemplar veto, and demote vetoed anomaly alerts to a low-priority log
+  rather than discarding them, so slow-connection attacks remain discoverable. Not yet tested: one seed only.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.
@@ -513,6 +536,8 @@ python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessio
 python scripts/offload_counterfactual.py <sessions> --spacing-us 12 --results docs/results/offload_counterfactual_12us.md
 python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelope_audit_study.md
 python scripts/preregistered_tests.py      # H1–H4 for the pre-registered second evening
+python scripts/attack_retention_eval.py <2017> <2018> --lab-runs <3 lab replicates> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/attack_retention.md
+python scripts/unseen_veto_eval.py <2017> <2018> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/unseen_veto.md
 python scripts/make_figures.py             # docs/figures from the result files
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
