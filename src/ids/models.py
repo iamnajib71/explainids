@@ -72,13 +72,30 @@ class Detector:
         return self.model.predict_proba(X[self.features])
 
     def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        scores, out, _ = self.anomaly_detail(X)
+        return scores, out
+
+    def anomaly_detail(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Scores, outliers after the site envelope, and outliers the envelope vetoed.
+
+        Vetoed flows are unusual for the benchmark but resemble this site's normal traffic. They are demoted,
+        not discarded: the veto also hides some unseen slow-DoS attacks (docs/RESEARCH.md, E11).
+        """
         scores = self.iforest.score_samples(self._anomaly_input(X))
         out = scores < self.anomaly_threshold
+        vetoed = np.zeros(len(out), dtype=bool)
         local = getattr(self, "local_normal", None)  # optional site envelope (ids.envelope.LocalNormal)
         if local is not None and out.any():
             idx = np.flatnonzero(out)
-            out[idx] = ~local.usual(X.iloc[idx])
-        return scores, out
+            usual = local.usual(X.iloc[idx])
+            vetoed[idx] = usual
+            out[idx] = ~usual
+        return scores, out, vetoed
+
+    def resembles_site_normal(self, X: pd.DataFrame) -> np.ndarray | None:
+        """Whether each flow lies inside the site envelope; None when no envelope is attached."""
+        local = getattr(self, "local_normal", None)
+        return None if local is None else np.asarray(local.usual(X))
 
     @property
     def classes(self) -> list[str]:

@@ -206,9 +206,33 @@ def test_dismissed_alert_is_kept_durably_as_a_repair_flow(tmp_path, monkeypatch)
     alerts = client.post("/predict", json={"flows": flows}).json()["alerts"]
     assert alerts
     aid = alerts[0]["alert_id"]
-    assert client.post(f"/alerts/{aid}/status", params={"status": "dismissed"}).json()["status"] == "dismissed"
+    decided = client.post(f"/alerts/{aid}/status", params={"status": "dismissed"}).json()
+    assert decided["status"] == "dismissed" and decided["repair_eligible"] is None     # no site envelope attached
     assert client.get("/triage/summary").json() == {"decisions": {"confirmed": 0, "dismissed": 1, "open": 0},
-                                                     "repair_set_flows": 1}
+                                                     "repair_set_flows": 1, "held_back": 0, "ungated": 1}
     csv = client.get("/triage/repair-set.csv")
     assert csv.status_code == 200 and "BENIGN" in csv.text and aid in csv.text
     assert main.TriageStore(tmp_path / "triage.sqlite").status(aid) == "dismissed"   # survives a restart
+
+
+class _Envelope:
+    """Stands in for a site envelope: only flows with a short duration resemble this site's normal traffic."""
+    def __init__(self, inside):
+        self.inside = inside
+
+    def usual(self, X):
+        import numpy as np
+        return np.full(len(X), self.inside)
+
+
+@pytest.mark.parametrize("inside", [True, False])
+def test_dismissal_feeds_repair_only_if_it_resembles_site_normal(tmp_path, monkeypatch, inside):
+    import api.main as main
+    monkeypatch.setattr(main, "TRIAGE_DB", tmp_path / "triage.sqlite")
+    monkeypatch.setattr(main.detector(), "local_normal", _Envelope(inside), raising=False)
+    flows = make_flows(8).drop(columns=["Label"]).to_dict("records")
+    aid = client.post("/predict", json={"flows": flows}).json()["alerts"][0]["alert_id"]
+    assert client.post(f"/alerts/{aid}/status", params={"status": "dismissed"}).json()["repair_eligible"] is inside
+    summary = client.get("/triage/summary").json()
+    assert (summary["repair_set_flows"], summary["held_back"]) == ((1, 0) if inside else (0, 1))
+    assert (aid in client.get("/triage/repair-set.csv").text) is inside

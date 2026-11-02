@@ -35,7 +35,12 @@ def score_frame(det, explainer: Explainer, df: pd.DataFrame, k: int = 5) -> tupl
     X = df[det.features].apply(pd.to_numeric, errors="coerce").replace([np.inf, -np.inf], np.nan).fillna(0)
     pred = det.predict(X)
     proba = det.predict_proba(X)
-    scores, outliers = det.anomaly(X) if det.iforest is not None else (None, None)
+    if det.iforest is None:
+        scores, outliers, vetoed = None, None, None
+    elif hasattr(det, "anomaly_detail"):
+        scores, outliers, vetoed = det.anomaly_detail(X)
+    else:
+        (scores, outliers), vetoed = det.anomaly(X), None
     flagged = [i for i, p in enumerate(pred) if p != BENIGN or (outliers is not None and outliers[i])]
     explanations: list[list[dict]] = [[] for _ in range(len(df))]
     if flagged:
@@ -45,6 +50,8 @@ def score_frame(det, explainer: Explainer, df: pd.DataFrame, k: int = 5) -> tupl
     alerts = build_alerts(df.reset_index(drop=True), pred, proba, scores, outliers, explanations)
     flows = pd.DataFrame({"predicted": pred, "confidence": proba.max(axis=1),
                           "outlier": outliers if outliers is not None else False})
+    # Benchmark-unusual but like this site's normal traffic: kept as low priority, not raised as an alert.
+    flows["demoted"] = (vetoed & (pred == BENIGN)) if vetoed is not None else False
     if LABEL_COL in df:
         truth = df[LABEL_COL].map(canonical_label).to_numpy()
         flows["truth"] = truth

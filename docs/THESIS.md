@@ -82,5 +82,5 @@ Each link is a script in this repository with a committed result file.
 |---|---|
 | Week 8 | Second real-network study: done 1 Nov, pre-registered, all four hypotheses confirmed |
 | Week 9 | Comparison arms (done): triage never worse than uncertainty sampling, better on day 2; local threshold, refit and exemplar veto not consistently separable |
-| Week 10 | Exemplar envelope as a deployable console option, with its alert budget shown |
+| Week 10 | Done 3 Nov: the console gates dismissals by the site envelope before retraining and demotes vetoed anomaly alerts to a low-priority count (E10, E11) |
 | Week 11–12 | Thesis write-up from the result files; reproduce every number from a clean checkout |

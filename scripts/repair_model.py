@@ -6,7 +6,8 @@
 The two local repairs measured in docs/RESEARCH.md, applied to the model the console serves:
 
   1. Classifier: retrain on the original training split plus the analyst's dismissed alerts
-     (GET /triage/repair-set.csv), labelled benign.
+     (GET /triage/repair-set.csv), labelled benign. Dismissals that do not resemble the local sessions are
+     dropped first: a few wrongly dismissed attacks can blind the retrained model (docs/RESEARCH.md, E10).
   2. Anomaly layer: attach the site's normal traffic as an exemplar envelope (ids.envelope.LocalNormal),
      so a benchmark anomaly alert stands only if the flow is also unlike every local normal flow.
 
@@ -90,6 +91,12 @@ def main() -> None:
     train = stratified_sample(train, cap)
     local = load_local(args.local_sessions, feats)
     repair = load_repair(args.repair_set, feats) if args.repair_set else None
+    envelope = LocalNormal(feats, local, args.budget)
+    held_back = 0
+    if repair is not None and len(repair):
+        inside = envelope.usual(repair[feats])
+        held_back = int((~inside).sum())
+        repair = repair.loc[inside]
 
     before = summary(base, test, local, feats)
     parts = [train[feats + [LABEL_COL]]] + ([repair[feats + [LABEL_COL]]] if repair is not None and len(repair) else [])
@@ -97,7 +104,7 @@ def main() -> None:
     det = Detector(base.name, anomaly_log=getattr(base, "anomaly_log", False)).fit(fitted[feats], fitted[LABEL_COL])
     det.fit_anomaly(fitted[fitted[LABEL_COL] == BENIGN][feats])
     det.tune_anomaly_threshold(val[val[LABEL_COL] == BENIGN][feats])
-    det.local_normal = LocalNormal(feats, local, args.budget)
+    det.local_normal = envelope
     after = summary(det, test, local, feats)
     # The local sessions trained the envelope, so their after-rate is optimistic; report it as such.
 
@@ -107,6 +114,7 @@ def main() -> None:
         if (args.model_dir / extra).exists():
             shutil.copy2(args.model_dir / extra, args.outdir / extra)
     card["repair"] = {"generated": time.strftime("%Y-%m-%d"), "repair_flows": 0 if repair is None else int(len(repair)),
+                      "repair_flows_held_back": held_back,
                       "local_sessions": len(args.local_sessions), "local_normal_flows": int(len(local)),
                       "envelope_budget": args.budget, "before": before, "after": after,
                       "note": "after-rate on local sessions is in-sample for the envelope"}

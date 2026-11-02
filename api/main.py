@@ -122,7 +122,8 @@ def _flow_rows(df: pd.DataFrame, flows: pd.DataFrame, offset: int = 0) -> list[d
     for i in range(len(df)):
         r = {"i": offset + i, "time": str(df["Timestamp"].iat[i]) if "Timestamp" in df else None,
              "predicted": flows["predicted"].iat[i], "confidence": round(float(flows["confidence"].iat[i]), 4),
-             "outlier": bool(flows["outlier"].iat[i])}
+             "outlier": bool(flows["outlier"].iat[i]),
+             "demoted": bool(flows["demoted"].iat[i]) if "demoted" in flows else False}
         r.update({k: (v[i].item() if isinstance(v[i], np.generic) else v[i]) for k, v in meta.items()})
         if "truth" in flows:
             r["truth"] = flows["truth"].iat[i]
@@ -246,7 +247,9 @@ async def sensor_ingest(file: UploadFile = File(...), sensor_session: str = Form
                               "total_flows": prior.get("total_flows", 0) + len(rows),
                               "total_alerts": prior.get("total_alerts", 0) + len(new_alerts),
                               "predicted_counts": flows["predicted"].value_counts().to_dict(),
-                              "outliers": int(flows["outlier"].sum()), "reported_capture": stats,
+                              "outliers": int(flows["outlier"].sum()),
+                              "demoted": prior.get("demoted", 0) + int(flows["demoted"].sum()),
+                              "reported_capture": stats,
                               "ground_truth_available": False, "addresses_pseudonymised": True,
                               "model": state()["mode"]}
         _sensor["batches"] = (_sensor["batches"] + [{"key": batch_key, "checksum": checksum, "result": result}])[-128:]
@@ -384,16 +387,22 @@ def incidents(window_minutes: int = 10):
 
 @app.post("/alerts/{alert_id}/status", dependencies=[Depends(require_key)])
 def set_status(alert_id: str, status: str):
-    """Record a triage decision durably. Dismissing an alert confirms the flow was benign, which adds
-    it to the repair set (see /triage/repair-set.csv)."""
+    """Record a triage decision durably. Dismissing an alert confirms the flow was benign; it joins the repair
+    set (see /triage/repair-set.csv) only if it resembles this site's normal traffic, because a few wrongly
+    dismissed attacks can teach the retrained model to ignore their type (docs/RESEARCH.md, E10)."""
     if status not in STATUSES:
         raise HTTPException(status_code=422, detail="status must be open, confirmed or dismissed")
     for a in _state["alerts"]:
         if a["alert_id"] == alert_id:
             a["status"] = status
-            triage().record(alert_id, status, a.get("predicted_class"), a.get("outlier"),
-                            _alert_features.get(alert_id))
-            return a
+            features = _alert_features.get(alert_id)
+            eligible = None
+            if status == "dismissed" and features:
+                check = getattr(detector(), "resembles_site_normal", None)
+                inside = check(pd.DataFrame([features])) if check else None
+                eligible = None if inside is None else bool(inside[0])
+            triage().record(alert_id, status, a.get("predicted_class"), a.get("outlier"), features, eligible)
+            return {**a, "repair_eligible": eligible}
     raise HTTPException(status_code=404, detail="alert not found")
 
 

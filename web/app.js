@@ -167,6 +167,7 @@ async function pollSensor(generation) {
       : age > 30 ? "Collector idle · no recent batch" : "Receiving sensor observations";
     $("#sensor-flows").textContent = fmt(summary?.total_flows || 0);
     $("#sensor-alert-count").textContent = fmt(summary?.total_alerts || 0);
+    $("#sensor-demoted").textContent = fmt(summary?.demoted || 0);
     $("#sensor-last").textContent = summary ? new Date(summary.received_at).toLocaleTimeString() : "—";
     $("#sensor-session").textContent = summary ? `Session ${summary.sensor_session} · ${summary.model}` : "Waiting for a collector";
     const queue = $("#sensor-alerts"); queue.replaceChildren();
@@ -178,7 +179,7 @@ async function pollSensor(generation) {
     }
     $("#sensor-rows").innerHTML = [...sensor.rows].reverse().slice(0, 100).map(r => `<tr>
       <td>${esc(String(r.time).slice(0, 19))}</td><td>${esc(r.src)}</td><td>${esc(r.dst)}</td>
-      <td>${esc(r.predicted)}</td><td>${r.outlier ? "yes" : "no"}</td></tr>`).join("");
+      <td>${esc(r.predicted)}</td><td>${r.outlier ? "yes" : r.demoted ? "low priority" : "no"}</td></tr>`).join("");
     if (feed.history_truncated) $("#sensor-access").textContent += " Earlier history expired from the bounded server queue.";
   } catch (e) {
     if (sensor.enabled && generation === sensor.generation) $("#sensor-status").textContent = e.name === "AbortError" ? "Feed request timed out" : "Feed unavailable; retrying";
@@ -499,13 +500,14 @@ function openDrawer(a) {
     <section><h4>Response</h4><ol class="steps">${steps.map(s => `<li>${esc(s.charAt(0).toUpperCase() + s.slice(1).replace(/\.$/, ""))}</li>`).join("")}</ol></section>
     <section><h4>Triage</h4><div class="triage">
       <button class="btn good" data-s="confirmed">✓ Confirm</button>
-      <button class="btn bad" data-s="dismissed" data-tip="False alarm: this flow was normal. Saved as a repair example for retraining.">✗ Dismiss</button>
+      <button class="btn bad" data-s="dismissed" data-tip="False alarm: this flow was normal. Used for retraining only if it resembles this site's normal traffic.">✗ Dismiss</button>
       <button class="btn ghost" data-s="open">Reopen</button>
       <span class="hint">Status <b id="cur-status">${esc(status)}</b></span></div></section>`;
   $$("#drawer-body .triage button").forEach(b => (b.onclick = () => {
     S.triage[a.alert_id] = b.dataset.s; store.set("triage", S.triage);
     $("#cur-status").textContent = b.dataset.s;
     if (!STATIC) api(`alerts/${encodeURIComponent(a.alert_id)}/status?status=${b.dataset.s}`, { method: "POST", headers: sensor.key ? { "X-API-Key": sensor.key } : {} })
+      .then(r => { if (r?.repair_eligible === false) toast("Dismissed. Not used for retraining: this flow doesn't resemble this site's normal traffic."); })
       .catch(() => { /* replay alerts live only in the browser; the local record above still applies */ });
     $$(`.alert-card[data-id="${a.alert_id}"]`).forEach(c => c.classList.toggle("triaged", b.dataset.s !== "open"));
     updateKpis(false);

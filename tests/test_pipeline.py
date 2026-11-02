@@ -176,3 +176,25 @@ def test_wilson_interval_is_honest_about_small_samples():
     assert 0.75 < lo < 0.76 and hi == 1.0
     lo, hi = wilson_interval(500, 1000)
     assert lo < 0.5 < hi and hi - lo < 0.07
+
+
+class _AllUsual:
+    """A site envelope under which every flow resembles the site's normal traffic."""
+    def usual(self, X):
+        return np.ones(len(X), dtype=bool)
+
+
+def test_site_envelope_demotes_outliers_instead_of_dropping_them(flows):
+    from ids.scoring import score_frame
+    X, y = flows[feature_columns(flows)], flows[LABEL_COL]
+    det = Detector("rf").fit(X, y).fit_anomaly(X[y == BENIGN])
+    det.tune_anomaly_threshold(X[y == BENIGN], target_fpr=0.2)
+    _, before = det.anomaly(X)
+    assert det.resembles_site_normal(X) is None
+    det.local_normal = _AllUsual()
+    _, after, vetoed = det.anomaly_detail(X)
+    assert before.any() and not after.any() and (vetoed == before).all()
+    scored, alerts = score_frame(det, Explainer(det), flows)
+    assert scored["demoted"].sum() == int((vetoed & (det.predict(X) == BENIGN)).sum())
+    assert not any(a["outlier"] for a in alerts)
+    assert det.resembles_site_normal(X).all()

@@ -232,7 +232,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .sensor-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 16px 0; }
 .sensor-controls label { display: grid; gap: 6px; color: var(--muted); }
 .sensor-controls input { width: min(360px, 75vw); padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); }
-.sensor-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sensor-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 #sensor-status { color: var(--accent); }
 #sensor-alerts { max-height: 480px; overflow-y: auto; }
 .sensor-table-wrap { overflow-x: auto; }
@@ -280,6 +280,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 
 @media (max-width: 1150px) {
   .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sensor-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .live-grid, .bottom-grid, .lab-grid, .result-grid { grid-template-columns: 1fr; }
   .lab-intro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .findings { grid-template-columns: 1fr; }
