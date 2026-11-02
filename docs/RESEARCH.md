@@ -345,6 +345,8 @@ evening, two days earlier. Day 2: 12/12 blocks validated, 4,634 flows, 0.99 h of
 | H3: the same with all 83 features | 6.2% → 1.0% (290 → 46 per hour), 12/12 blocks, p = 0.0005; detection change +0.001 | **Confirmed** |
 | H4: 30 lab service flows do not lower alerts | without shortcut features lower 5, higher 6, p = 1.0; with all features higher in 11/12, p = 0.006 | **Confirmed** (neutral, and worse with fingerprint features, as on day 1) |
 
+Tests regenerate with `python scripts/preregistered_tests.py` ([`results/preregistered_day2.md`](results/preregistered_day2.md)).
+
 **Exploratory (not pre-registered), day 2 against triage + exemplar envelope:**
 - **Triage beats least-confident selection on the second evening:** lower in 12/12 blocks with either feature set
   (p = 0.0005; 2.0% vs 4.3% without shortcut features). On day 1 the two were indistinguishable, so the claim is
@@ -464,6 +466,8 @@ python scripts/capture_blocks.py --interface <npf-id> --converter-argv <json> --
 python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessions <previous-day sessions> --study data/sensor/study_<date>.json --results docs/results/real_network.md
 python scripts/offload_counterfactual.py <sessions> --spacing-us 12 --results docs/results/offload_counterfactual_12us.md
 python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelope_audit_study.md
+python scripts/preregistered_tests.py      # H1–H4 for the pre-registered second evening
+python scripts/make_figures.py             # docs/figures from the result files
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
 
