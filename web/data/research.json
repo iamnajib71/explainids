@@ -139,6 +139,24 @@
   ],
   "tip": "Each attack class removed from training in turn (cicids2017, 14 classes); bars show how much of it still raised an alert. Isolation Forest threshold set for 1% false alarms on validation benign traffic. With signed-log features for the Isolation Forest the median is 57%. On csecicids2018 the median is 7%. Source: docs/results/unseen_cicids2017.md"
  },
+ "real": {
+  "question": "Does the repair hold on a real network?",
+  "headline": "\u221270%",
+  "label": "alerts per hour, 310 \u2192 94, on an evening fixed in advance",
+  "evenings": [
+   "Evening 1",
+   "Evening 2, pre-registered"
+  ],
+  "before": [
+   0.06852131841548231,
+   0.06646525679758308
+  ],
+  "after": [
+   0.020260054429996975,
+   0.0202416918429003
+  ],
+  "tip": "Home WiFi in ordinary use, 4,634 flows in 12 five-minute blocks; nothing was attacked, so every alert counts as a false alert (an upper bound). Few-shot model (k = 50) against the same model repaired with 30 analyst-triaged local flows and a local model of normal traffic, fitted only on an earlier evening; port and TCP-window features removed. Evening 1: lower in 12/12 blocks (sign test p = 0.0005); Evening 2, pre-registered: lower in 12/12 blocks (sign test p = 0.0005). Benchmark detection 0.962 \u2192 0.960. 30 lab service flows instead: lower in only 5/11 blocks. Triage beat least-confident selection in 12/12 blocks. Source: docs/results/real_network_day2_portable.md, docs/PREREGISTRATION_DAY2.md"
+ },
  "sources": [
   {
    "label": "Cantone et al., 2024",

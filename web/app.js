@@ -743,7 +743,8 @@ function renderUpload(r) {
 
 /* ---------------- research findings: one question, one number, one chart ---------------- */
 let research = null;
-const PENDING = { RQ1: "Does it work on a new network?", RQ2: "Do explanations stay the same?", RQ3: "Can it catch attacks it never saw?" };
+const PENDING = { RQ1: "Does it work on a new network?", RQ2: "Do explanations stay the same?", RQ3: "Can it catch attacks it never saw?",
+                  Field: "Does the repair hold on a real network?" };
 async function renderResearch() {
   if (!research) {
     try { research = await (await fetch("data/research.json", { cache: "no-cache" })).json(); }
@@ -753,9 +754,9 @@ async function renderResearch() {
       <span class="rq">${rq}</span><span class="q" tabindex="0" data-tip="${esc(f.tip)}">${esc(f.question)}</span>
       <strong class="big">${esc(f.headline)}</strong><span class="what">${esc(f.label)}</span><div id="${id}" class="chart"></div></div>`
     : `<div class="card finding"><span class="rq">${rq}</span><span class="q">${PENDING[rq]}</span><strong class="big">—</strong><span class="what">experiment running</span></div>`;
-  $("#findings").innerHTML = card("r-transfer", "RQ1", R.transfer) + card("r-stable", "RQ2", R.stability) + card("r-unseen", "RQ3", R.unseen);
+  $("#findings").innerHTML = card("r-transfer", "RQ1", R.transfer) + card("r-stable", "RQ2", R.stability) + card("r-unseen", "RQ3", R.unseen) + card("r-real", "Field", R.real);
   $("#sources").innerHTML = (R.sources || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join(" · ");
-  ["r-transfer", "r-unseen", "r-stable"].forEach(id => { charts[id]?.dispose(); delete charts[id]; });
+  ["r-transfer", "r-unseen", "r-stable", "r-real"].forEach(id => { charts[id]?.dispose(); delete charts[id]; });
   const yPct = { type: "value", min: 0, max: 1, axisLabel: { color: p.muted, formatter: v => pct(v, 0) } };
   if (R.transfer) {
     const t = R.transfer;
@@ -782,6 +783,15 @@ async function renderResearch() {
       xAxis: axis({ type: "value", min: 0, max: 1, splitNumber: 2 }), yAxis: axis({ type: "category", inverse: true, data: s.map(x => x.class), axisLabel: { color: p.muted, fontSize: 10, interval: 0 } }),
       series: [{ type: "bar", barWidth: "55%", data: s.map(x => x.median), label: { show: true, position: "right", color: p.muted, fontSize: 10, formatter: d => d.value.toFixed(2) },
         itemStyle: { borderRadius: 3, color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: p.accent2 }, { offset: 1, color: p.accent }]) } }] });
+  }
+  if (R.real) {
+    const r = R.real, top = Math.max(...r.before) * 1.25;
+    chart("r-real").setOption({ ...base(), legend: { top: 0, textStyle: { color: p.muted } },
+      tooltip: { ...base().tooltip, trigger: "axis", valueFormatter: v => pct(v) }, grid: { left: 8, right: 8, top: 52, bottom: 8, containLabel: true },
+      xAxis: axis({ type: "category", data: r.evenings }), yAxis: axis({ type: "value", min: 0, max: top, axisLabel: { color: p.muted, formatter: v => pct(v, 0) } }),
+      series: [["Few-shot adapted", p.attack, "before"], ["Repaired with local evidence", p.benign, "after"]].map(([name, color, k]) => ({
+        name, type: "bar", color, barGap: "12%", itemStyle: { borderRadius: [4, 4, 0, 0] },
+        label: { show: true, position: "top", color: p.text, formatter: d => pct(d.value) }, data: r[k] })) });
   }
 }
 redrawers.renderResearch = () => $("#view-research").classList.contains("active") && research && renderResearch();

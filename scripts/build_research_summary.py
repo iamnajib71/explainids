@@ -2,8 +2,8 @@
 
 Usage: python scripts/build_research_summary.py [--results docs/results] [--out web/data/research.json]
 
-Reads the JSON written by cross_dataset_eval.py (RQ1), shap_stability_eval.py (RQ2) and
-unseen_attack_eval.py (RQ3). A missing experiment becomes null and the console shows it as pending,
+Reads the JSON written by cross_dataset_eval.py (RQ1), shap_stability_eval.py (RQ2),
+unseen_attack_eval.py (RQ3) and real_network_eval.py --portable (both real-network evenings). A missing experiment becomes null and the console shows it as pending,
 so the page never displays a number that no script produced.
 """
 import argparse
@@ -109,6 +109,50 @@ def service_aware_note(res: dict) -> str:
             "Source: docs/results/service_aware.md")
 
 
+FEW_SHOT, REPAIRED = "few-shot", "few-shot + 30 triaged local flows + exemplar envelope"
+LAB, UNCERTAIN = "few-shot + 30 lab service flows", "few-shot + 30 uncertain local flows + exemplar envelope"
+
+
+def _mean(res: dict, config: str, key: str) -> float:
+    return float(np.mean([r["real_network"][key] for r in res["runs"] if r["config"] == config]))
+
+
+def _blocks_lower(res: dict, config: str, reference: str) -> tuple[int, int, float]:
+    """Blocks where config alerts less than reference (seed-averaged), blocks compared, two-sided sign-test p."""
+    from scipy.stats import binomtest
+    rates = {c: np.mean([r["real_network"]["block_rates"] for r in res["runs"] if r["config"] == c], axis=0)
+             for c in (config, reference)}
+    d = rates[config] - rates[reference]
+    lower, n = int((d < 0).sum()), int((d != 0).sum())
+    return lower, n, float(binomtest(lower, n, 0.5).pvalue) if n else 1.0
+
+
+def real_network(day1: dict | None, day2: dict | None) -> dict | None:
+    """Local repair on a home network in ordinary use: day 1 examined, day 2 pre-registered (shortcut-free features)."""
+    evenings = [(name, res) for name, res in (("Evening 1", day1), ("Evening 2, pre-registered", day2)) if res]
+    if not evenings:
+        return None
+    last = evenings[-1][1]
+    before, after = _mean(last, FEW_SHOT, "alerts_per_hour"), _mean(last, REPAIRED, "alerts_per_hour")
+    det = {c: np.mean([r["target_test"]["macro_detection"] for r in last["runs"] if r["config"] == c]) for c in (FEW_SHOT, REPAIRED)}
+    tests = "; ".join(f"{name}: lower in {lo}/{n} blocks (sign test p = {p:.4f})"
+                      for name, res in evenings for lo, n, p in [_blocks_lower(res, REPAIRED, FEW_SHOT)])
+    lab_lo, lab_n, _ = _blocks_lower(last, LAB, FEW_SHOT)
+    tri_lo, tri_n, _ = _blocks_lower(last, REPAIRED, UNCERTAIN)
+    return {"question": "Does the repair hold on a real network?", "headline": f"−{1 - after / before:.0%}",
+            "label": f"alerts per hour, {before:.0f} → {after:.0f}, on an evening fixed in advance",
+            "evenings": [name for name, _ in evenings],
+            "before": [_mean(res, FEW_SHOT, "rate") for _, res in evenings],
+            "after": [_mean(res, REPAIRED, "rate") for _, res in evenings],
+            "tip": (f"Home WiFi in ordinary use, {last['eval_flows']:,} flows in {last['eval_blocks']} five-minute blocks; "
+                    "nothing was attacked, so every alert counts as a false alert (an upper bound). Few-shot model "
+                    "(k = 50) against the same model repaired with 30 analyst-triaged local flows and a local model of "
+                    f"normal traffic, fitted only on an earlier evening; port and TCP-window features removed. {tests}. "
+                    f"Benchmark detection {det[FEW_SHOT]:.3f} → {det[REPAIRED]:.3f}. 30 lab service flows instead: lower "
+                    f"in only {lab_lo}/{lab_n} blocks. Triage beat least-confident selection in {tri_lo}/{tri_n} blocks. "
+                    "Source: docs/results/real_network_day2_portable.md, docs/PREREGISTRATION_DAY2.md")}
+
+
 def unseen(res: dict | None, log_res: dict | None, other: dict | None = None) -> dict | None:
     if not res:
         return None
@@ -156,6 +200,7 @@ def main():
            "unseen": unseen(load(r / f"unseen_{args.dataset}.json"), load(r / f"unseen_{args.dataset}_log.json"),
                             next((load(f) for f in sorted(r.glob("unseen_*.json"))
                                   if args.dataset not in f.stem and not f.stem.endswith("_log")), None)),
+           "real": real_network(load(r / "real_network_portable.json"), load(r / "real_network_day2_portable.json")),
            "sources": [{"label": label, "url": url} for label, url in SOURCES]}
     calib = load(r / "local_calibration.json")
     if out["transfer"] and calib:
