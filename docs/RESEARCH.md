@@ -397,6 +397,52 @@ is just the model reading port numbers. Every repair experiment was rerun with t
 cleaner: classifier failures become pure behaviour (FTP data as scans), and the anomaly envelope matters only where
 traffic volume genuinely differs, on the real network.
 
+### Security of the repair: does it make the detector easier to fool?
+
+**Why it matters.** A repair that lowers false alerts is only useful if it does not hide attacks or open a way to
+poison the detector. The home network was never attacked, so attacks come from places that never touch it: the
+benchmark's held-out test and three bounded attack replicates from the isolated lab (port scan, SYN burst, SSH and
+FTP brute force, incomplete HTTP probes; 792 flows). Flows are scored independently, so scoring lab attacks with the
+detector fitted for the home network is equivalent to injecting them into its traffic. Decision rules were committed
+before the first run (`scripts/attack_retention_eval.py`, commit `997f9e5`); three additions made after a one-seed
+smoke run are labelled exploratory (commit `55f3a66`). Results:
+[`attack_retention_portable`](results/attack_retention_portable.md), [`attack_retention`](results/attack_retention.md);
+5 seeds, local model of normal fitted on the first evening, false alerts measured on the second.
+
+| Test (5 seeds) | Without port and window features | All features | Rule |
+|---|---|---|---|
+| R1 retention: lab attack recall, few-shot → triaged + envelope | 86.4% → 86.4%; benchmark 0.962 → 0.960 | 90.9% → 90.9%; 0.980 → 0.981 | Retained |
+| Share of caught attacks that only the anomaly layer catches (lab / benchmark) | 0% / 0% | 0% / 0% | — |
+| R2 up to 264 lab attacks (7.4%) hidden in the local fit pool | recall 86.4% at every level | 90.9% at every level | No effect |
+| R2 attacks wrongly dismissed in triage, 3 / 10 | recall 86.4% → 54.5% / 54.6% | 90.9% → 24.3% / 9.4% | **Large effect** |
+| R5 the same, dismissals gated by the local envelope (exploratory) | 86.4% / 86.4% | 90.9% / 88.2% | Restored |
+| R3 local normal flows needed (within 0.5 points of 3,307) | 100 (2.5% vs 2.0%); 300 matches | 100 (1.3% vs 1.0%) | 100 flows |
+| R4 attacks moved toward nearest local normal: largest envelope-vs-benchmark gap | 0.0 points | 0.0 points | No new evasion path |
+
+![Triage poisoning and the gate](figures/fig8_triage_poisoning.png)
+
+**What we found.**
+- **The local model of normal costs nothing on known attacks, and the reason matters.** For every attack class the
+  model was trained on, the classifier makes every detection; the benchmark anomaly layer catches nothing the
+  classifier misses, on the benchmark or in the lab. A veto on anomaly alerts therefore cannot remove a known-attack
+  detection, which is also why hiding attacks in the fit pool (R2) and the evasion stress test (R4) show no effect.
+  The anomaly layer's job is unseen attacks; that case is tested separately below.
+- **The triage loop is the attack surface.** Three attack flows wrongly dismissed as benign, one tenth of the repair
+  set, cut recall on attacks from the *other* lab captures from 86% to 55% (shortcut-free) and from 91% to 24% (all
+  features); ten cut it to 9%. The classifier learns the dismissed attack type as benign, and the effect is
+  concentrated on the dismissed types (port scan and SYN burst). Real-network false alerts do not change, so the
+  damage is invisible from the alert queue.
+- **A local-normal gate prevents it (exploratory).** Admitting a dismissal into the repair set only if the flow
+  resembles the site's earlier normal traffic kept every legitimate triaged flow (27 of 27; 20 of 20), rejected every
+  dismissed attack at 3, and let 0–2 of 10 through, restoring recall to 86–91% with false alerts unchanged. The only
+  loss after gating is SSH brute force (all features, 3 of 5 seeds), consistent with brute-force flows looking like
+  ordinary SSH sessions; a gate cannot catch an attack that resembles normal traffic.
+- **A site needs little normal traffic.** About 100 flows bring the false-alert rate within 0.5 points of using all
+  3,307; 300 match it.
+- **Limits.** Lab attacks are five bounded types, and two (FTP brute force, incomplete HTTP probes) are missed by every
+  variant, a detection gap of the model rather than of the repair. Feature interpolation in R4 is a geometric stress
+  test, not a realisable attack. The gate result is exploratory and needs confirmation on new dismissals.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.

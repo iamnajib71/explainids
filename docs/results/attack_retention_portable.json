@@ -1,0 +1,6208 @@
+{
+ "generated": "2026-11-02",
+ "model": "lgbm",
+ "features": 79,
+ "portable": true,
+ "k": 50,
+ "service_flows": 30,
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "lab_runs": [
+  "run_20261025T050509Z",
+  "run_20261025T050628Z",
+  "run_20261025T051149Z"
+ ],
+ "lab_attacks": 792,
+ "held_attacks": 528,
+ "poison_attacks": 264,
+ "fit_pool_flows": 3307,
+ "eval_flows": 4634,
+ "runs": [
+  {
+   "test": "R1 retention",
+   "variant": "few-shot",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.07034958998705222,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8891816280522584,
+    "recall_ci": [
+     0.8884438651763975,
+     0.8899151163812302
+    ],
+    "fpr": 0.008350216400572538,
+    "macro_detection": 0.9595400472791691,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7732,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9942,
+     "DoS-Hulk": 0.9602,
+     "DoS-Slowloris": 0.9564,
+     "Infiltration": 0.931,
+     "PortScan": 0.9192,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.2154185751515667e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03927492447129909,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017845017247467,
+    "recall_ci": [
+     0.9010848703399257,
+     0.9024797201399715
+    ],
+    "fpr": 0.008384194900676597,
+    "macro_detection": 0.9608281392989283,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9388,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.268192619436003e-05
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.004525511482609379,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017744949058144,
+    "recall_ci": [
+     0.901074831918064,
+     0.9024697450338778
+    ],
+    "fpr": 0.0036080919797997816,
+    "macro_detection": 0.9604845978776484,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5852583654083943e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local refit anomaly",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.018774277082434183,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.0032215865411161088,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + two-envelope anomaly",
+   "seed": 42,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01985325852395339,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.003450941416818508,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020500647388864913
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "dismissed": 3,
+   "lab": {
+    "attacks": 528,
+    "caught": 220,
+    "recall": 0.4166666666666667,
+    "recall_ci": [
+     0.3753639225533726,
+     0.4591732779965656
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8594,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0146741476046612
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "dismissed": 3,
+   "kept": 27,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017911091929218817
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "dismissed": 10,
+   "lab": {
+    "attacks": 528,
+    "caught": 243,
+    "recall": 0.4602272727272727,
+    "recall_ci": [
+     0.41815352534633177,
+     0.5028755930979568
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8789,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.09
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01683211048769961
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "dismissed": 10,
+   "kept": 22,
+   "attacks_kept": 2,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.018774277082434183
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02352179542511869,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.004045565168639543,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.015105740181268883,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.0028541940087409693,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0220112214069918,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.004986344890270681,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.023090202848511005,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017744949058144,
+    "recall_ci": [
+     0.901074831918064,
+     0.9024697450338778
+    ],
+    "fpr": 0.0040158339810484915,
+    "macro_detection": 0.9604845978776484,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5852583654083943e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01661631419939577,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.0038268285742196627,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9017744949058144,
+    "recall_ci": [
+     0.901074831918064,
+     0.9024697450338778
+    ],
+    "fpr": 0.0035465059483611745,
+    "macro_detection": 0.9604845978776484,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5852583654083943e-06
+   }
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.2,
+   "flagged": 0.38636363636363635,
+   "classifier_only": 0.38636363636363635,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.4,
+   "flagged": 0.003787878787878788,
+   "classifier_only": 0.003787878787878788,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.6,
+   "flagged": 0.005050505050505051,
+   "classifier_only": 0.005050505050505051,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 0.9,
+   "flagged": 0.025252525252525252,
+   "classifier_only": 0.025252525252525252,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 0.9,
+   "flagged": 0.025252525252525252,
+   "classifier_only": 0.025252525252525252,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 0.9,
+   "flagged": 0.025252525252525252,
+   "classifier_only": 0.025252525252525252,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 42,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 42,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 42,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 42,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R1 retention",
+   "variant": "few-shot",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.06387570133793699,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.929747842458361,
+    "recall_ci": [
+     0.9291465612231743,
+     0.9303444035907197
+    ],
+    "fpr": 0.009573442404318667,
+    "macro_detection": 0.9650502573815535,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.883,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.951,
+     "DoS-Hulk": 0.9554,
+     "DoS-Slowloris": 0.9605,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9367,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.537562655678219e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.036901165299956844,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.009713603717247912,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5274777981102044e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.005786963298972575,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02006905481225723,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.00489927498375403,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5274777981102044e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local refit anomaly",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01855848079413034,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004361989950858594,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + two-envelope anomaly",
+   "seed": 1,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.018990073370738023,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004597715795330504,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02006905481225723
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02006905481225723
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02006905481225723
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "dismissed": 3,
+   "lab": {
+    "attacks": 528,
+    "caught": 255,
+    "recall": 0.48295454545454547,
+    "recall_ci": [
+     0.44060747515730053,
+     0.5255478613188231
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.9961,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.019637462235649546
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "dismissed": 3,
+   "kept": 27,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.018774277082434183
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "dismissed": 10,
+   "lab": {
+    "attacks": 528,
+    "caught": 224,
+    "recall": 0.42424242424242425,
+    "recall_ci": [
+     0.38278196131943154,
+     0.46679731190778506
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8516,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.03
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "dismissed": 10,
+   "kept": 21,
+   "attacks_kept": 1,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01985325852395339,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004419328669784194,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02783772119119551,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.006511130082440336,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5274777981102044e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.012516184721622789,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004446936201118742,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01661631419939577,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004251559825520402,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.014889943892965041,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.00525604923484665,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.004945995421397111,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5274777981102044e-06
+   }
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.2,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.2,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.2,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.4,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 1,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 1,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 1,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 1,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R1 retention",
+   "variant": "few-shot",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0660336642209754,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9247072648075904,
+    "recall_ci": [
+     0.9240865806210117,
+     0.9253232842541435
+    ],
+    "fpr": 0.010575808157388412,
+    "macro_detection": 0.9604783421075899,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8801,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9517,
+     "DoS-Hulk": 0.9493,
+     "DoS-Slowloris": 0.947,
+     "Infiltration": 0.931,
+     "PortScan": 0.8864,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.091887813942559e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.039490720759602936,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.010641641501340027,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.0783343748364635e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.007288388272320689,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5391695564575089e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.006349732206946055,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.0783343748364635e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local refit anomaly",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.019637462235649546,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.005939866549440841,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5391695564575089e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + two-envelope anomaly",
+   "seed": 2,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287757514763632,
+    "recall_ci": [
+     0.9281706615486078,
+     0.9293761319781781
+    ],
+    "fpr": 0.006175592393912752,
+    "macro_detection": 0.9556227623213432,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.8966,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.021148036253776436
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01812688821752266
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0220112214069918
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "dismissed": 3,
+   "lab": {
+    "attacks": 528,
+    "caught": 283,
+    "recall": 0.5359848484848485,
+    "recall_ci": [
+     0.4933396068365373,
+     0.5781102383805349
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8789,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.29
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0183426845058265
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "dismissed": 3,
+   "kept": 27,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.016184721622788088
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "dismissed": 10,
+   "lab": {
+    "attacks": 528,
+    "caught": 266,
+    "recall": 0.5037878787878788,
+    "recall_ci": [
+     0.46126701355033045,
+     0.5462540227883087
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8594,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.23
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.015105740181268883
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "dismissed": 10,
+   "kept": 20,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01640051791109193
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0256797583081571,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.006564221488852928,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5391695564575089e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02589555459646094,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.007110001146774379,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.0783343748364635e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01683211048769961,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.007182205459495504,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5391695564575089e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.022658610271903322,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.006532366645005372,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.0783343748364635e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.015105740181268883,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.006659786020395595,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.5391695564575089e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02330599913681485,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.006647044082856573,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 3.0783343748364635e-06
+   }
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.2,
+   "flagged": 0.8522727272727273,
+   "classifier_only": 0.8522727272727273,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.4,
+   "flagged": 0.8522727272727273,
+   "classifier_only": 0.8522727272727273,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.4,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.4,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.4,
+   "flagged": 0.8611111111111112,
+   "classifier_only": 0.8611111111111112,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.6,
+   "flagged": 0.022727272727272728,
+   "classifier_only": 0.022727272727272728,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.6,
+   "flagged": 0.022727272727272728,
+   "classifier_only": 0.022727272727272728,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.6,
+   "flagged": 0.022727272727272728,
+   "classifier_only": 0.022727272727272728,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 2,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 2,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 2,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 2,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R1 retention",
+   "variant": "few-shot",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.06452309020284851,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8480450249670133,
+    "recall_ci": [
+     0.8472018697240735,
+     0.8488843574838234
+    ],
+    "fpr": 0.007562339929409666,
+    "macro_detection": 0.950482785506961,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6668,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9694,
+     "DoS-Hulk": 0.9621,
+     "DoS-Slowloris": 0.957,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9022,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6856953577635543e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.05114372032801036,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.0077194904923909395,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.004134758731412698,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03280103582218386,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.0032088446035770865,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local refit anomaly",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03150625809236081,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0028605649775104804,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + two-envelope anomaly",
+   "seed": 3,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.032369443245576175,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0030920435094693834,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03280103582218386
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03280103582218386
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03280103582218386
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0330168321104877
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03085886922744929
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0330168321104877
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "dismissed": 3,
+   "lab": {
+    "attacks": 528,
+    "caught": 425,
+    "recall": 0.8049242424242424,
+    "recall_ci": [
+     0.7689719388007069,
+     0.8364714864597466
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8789,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.029995684074233923
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "dismissed": 3,
+   "kept": 27,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0293482952093224
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "dismissed": 10,
+   "lab": {
+    "attacks": 528,
+    "caught": 425,
+    "recall": 0.8049242424242424,
+    "recall_ci": [
+     0.7689719388007069,
+     0.8364714864597466
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8789,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03366422097539922
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "dismissed": 10,
+   "kept": 22,
+   "attacks_kept": 2,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02330599913681485
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.037332757876564523,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0035167747607701225,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.04121709106603366,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.0045722319202524606,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02956409149762624,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0030559413531088203,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03452740612861459,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.003410591947944938,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.030211480362537766,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.003954247949609884,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03409581355200691,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.003380860760353886,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.6683711858949227e-06
+   }
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.2,
+   "flagged": 0.5012626262626263,
+   "classifier_only": 0.5012626262626263,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.2,
+   "flagged": 0.3611111111111111,
+   "classifier_only": 0.3611111111111111,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.2,
+   "flagged": 0.3611111111111111,
+   "classifier_only": 0.3611111111111111,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.2,
+   "flagged": 0.3611111111111111,
+   "classifier_only": 0.3611111111111111,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.4,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.4,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.4,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.4,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.6,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.6,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.6,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.6,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 3,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 3,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 3,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 3,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R1 retention",
+   "variant": "few-shot",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.06754423823910229,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9639625859335575,
+    "recall_ci": [
+     0.9635232525296185,
+     0.9643968234396294
+    ],
+    "fpr": 0.007220431272112571,
+    "macro_detection": 0.9734199960513639,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9509,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9825,
+     "DoS-Hulk": 0.9707,
+     "DoS-Slowloris": 0.9647,
+     "Infiltration": 0.931,
+     "PortScan": 0.9011,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.4829886373410608e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.03798014674147605,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.007054786084105282,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.485191158954069e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0031769897597295313,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.0022680648819459488,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.485191158954069e-06
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + local refit anomaly",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0183426845058265,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0017711293179240835,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R1 retention",
+   "variant": "triaged + two-envelope anomaly",
+   "seed": 4,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.019205869659041863,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.00200473150613949,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "attacks_in_pool": 0,
+   "share_of_pool": 0.0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "attacks_in_pool": 10,
+   "share_of_pool": 0.0030147723846849564,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "attacks_in_pool": 30,
+   "share_of_pool": 0.008990110878034162,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "attacks_in_pool": 100,
+   "share_of_pool": 0.0293513354857646,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02028485110056107
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017263703064307294
+  },
+  {
+   "test": "R2 poisoned pool",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "attacks_in_pool": 264,
+   "share_of_pool": 0.07392887146457575,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.020716443677168753
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "dismissed": 3,
+   "lab": {
+    "attacks": 528,
+    "caught": 256,
+    "recall": 0.48484848484848486,
+    "recall_ci": [
+     0.4424825864382059,
+     0.5274332682072375
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01855848079413034
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "dismissed": 3,
+   "kept": 27,
+   "attacks_kept": 0,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01855848079413034
+  },
+  {
+   "test": "R2 dismissed attacks",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "dismissed": 10,
+   "lab": {
+    "attacks": 528,
+    "caught": 283,
+    "recall": 0.5359848484848485,
+    "recall_ci": [
+     0.4933396068365373,
+     0.5781102383805349
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 0.8789,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 0.29
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.01985325852395339
+  },
+  {
+   "test": "R5 gated triage",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "dismissed": 10,
+   "kept": 21,
+   "attacks_kept": 1,
+   "lab": {
+    "attacks": 528,
+    "caught": 456,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8317255226725486,
+     0.8902939658368121
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 80,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.019421665947345707
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017479499352611134,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0028011026023283766,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "pool_flows": 100,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02740612861458783,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.0038077156679111293,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.485191158954069e-06
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017695295640914977,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.002896667133871043,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "pool_flows": 300,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.017695295640914977,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0019473927872138905,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.0146741476046612,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0021024196939386603,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 0.0
+   }
+  },
+  {
+   "test": "R3 pool size",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "pool_flows": 1000,
+   "lab": {
+    "attacks": 792,
+    "caught": 684,
+    "recall": 0.8636363636363636,
+    "recall_ci": [
+     0.8379737189081479,
+     0.8857883965680978
+    ],
+    "per_class": {
+     "FTP-BruteForce": 0.0,
+     "Incomplete-HTTP-Probe": 0.0,
+     "PortScan": 1.0,
+     "SSH-BruteForce": 0.0,
+     "SYN-Burst": 1.0
+    },
+    "vetoable_share": 0.0,
+    "benign": 120,
+    "benign_fpr": 0.0
+   },
+   "real_network_rate": 0.02006905481225723,
+   "benchmark": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.002244704663124408,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    },
+    "vetoable_share": 1.485191158954069e-06
+   }
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.0,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.2,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.2,
+   "flagged": 0.8636363636363636,
+   "classifier_only": 0.8636363636363636,
+   "near_normal": 0.13636363636363635
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.4,
+   "flagged": 0.39015151515151514,
+   "classifier_only": 0.39015151515151514,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.4,
+   "flagged": 0.5088383838383839,
+   "classifier_only": 0.5088383838383839,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.4,
+   "flagged": 0.5088383838383839,
+   "classifier_only": 0.5088383838383839,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.4,
+   "flagged": 0.5088383838383839,
+   "classifier_only": 0.5088383838383839,
+   "near_normal": 0.14015151515151514
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.6,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.1590909090909091
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.8,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.8,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.34595959595959597
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 0.9,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 0.9,
+   "flagged": 0.02904040404040404,
+   "classifier_only": 0.02904040404040404,
+   "near_normal": 0.7070707070707071
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "few-shot",
+   "seed": 4,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged, benchmark anomaly layer",
+   "seed": 4,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + exemplar envelope",
+   "seed": 4,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  },
+  {
+   "test": "R4 evasion",
+   "variant": "triaged + local anomaly threshold",
+   "seed": 4,
+   "alpha": 1.0,
+   "flagged": 0.0,
+   "classifier_only": 0.0,
+   "near_normal": 1.0
+  }
+ ],
+ "minutes": 93.97760669499985
+}

@@ -194,7 +194,39 @@ def baselines() -> None:
     save(fig, "fig6_baselines.png")
 
 
+def triage_poisoning() -> None:
+    files = [("attack_retention_portable.json", "Without port and window features"), ("attack_retention.json", "All features")]
+    if not all((RES / f).exists() for f, _ in files):
+        print("skip fig8: attack retention results not present yet")
+        return
+    fig, axes = plt.subplots(1, 2, figsize=(7.6, 3.0), sharey=True, gridspec_kw={"wspace": 0.12})
+    for ax, (name, title) in zip(axes, files):
+        runs = load(name)["runs"]
+        recall = lambda test, k: np.mean([r["lab"]["recall"] for r in runs if r["test"] == test and r.get("dismissed") == k])  # noqa: E731
+        clean = np.mean([r["lab"]["recall"] for r in runs if r["test"] == "R2 poisoned pool"
+                         and r["variant"] == "triaged + exemplar envelope" and r["attacks_in_pool"] == 0])
+        idx, w = np.arange(3), 0.36
+        ungated = [clean] + [recall("R2 dismissed attacks", k) for k in (3, 10)]
+        gated = [clean] + [recall("R5 gated triage", k) for k in (3, 10)]
+        b1 = ax.bar(idx - w / 2 - 0.01, ungated, w, color=ORANGE, label="Every dismissal retrains the model",
+                    edgecolor=SURFACE, linewidth=2)
+        b2 = ax.bar(idx + w / 2 + 0.01, gated, w, color=BLUE, label="Only dismissals that look like local normal",
+                    edgecolor=SURFACE, linewidth=2)
+        bar_labels(ax, list(b1) + list(b2))
+        ax.set_xticks(idx, ["0", "3", "10"])
+        ax.set_xlabel("Attack flows wrongly dismissed as benign")
+        ax.set_title(title, fontsize=9, fontweight="normal", color=MUTED)
+        ax.set_ylim(0, 1.15)
+        ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+    axes[0].set_ylabel("Attacks in other lab captures caught")
+    axes[0].legend(loc="upper center", bbox_to_anchor=(1.06, -0.24), ncol=2, fontsize=7.5)
+    fig.suptitle("Three wrong dismissals blind the model; a local-normal gate prevents it (5 seeds)",
+                 x=0.06, y=1.02, ha="left", fontsize=10, fontweight="bold", color=INK)
+    save(fig, "fig8_triage_poisoning.png")
+
+
 if __name__ == "__main__":
     transfer(); dose_response(); per_block(); offload(); envelope(); baselines()
+    triage_poisoning()
     per_block("real_network_day2_portable.json", "fig7_day2_blocks.png",
               "Pre-registered second evening: lower again in all 12 blocks")
