@@ -466,6 +466,16 @@ catches; one seed; [`unseen_veto_portable`](results/unseen_veto_portable.md), [`
 - **What an operator should do.** Prefer the exemplar veto, and demote vetoed anomaly alerts to a low-priority log
   rather than discarding them, so slow-connection attacks remain discoverable. Not yet tested: one seed only.
 
+**End to end through the console.** The whole loop was then run through the product's own API
+(`scripts/repair_loop_check.py`, [`results/repair_loop`](results/repair_loop.md)): stream the first evening through
+the sensor endpoint, dismiss its 190 alerts plus 3 lab attacks by mistake, export the repair set, retrain with
+`repair_model.py`, and serve the result. The gate used all 190 household dismissals and held back all 3 attacks. On
+the second evening alerts fell from 236 to 45 (5.1% → 1.0%), with 93 vetoed flows kept as low priority rather than
+dropped; lab attacks from the other captures were still caught at 90.9%, and benchmark attack recall was unchanged
+(0.9976). Dismissing caught attacks under the repaired model marks them *held back* at decision time. This uses
+the shipped CIC-IDS2017 model without few-shot labels, so the rates are not the study's; it shows the mechanisms
+work together in the product.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.
@@ -538,6 +548,7 @@ python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelo
 python scripts/preregistered_tests.py      # H1–H4 for the pre-registered second evening
 python scripts/attack_retention_eval.py <2017> <2018> --lab-runs <3 lab replicates> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/attack_retention.md
 python scripts/unseen_veto_eval.py <2017> <2018> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/unseen_veto.md
+python scripts/repair_loop_check.py data/processed/cicids2017.parquet --day1 <day-1 sessions> --day2 <day-2 sessions> --lab-runs <3 lab replicates>
 python scripts/make_figures.py             # docs/figures from the result files
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
 ```
