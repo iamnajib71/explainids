@@ -76,6 +76,7 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=50)
     ap.add_argument("--service-flows", type=int, default=30)
     ap.add_argument("--portable", action="store_true")
+    ap.add_argument("--seed", type=int, default=SEED, help="label, triage and model seed (confirmation runs use 1-4)")
     ap.add_argument("--results", default="docs/results/unseen_veto.md")
     args = ap.parse_args()
 
@@ -92,9 +93,9 @@ def main() -> None:
     rows = []
     for cls in classes:
         s, t = without(src, cls), without(tgt, cls)
-        labels = few_shot(t, args.k, 1000, SEED)
+        labels = few_shot(t, args.k, 1000, args.seed)
         base = fit_detector(pd.concat([s["train"], labels]), s["val"], feats, args.model)
-        triaged, _ = triage_sample(base, fit_pool, feats, args.service_flows, SEED)
+        triaged, _ = triage_sample(base, fit_pool, feats, args.service_flows, args.seed)
         rep = fit_detector(pd.concat([s["train"], labels, triaged]), s["val"], feats, args.model)
         thr = copy.deepcopy(rep)
         thr.tune_anomaly_threshold(fit_pool[feats])
@@ -111,7 +112,7 @@ def main() -> None:
                                for n, d in row["splits"].items()}), flush=True)
 
     res = {"generated": time.strftime("%Y-%m-%d"), "model": args.model, "features": len(feats),
-           "portable": args.portable, "k": args.k, "service_flows": args.service_flows, "seed": SEED,
+           "portable": args.portable, "k": args.k, "service_flows": args.service_flows, "seed": args.seed,
            "fit_pool_flows": int(len(fit_pool)), "eval_flows": int(sum(len(b) for b in blocks)),
            "rows": rows, "minutes": (time.perf_counter() - t0) / 60}
     out = Path(args.results)
