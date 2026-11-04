@@ -697,7 +697,7 @@ async function upload(file) {
   const fd = new FormData(); fd.append("file", file);
   const t0 = performance.now();
   try {
-    const r = await api("score-csv", { method: "POST", body: fd });
+    const r = await api("score-csv", { method: "POST", body: fd, headers: sensor.key ? { "X-API-Key": sensor.key } : {} });
     st.innerHTML = `<p>✓ <b>${fmt(r.rows)}</b> flows · ${((performance.now() - t0) / 1000).toFixed(1)} s${r.dropped_invalid_rows ? ` · ${fmt(r.dropped_invalid_rows)} invalid rows skipped` : ""}</p>`;
     r.top_alerts.forEach(a => addAlert(a, false, "upload"));
     renderUpload(r);

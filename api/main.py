@@ -309,7 +309,7 @@ def sample_csv(rows: int = 3000):
                     headers={"Content-Disposition": 'attachment; filename="explainids_sample_flows.csv"'})
 
 
-@app.post("/score-csv")
+@app.post("/score-csv", dependencies=[Depends(require_key)])
 async def score_csv(file: UploadFile = File(...)):
     """Score an uploaded CICFlowMeter CSV. If it has a Label column, return a full evaluation too."""
     raw = await file.read(MAX_UPLOAD_MB * 1024 * 1024 + 1)  # never buffer more than the limit

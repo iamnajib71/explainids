@@ -10,10 +10,11 @@
 <script src="vendor/echarts.min.js"></script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="brand">
     <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z"/><path class="tick" d="m11 16 4 4 7-8"/></svg>
-    <div><strong>ExplainIDS</strong><span>Explainable intrusion detection</span></div>
+    <div><h1 class="brand-name">ExplainIDS</h1><span>Explainable intrusion detection</span></div>
   </div>
   <nav class="tabs" role="tablist">
     <button role="tab" data-view="sensor" class="active">Local sensor</button>
@@ -30,9 +31,10 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 <!-- LOCAL SENSOR: separate from labelled replay and file experiments -->
 <section id="view-sensor" class="view active">
+<h2 class="sr-only">Local sensor</h2>
   <div class="card sensor-intro">
     <div class="card-head"><h3>Own-network observations</h3><span id="sensor-status" role="status">No sensor connected</span></div>
     <p>Read flows submitted by a collector you run on your own computer. Replay continues in its own tab and never counts as sensor observations.</p>
@@ -64,6 +66,7 @@
 </section>
 <!-- LIVE -->
 <section id="view-live" class="view">
+<h2 class="sr-only">Traffic replay</h2>
   <div class="controls card">
     <div class="ctl-group">
       <button id="play" class="btn primary" disabled><span class="ico">▶</span> <span class="lbl">Start replay</span></button>
@@ -111,12 +114,14 @@
 
 <!-- INCIDENTS -->
 <section id="view-incidents" class="view">
+<h2 class="sr-only">Incidents</h2>
   <div class="card"><div class="card-head"><h3 tabindex="0" data-tip="Alerts grouped by source, candidate technique and 10-minute capture window. Bubble size = alerts in the group.">Incident timeline</h3></div><div id="c-incidents" class="chart tall"></div></div>
   <div class="card"><div class="card-head"><h3>Incidents</h3><small id="inc-count"></small></div><div id="incident-list" class="incident-list"><div class="empty">No incidents yet</div></div></div>
 </section>
 
 <!-- ATT&CK -->
 <section id="view-attack" class="view">
+<h2 class="sr-only">ATT&amp;CK</h2>
   <div class="card"><div class="card-head"><h3 tabindex="0" data-tip="Candidate MITRE ATT&amp;CK techniques for this session's alerts. Flow features show network symptoms, not intent, so an analyst confirms each mapping.">Candidate techniques</h3></div>
     <div id="attack-matrix" class="attack-matrix"></div></div>
   <div class="card"><div class="card-head"><h3 tabindex="0" data-tip="Predicted class → candidate technique → tactic, sized by alert count. Hover a band to trace it.">Attack context</h3></div>
@@ -125,6 +130,7 @@
 
 <!-- MODEL LAB -->
 <section id="view-lab" class="view">
+<h2 class="sr-only">Model lab</h2>
   <div class="card lab-intro" id="lab-intro"></div>
   <div class="lab-grid">
     <div class="card"><div class="card-head"><h3 tabindex="0" data-tip="Classifier only, on the held-out test split. ★ = chosen on validation macro F1, not on these test results.">Test · classifier</h3></div><div id="c-compare" class="chart"></div></div>
@@ -136,12 +142,14 @@
 
 <!-- RESEARCH -->
 <section id="view-research" class="view">
+<h2 class="sr-only">Findings</h2>
   <div class="findings" id="findings"></div>
   <p class="sources" id="sources"></p>
 </section>
 
 <!-- UPLOAD -->
 <section id="view-upload" class="view">
+<h2 class="sr-only">Analyse a file</h2>
   <div class="card">
     <div class="card-head"><h3>Analyse a file</h3><small tabindex="0" data-tip="CICFlowMeter CSV, up to 25 MB and 200,000 rows. Scored in memory, never stored. Add a Label column to get precision, recall, F1 and a confusion matrix.">CSV · 25 MB</small></div>
     <label class="dropzone" id="dropzone" tabindex="0" role="button">
@@ -164,7 +172,7 @@
   </div>
 </aside>
 <div id="scrim" class="scrim"></div>
-<div id="toasts" class="toasts"></div>
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
 
 <script src="app.js"></script>
 </body>

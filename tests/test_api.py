@@ -236,3 +236,21 @@ def test_dismissal_feeds_repair_only_if_it_resembles_site_normal(tmp_path, monke
     summary = client.get("/triage/summary").json()
     assert (summary["repair_set_flows"], summary["held_back"]) == ((1, 0) if inside else (0, 1))
     assert (aid in client.get("/triage/repair-set.csv").text) is inside
+
+
+PUBLIC_ROUTES = {("GET", "/health"), ("GET", "/model"), ("GET", "/replay"), ("GET", "/sample.csv")}
+
+
+def test_every_route_that_scores_writes_or_reveals_alerts_requires_the_key(monkeypatch):
+    """Only health, the model card and benchmark replay/sample data are public; everything else needs the key."""
+    from fastapi.routing import APIRoute
+    import api.main as main
+    routes = [(m, r.path, r) for r in main.app.routes if isinstance(r, APIRoute) for m in r.methods]
+    for method, path, route in routes:
+        keyed = any(d.call is main.require_key for d in route.dependant.dependencies)
+        assert keyed or (method, path) in PUBLIC_ROUTES, f"{method} {path} is reachable without the API key"
+    monkeypatch.setattr(main, "API_KEY", "test-key")
+    for method, path, _ in routes:
+        if (method, path) not in PUBLIC_ROUTES:
+            url = path.replace("{alert_id}", "x")
+            assert client.request(method, url).status_code == 401, f"{method} {path} accepted a missing key"

@@ -19,8 +19,10 @@ def member_ranges(z: zipfile.ZipFile, size: int) -> dict[str, tuple[int, int]]:
 
 
 def patch(path: str, url: str, start: int, end: int) -> None:
+    if not url.lower().startswith("https://"):  # no file:// or other schemes (bandit B310)
+        raise SystemExit("download URL must be https://")
     req = urllib.request.Request(url, headers={"Range": f"bytes={start}-{end - 1}"})
-    with urllib.request.urlopen(req, timeout=120) as r, open(path, "r+b") as f:
+    with urllib.request.urlopen(req, timeout=120) as r, open(path, "r+b") as f:  # nosec B310: scheme checked above
         f.seek(start)
         done = 0
         while chunk := r.read(CHUNK):
