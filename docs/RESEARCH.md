@@ -441,7 +441,7 @@ smoke run are labelled exploratory (commit `55f3a66`). Results:
   3,307; 300 match it.
 - **Limits.** Lab attacks are five bounded types, and two (FTP brute force, incomplete HTTP probes) are missed by every
   variant, a detection gap of the model rather than of the repair. Feature interpolation in R4 is a geometric stress
-  test, not a realisable attack. The gate result is exploratory and needs confirmation on new dismissals.
+  test, not a realisable attack. The gate was then tested on new dismissals under a pre-specified rule (below).
 
 **Unseen attacks: here the veto has a price.** The anomaly layer exists for attacks never seen in training, so the
 veto's real cost is measured there. Each attack class was left out of all training in turn, the deployment recipe
@@ -464,7 +464,7 @@ catches; one seed; [`unseen_veto_portable`](results/unseen_veto_portable.md), [`
   HTTPS sessions, and Infiltration (6 of 7–8). A threshold moves the operating point for all traffic; the exemplar
   veto removes only alerts that resemble something the site has done before.
 - **What an operator should do.** Prefer the exemplar veto, and demote vetoed anomaly alerts to a low-priority log
-  rather than discarding them, so slow-connection attacks remain discoverable. Not yet tested: one seed only.
+  rather than discarding them, so slow-connection attacks remain discoverable. Repeated over five seeds below.
 
 **End to end through the console.** The whole loop was then run through the product's own API
 (`scripts/repair_loop_check.py`, [`results/repair_loop`](results/repair_loop.md)): stream the first evening through
@@ -475,6 +475,43 @@ dropped; lab attacks from the other captures were still caught at 90.9%, and ben
 (0.9976). Dismissing caught attacks under the repaired model marks them *held back* at decision time. This uses
 the shipped CIC-IDS2017 model without few-shot labels, so the rates are not the study's; it shows the mechanisms
 work together in the product.
+
+### Pre-specified confirmations: gate, unseen cost, refit cadence
+
+Three results above rested on thin evidence or had not been tested, so each was fixed in
+[`PREREGISTRATION_CONFIRM.md`](PREREGISTRATION_CONFIRM.md) (commit `bcc0ef5`) before running. Every outcome is
+reported as it fell, including the clauses that missed.
+
+| Question | Primary result (without port and window features) | All features (secondary) | Verdict under the rule |
+|---|---|---|---|
+| C1 gate, 3 wrong dismissals (new replicate, seeds 5–9) | clean 86.5%, ungated 76.6%, gated 86.5%; restored in 5/5 seeds; 100% of legitimate dismissals kept | 90.9% → 42.6% → 90.0%; 4/5 | Gate holds; primary **not confirmed** only because poisoning fell 9.9 points (rule: ≥ 10); all features confirmed |
+| C1 gate, 10 wrong dismissals | 86.5% → 55.2% → 86.5%; 5/5; 100% kept | 90.9% → 2.2% → 88.3%; 2/5 | Primary **confirmed**; all features not confirmed (SSH brute force leaks) |
+| C2 unseen cost, seeds 42 and 1–4 pooled | exemplar removes 939 of 3,200 anomaly-only unseen detections (29.3%); threshold 95.4% | 321 of 2,357 (13.6%); threshold 83.8% | Cost **confirmed** (> 10%); exemplar pays less in **5/5** seeds, both feature sets |
+| C3 refit cadence, 3-day-old vs equal-size 2-day-old pool | alerts 2.03% vs 2.11%; old higher in 4 of 12 blocks, p = 0.39 | — | **No decay detected** (weak test: one day apart) |
+
+Results: [`gate_confirm_portable`](results/gate_confirm_portable.md), [`gate_confirm`](results/gate_confirm.md),
+[`unseen_veto_portable_seed1`](results/unseen_veto_portable_seed1.md)–[`seed4`](results/unseen_veto_portable_seed4.md),
+[`unseen_veto_seed1`](results/unseen_veto_seed1.md)–[`seed4`](results/unseen_veto_seed4.md),
+[`cadence_portable`](results/cadence_portable.md).
+
+**What we found.**
+- **The gate replicates on fresh dismissals.** Across both dismissal counts and all ten primary seed runs, gated
+  recall equals clean recall exactly and no legitimate dismissal is lost; 0–3 of the dismissed attacks pass the gate.
+  The primary k = 3 verdict fails on the poisoning clause, not the gate: with this replicate three dismissals
+  damaged only one seed badly (86% → 48%) and the others by about 4 points, so the poisoning effect of a handful of
+  mistakes is variable, while ten mistakes damage every seed (49–64%).
+- **The gate's known hole is confirmed.** With all features the attacks that pass the gate are SSH brute force, and in
+  3 of 5 seeds at 10 dismissals the gated model then misses SSH brute force entirely (recall 86–87% against 91%). A
+  gate based on resemblance to normal traffic cannot stop a dismissed attack that looks like an ordinary session; an
+  operator still needs to review dismissals of authentication traffic.
+- **The unseen-attack price is real and has one shape.** In all ten runs the exemplar veto keeps every Bot detection
+  (402–403 flows per run), which the threshold loses 64–100% of, and its losses are DoS-Slowloris and Infiltration.
+  Where the all-features anomaly layer does not catch Slowloris at all (seeds 1, 3, 4) the exemplar cost falls to
+  1–2%, which is why the pooled share is lower there. Real-network false alerts are unchanged across seeds
+  (portable: 3.7–4.0% → 1.6–2.0% exemplar, 1.9–2.3% threshold).
+- **A site's model of normal did not go stale in three days.** A 222-flow pilot from three days earlier repaired the
+  later evening as well as an equal-size pool from two days earlier (2.0–2.3% against 6.6% unrepaired). This bounds
+  nothing beyond a few days; a longer gap is needed to set a refit schedule.
 
 ## RQ2: Stability of explanations
 
@@ -548,6 +585,9 @@ python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelo
 python scripts/preregistered_tests.py      # H1–H4 for the pre-registered second evening
 python scripts/attack_retention_eval.py <2017> <2018> --lab-runs <3 lab replicates> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/attack_retention.md
 python scripts/unseen_veto_eval.py <2017> <2018> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/unseen_veto.md
+python scripts/gate_confirm.py <2017> <2018> --lab-runs <replicate B> <A> <C> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json --seeds 5,6,7,8,9 [--portable]   # C1
+python scripts/unseen_veto_eval.py ... --seed 1   # C2: seeds 1-4, with and without --portable
+python scripts/cadence_eval.py <2017> <2018> --old <29 Oct pilot sessions> --recent <day-1 sessions> --study data/sensor/study_wifi_20261101.json --portable   # C3
 python scripts/repair_loop_check.py data/processed/cicids2017.parquet --day1 <day-1 sessions> --day2 <day-2 sessions> --lab-runs <3 lab replicates>
 python scripts/make_figures.py             # docs/figures from the result files
 python scripts/build_research_summary.py   # refreshes the console's Findings tab
