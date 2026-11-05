@@ -238,7 +238,8 @@ def test_dismissal_feeds_repair_only_if_it_resembles_site_normal(tmp_path, monke
     assert (aid in client.get("/triage/repair-set.csv").text) is inside
 
 
-PUBLIC_ROUTES = {("GET", "/health"), ("GET", "/model"), ("GET", "/replay"), ("GET", "/sample.csv")}
+PUBLIC_ROUTES = {("GET", "/health"), ("GET", "/model"), ("GET", "/replay"), ("GET", "/sample.csv"),
+                 ("POST", "/auth/login"), ("POST", "/auth/logout"), ("GET", "/auth/me")}
 
 
 def test_every_route_that_scores_writes_or_reveals_alerts_requires_the_key(monkeypatch):
@@ -254,3 +255,57 @@ def test_every_route_that_scores_writes_or_reveals_alerts_requires_the_key(monke
         if (method, path) not in PUBLIC_ROUTES:
             url = path.replace("{alert_id}", "x")
             assert client.request(method, url).status_code == 401, f"{method} {path} accepted a missing key"
+
+
+def _signed_in_client(monkeypatch, password="a long test password"):
+    import api.main as main
+    from ids.auth import LoginLimiter, hash_password
+    monkeypatch.setattr(main, "USERS", {"analyst": hash_password(password, iterations=1000)})
+    monkeypatch.setattr(main, "API_KEY", "collector-key")
+    monkeypatch.setattr(main, "_logins", LoginLimiter())
+    return TestClient(app)
+
+
+def test_sign_in_gives_a_strict_httponly_session_that_replaces_the_key(monkeypatch):
+    c = _signed_in_client(monkeypatch)
+    assert c.get("/alerts").status_code == 401
+    assert c.post("/auth/login", json={"user": "analyst", "password": "wrong"}).status_code == 401
+    assert c.get("/auth/me").json() == {"user": None, "sign_in": True, "key_required": True}
+    r = c.post("/auth/login", json={"user": "analyst", "password": "a long test password"})
+    assert r.status_code == 200
+    cookie = r.headers["set-cookie"].lower()
+    assert "httponly" in cookie and "samesite=strict" in cookie
+    assert c.get("/auth/me").json()["user"] == "analyst"
+    assert c.get("/alerts").status_code == 200
+    assert c.post("/alerts/x/status", params={"status": "dismissed"}).status_code == 403, "cookie writes need the header"
+    assert c.post("/alerts/x/status", params={"status": "dismissed"}, headers={"X-ExplainIDS": "1"}).status_code == 404
+    c.post("/auth/logout")
+    assert c.get("/alerts").status_code == 401
+    assert TestClient(app).get("/alerts", headers={"X-API-Key": "collector-key"}).status_code == 200
+
+
+def test_repeated_failed_sign_ins_are_rate_limited(monkeypatch):
+    c = _signed_in_client(monkeypatch)
+    codes = [c.post("/auth/login", json={"user": "analyst", "password": f"bad{i}"}).status_code for i in range(6)]
+    assert codes == [401] * 5 + [429]
+    assert c.post("/auth/login", json={"user": "analyst", "password": "a long test password"}).status_code == 429
+
+
+def test_public_deployment_forces_https_and_sends_security_headers(monkeypatch):
+    import api.main as main
+    monkeypatch.setattr(main, "REQUIRE_HTTPS", True)
+    plain = TestClient(app, base_url="http://ids.example.org")
+    r = plain.get("/health", follow_redirects=False)
+    assert r.status_code == 308 and r.headers["location"].startswith("https://ids.example.org/")
+    assert plain.post("/auth/login", json={"user": "a", "password": "b"}).status_code == 400
+    r = TestClient(app, base_url="https://ids.example.org").get("/health")
+    assert r.status_code == 200 and "max-age" in r.headers["strict-transport-security"]
+    assert "frame-ancestors 'none'" in r.headers["content-security-policy"]
+    assert r.headers["x-content-type-options"] == "nosniff"
+    assert TestClient(app).get("/health").status_code == 200, "localhost stays usable for development"
+
+
+def test_console_has_a_content_security_policy_but_api_docs_still_load():
+    assert "script-src 'self'" in client.get("/").headers["content-security-policy"]
+    docs = client.get("/docs")
+    assert docs.status_code == 200 and "content-security-policy" not in docs.headers

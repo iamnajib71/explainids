@@ -22,13 +22,15 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, Security, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Response, Security, UploadFile
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 
 from ids.alerts import SEVERITY_RANK, aggregate
+from ids.auth import SESSION_SECONDS, LoginLimiter, issue_token, parse_users, read_token, verify_password
 from ids.data import BENIGN, LABEL_COL, feature_columns
 from ids.evaluate import report
 from ids.explain import Explainer
@@ -39,6 +41,12 @@ from ids.triage_store import STATUSES, TriageStore
 
 MODEL_DIR = Path(os.environ.get("EXPLAINIDS_MODEL_DIR", "models"))
 API_KEY = os.environ.get("EXPLAINIDS_API_KEY")  # unset = open (local dev only)
+USERS = parse_users(os.environ.get("EXPLAINIDS_USERS"))  # console accounts, name:hash (scripts/hash_password.py)
+SESSION_SECRET = os.environ.get("EXPLAINIDS_SESSION_SECRET", "").encode() or secrets.token_bytes(32)
+REQUIRE_HTTPS = os.environ.get("EXPLAINIDS_REQUIRE_HTTPS") == "1"  # set on any public deployment
+SESSION_COOKIE, CSRF_HEADER = "explainids_session", "x-explainids"
+LOOPBACK = {"localhost", "127.0.0.1", "::1", "testserver"}
+_logins = LoginLimiter()
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 MAX_UPLOAD_MB, MAX_UPLOAD_ROWS, MAX_RETURNED_ALERTS = 25, 200_000, 300
 MAX_PREDICT_FLOWS, MAX_KEPT_ALERTS = 1000, 10_000
@@ -73,9 +81,54 @@ def _remember(alerts: list[dict], frame: pd.DataFrame, flagged: list[int]) -> No
         _alert_features.pop(next(iter(_alert_features)))
 
 
-def require_key(key: str | None = Security(APIKeyHeader(name="X-API-Key", auto_error=False))):
-    if API_KEY and key != API_KEY:
-        raise HTTPException(status_code=401, detail="invalid API key")
+def require_key(request: Request, key: str | None = Security(APIKeyHeader(name="X-API-Key", auto_error=False))):
+    """A collector authenticates with the API key, a person with a signed-in session; open only if neither is set."""
+    if not API_KEY and not USERS:
+        return
+    if API_KEY and key and hmac.compare_digest(key.encode(), API_KEY.encode()):
+        return
+    if USERS and read_token(request.cookies.get(SESSION_COOKIE), SESSION_SECRET) in USERS:
+        # Cookies ride along on cross-site requests; a custom header cannot be set cross-site without CORS.
+        if request.method not in ("GET", "HEAD") and request.headers.get(CSRF_HEADER) != "1":
+            raise HTTPException(status_code=403, detail="missing X-ExplainIDS request header")
+        return
+    raise HTTPException(status_code=401, detail="sign in or provide the API key")
+
+
+class Login(BaseModel):
+    user: str = Field(min_length=1, max_length=64)
+    password: str = Field(min_length=1, max_length=256)
+
+
+def _secure(request: Request) -> bool:
+    return REQUIRE_HTTPS or request.url.scheme == "https"
+
+
+@app.post("/auth/login")
+def login(body: Login, request: Request, response: Response):
+    client = request.client.host if request.client else "unknown"
+    if _logins.blocked(client):
+        raise HTTPException(status_code=429, detail="too many failed sign-ins; try again in a few minutes")
+    stored = USERS.get(body.user)
+    if not stored or not verify_password(body.password, stored):
+        _logins.fail(client)
+        raise HTTPException(status_code=401, detail="unknown user or wrong password")
+    _logins.clear(client)
+    response.set_cookie(SESSION_COOKIE, issue_token(body.user, SESSION_SECRET), max_age=SESSION_SECONDS,
+                        httponly=True, secure=_secure(request), samesite="strict", path="/")
+    return {"user": body.user}
+
+
+@app.post("/auth/logout")
+def logout(request: Request, response: Response):
+    response.delete_cookie(SESSION_COOKIE, httponly=True, secure=_secure(request), samesite="strict", path="/")
+    return {"user": None}
+
+
+@app.get("/auth/me")
+def me(request: Request):
+    user = read_token(request.cookies.get(SESSION_COOKIE), SESSION_SECRET)
+    return {"user": user if user in USERS else None, "sign_in": bool(USERS), "key_required": bool(API_KEY)}
 
 
 def _load() -> None:
@@ -135,7 +188,7 @@ def _flow_rows(df: pd.DataFrame, flows: pd.DataFrame, offset: int = 0) -> list[d
 def health():
     s = state()
     return {"status": "ok", "model": s["mode"], "classifier": s["detector"].name,
-            "replay_flows": len(s["replay"]), "sensor_key_required": bool(API_KEY)}
+            "replay_flows": len(s["replay"]), "sensor_key_required": bool(API_KEY), "sign_in": bool(USERS)}
 
 
 def _sensor_token(value: str, name: str) -> str:
@@ -419,11 +472,32 @@ def repair_set_csv():
                     headers={"Content-Disposition": "attachment; filename=repair_set.csv"})
 
 
+SECURITY_HEADERS = {
+    "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; "
+                               "script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; "
+                               "form-action 'self'",
+    "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "X-Frame-Options": "DENY",
+}
+
+
+API_DOCS = {"/docs", "/redoc", "/docs/oauth2-redirect"}
+
+
 @app.middleware("http")
-async def revalidate_static(request, call_next):
-    """Make browsers revalidate the console's files so a redeploy shows up on the next load."""
+async def harden(request: Request, call_next):
+    """HTTPS only on public deployments; security headers; revalidate the console's files after a redeploy."""
+    if REQUIRE_HTTPS and request.url.scheme != "https" and request.url.hostname not in LOOPBACK:
+        if request.method in ("GET", "HEAD"):
+            return RedirectResponse(str(request.url.replace(scheme="https")), status_code=308)
+        return JSONResponse({"detail": "HTTPS required"}, status_code=400)
     response = await call_next(request)
     response.headers.setdefault("Cache-Control", "no-cache")
+    for name, value in SECURITY_HEADERS.items():
+        if name == "Content-Security-Policy" and request.url.path in API_DOCS:
+            continue  # FastAPI's interactive docs load Swagger UI from a CDN
+        response.headers.setdefault(name, value)
+    if request.url.scheme == "https":
+        response.headers.setdefault("Strict-Transport-Security", "max-age=31536000")
     return response
 
 

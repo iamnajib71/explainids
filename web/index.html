@@ -27,6 +27,8 @@
   </nav>
   <div class="status">
     <span id="model-pill" class="pill" role="status"><i class="dot"></i><span>Connecting…</span></span>
+    <button id="signin-open" class="btn small ghost" hidden>Sign in</button>
+    <span id="user-chip" class="user-chip" hidden><span id="user-name"></span><button id="signout" class="btn small ghost">Sign out</button></span>
     <button id="theme" class="icon-btn" aria-label="Switch theme">◐</button>
   </div>
 </header>
@@ -173,6 +175,15 @@
 </aside>
 <div id="scrim" class="scrim"></div>
 <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+<dialog id="signin" class="signin" aria-labelledby="signin-title">
+  <form id="signin-form">
+    <h2 id="signin-title">Sign in</h2>
+    <label for="signin-user">User <input id="signin-user" name="user" autocomplete="username" required maxlength="64" spellcheck="false"></label>
+    <label for="signin-pass">Password <input id="signin-pass" name="password" type="password" autocomplete="current-password" required maxlength="256"></label>
+    <p id="signin-error" class="hint" role="status" aria-live="polite"></p>
+    <div class="signin-actions"><button type="button" id="signin-cancel" class="btn ghost">Cancel</button><button type="submit" id="signin-submit" class="btn primary">Sign in</button></div>
+  </form>
+</dialog>
 
 <script src="app.js"></script>
 </body>

@@ -48,7 +48,9 @@ Without trained artefacts the app starts in synthetic demo mode. To train on rea
 python scripts/build_processed.py data/raw/cicids2017 data/processed/cicids2017.parquet
 python scripts/train_baseline.py data/processed/cicids2017.parquet --models lgbm,xgb,rf --results docs/results/cicids2017_baseline.md
 ```
-The API is documented at `/docs` (OpenAPI). Set `EXPLAINIDS_API_KEY` to require an `X-API-Key` header on the alert endpoints.
+The API is documented at `/docs` (OpenAPI). Set `EXPLAINIDS_API_KEY` to require an `X-API-Key` header on the alert endpoints, and `EXPLAINIDS_USERS` (from `python scripts/hash_password.py <name>`) to require browser sign-in; a signed-in session is an HttpOnly cookie and works in place of the key. `EXPLAINIDS_REQUIRE_HTTPS=1` refuses plain HTTP except on localhost.
+
+**Cloud:** [`infra/azure/`](infra/azure/README.md) deploys the same image to Azure Container Apps at $0 (scale to zero, HTTPS, sign-in, budget alert) and removes it with one command.
 
 For passive observations, use the separate [local sensor](docs/LOCAL_SENSOR.md) and the console's **Local sensor** tab. It requires an explicitly selected interface, capture tools and a compatible flow extractor. App startup never starts capture. Live observations have no ground-truth performance metrics. See [local setup and portability limits](docs/APP_START.md).
 

@@ -19,7 +19,8 @@ const STATIC = window.EXPLAINIDS_STATIC;  // set by scripts/export_static.py for
 
 async function api(path, opts) {
   if (STATIC) return staticApi(path);
-  const r = await fetch(path, opts);
+  // The header proves a same-origin request, which a signed-in session needs for writes (no cross-site forgery).
+  const r = await fetch(path, { ...opts, headers: { "X-ExplainIDS": "1", ...(opts?.headers || {}) } });
   if (!r.ok) {
     let detail = r.statusText;
     try { detail = (await r.json()).detail || detail; } catch { /* not JSON */ }
@@ -192,7 +193,7 @@ $("#sensor-connect").onclick = () => {
   if (STATIC) { $("#sensor-status").textContent = "Sensor feed requires the live local app"; return; }
   const key = $("#sensor-key").value;
   const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
-  if (!loopback && !key) { $("#sensor-status").textContent = "Remote feed requires an API key and a trusted connection"; return; }
+  if (!loopback && !key && !auth.user) { $("#sensor-status").textContent = "Sign in or enter the API key to read a remote feed"; return; }
   if (!loopback && location.protocol !== "https:") { $("#sensor-status").textContent = "Use localhost or HTTPS before entering an API key"; return; }
   sensor.key = key; $("#sensor-key").value = ""; sensor.enabled = true;
   $("#sensor-connect").disabled = true; $("#sensor-disconnect").disabled = false;
@@ -798,6 +799,42 @@ async function renderResearch() {
 }
 redrawers.renderResearch = () => $("#view-research").classList.contains("active") && research && renderResearch();
 
+/* ---------------- sign-in (hosted deployments; the session is an HttpOnly cookie) ---------------- */
+const auth = { user: null, required: false };
+function renderAuth() {
+  $("#signin-open").hidden = !auth.required || !!auth.user;
+  $("#user-chip").hidden = !auth.user;
+  $("#user-name").textContent = auth.user ? `Signed in as ${auth.user}` : "";
+  $("#signout").setAttribute("aria-label", auth.user ? `Sign out ${auth.user}` : "Sign out");
+}
+async function refreshAuth() {
+  if (STATIC) return;
+  try { const me = await api("auth/me"); auth.user = me.user; auth.required = me.sign_in; } catch { /* older server */ }
+  renderAuth();
+}
+$("#signin-open").onclick = () => { $("#signin-error").textContent = ""; $("#signin").showModal(); $("#signin-user").focus(); };
+$("#signin-cancel").onclick = () => $("#signin").close();
+$("#signin-form").onsubmit = async e => {
+  e.preventDefault();
+  const btn = $("#signin-submit"), form = new FormData(e.target);
+  if (location.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) {
+    $("#signin-error").textContent = "Use HTTPS before entering a password"; return;
+  }
+  btn.disabled = true; btn.textContent = "Signing in…";
+  try {
+    const r = await api("auth/login", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: form.get("user"), password: form.get("password") }) });
+    auth.user = r.user; $("#signin-pass").value = ""; $("#signin").close(); renderAuth(); toast(`Signed in as ${r.user}`);
+  } catch (err) {
+    $("#signin-error").textContent = err.message.startsWith("429") ? "Too many attempts; wait a few minutes"
+      : "Unknown user or wrong password";
+  } finally { btn.disabled = false; btn.textContent = "Sign in"; }
+};
+$("#signout").onclick = async () => {
+  try { await api("auth/logout", { method: "POST" }); } catch { /* cookie expires anyway */ }
+  auth.user = null; disconnectSensor("Signed out"); renderAuth();
+};
+
 /* ---------------- boot ---------------- */
 async function boot() {
   const pill = $("#model-pill");
@@ -813,6 +850,7 @@ async function boot() {
   } catch (e) {
     pill.className = "pill err"; $("span", pill).textContent = "Replay unavailable"; pill.title = e.message;
   }
+  refreshAuth();
   updateKpis(false); drawTimeline(); drawClasses(); drawMatrix();
   showView(store.get("view", "sensor"));
 }

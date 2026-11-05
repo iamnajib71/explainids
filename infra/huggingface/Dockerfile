@@ -20,4 +20,4 @@ RUN cd models && for f in detector.joblib model_card.json replay.parquet; do \
 
 USER app
 EXPOSE 7860
-CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips='*'"]

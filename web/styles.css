@@ -309,3 +309,19 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .brand-name { margin: 0; font-size: inherit; font-weight: 700; line-height: inherit; }
 main:focus { outline: none; }
 @media (max-width: 640px) { input, select, textarea { font-size: 16px; } }
+
+/* sign-in (hosted deployments) */
+[hidden] { display: none !important; }
+.user-chip { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.signin { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 22px; width: min(360px, calc(100vw - 32px)); box-shadow: var(--shadow); }
+.signin::backdrop { background: rgba(5,10,20,.55); }
+.signin form { display: grid; gap: 14px; }
+.signin h2 { margin: 0; font-size: 18px; }
+.signin label { display: grid; gap: 6px; color: var(--muted); font-size: 13px; }
+.signin input { padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 15px; }
+.signin input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.signin #signin-error { margin: 0; min-height: 1.2em; color: var(--attack); }
+.signin-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@media (max-width: 640px) { .signin input { font-size: 16px; } }
+.user-chip .btn, #signin-open { white-space: nowrap; }
+@media (max-width: 640px) { #user-name { display: none; } }
