@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -93,6 +94,7 @@ def main() -> None:
     ap.add_argument("--day2", nargs="+", type=Path, required=True)
     ap.add_argument("--lab-runs", nargs=3, type=Path, required=True)
     ap.add_argument("--results", type=Path, default=ROOT / "docs/results/repair_loop.md")
+    ap.add_argument("--keep-model", type=Path, help="also copy the repaired model here (for the live demo)")
     args = ap.parse_args()
     t0 = time.perf_counter()
     work = Path(tempfile.mkdtemp(prefix="repair_loop_"))
@@ -128,6 +130,8 @@ def main() -> None:
     subprocess.run([sys.executable, str(ROOT / "scripts/repair_model.py"), args.parquet, "--model-dir",
                     str(args.model_dir), "--repair-set", str(repair_csv), "--local-sessions",
                     *map(str, args.day1), "--outdir", str(repaired_dir)], check=True, cwd=ROOT)
+    if args.keep_model:
+        shutil.copytree(repaired_dir, args.keep_model, dirs_exist_ok=True)
     card = json.loads((repaired_dir / "model_card.json").read_text(encoding="utf-8"))["repair"]
     out["repair"] = {k: card[k] for k in ("repair_flows", "repair_flows_held_back", "local_normal_flows")}
     out["repair"]["benchmark"] = {when: {k: card[when][k] for k in ("macro_f1", "attack_recall", "benign_fpr")}
