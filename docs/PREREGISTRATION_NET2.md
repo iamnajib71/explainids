@@ -48,3 +48,23 @@ with `--portable` and once without; results in `docs/results/real_network_net2_p
 
 Whatever the outcome, H1–H4 are reported with p-values and effect sizes in `docs/RESEARCH.md`, and E9 in
 `docs/THESIS.md` becomes "replicated on two networks", "replicated in part" or "not replicated" accordingly.
+
+## Amendment, 7 November 2026 (before any capture on the second network)
+
+Added to make the outcome precise and comparable with the first network; nothing about the second network has
+been observed. The capture and import path was checked end to end on the first network's PC (two 30-second
+blocks, discarded afterwards).
+
+- **Validity of a block.** A block counts if its capture exits cleanly and at least 20 flows validate; otherwise it
+  is excluded as a whole and reported. If fewer than 6 evaluation blocks remain, H1 is reported as untestable,
+  not as failed.
+- **Independence check, recorded before analysis.** Different household, router and internet connection from the
+  first network; no device of the first household on it during capture. Recorded as yes/no in the study notes.
+- **Effect size.** Alongside each sign test: the pooled alert rate of each condition with its 95% block-bootstrap
+  interval (as `real_network_eval.py` already computes), alerts per hour, and the relative reduction of H1's
+  condition against few-shot. Replication is judged on H1's direction and p only; the size is reported, not tested.
+- **Exploratory, labelled as such (E1).** Does a repair fitted on the *first* network help the second? The
+  first network's triaged flows and envelope are applied to the second network's evaluation blocks. If the repair
+  is site-specific, as the thesis argues, this should do less than the second network's own repair.
+- **Exploratory (E2).** Composition of the remaining alerts by destination port class and by classifier versus
+  anomaly layer, as for the first network, to see whether the same mechanisms drive them.
