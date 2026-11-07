@@ -325,3 +325,8 @@ main:focus { outline: none; }
 @media (max-width: 640px) { .signin input { font-size: 16px; } }
 .user-chip .btn, #signin-open { white-space: nowrap; }
 @media (max-width: 640px) { #user-name { display: none; } }
+/* touch targets on phones: 44 px (AGENTS.md console rules) */
+@media (max-width: 640px) {
+  .tabs button, .seg button, .btn, .icon-btn, .queue-card select { min-height: 44px; }
+  .icon-btn { min-width: 44px; }
+}

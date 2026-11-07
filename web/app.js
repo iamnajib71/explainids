@@ -116,6 +116,15 @@ function showView(name) {
   });
 }
 $$(".tabs button").forEach(b => (b.onclick = () => showView(b.dataset.view)));
+$(".tabs").addEventListener("keydown", e => {  // tablist keyboard pattern: arrows, Home, End
+  const tabs = $$(".tabs button"), i = tabs.indexOf(document.activeElement);
+  if (i < 0) return;
+  const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+  if (j === undefined) return;
+  e.preventDefault();
+  const next = tabs[(j + tabs.length) % tabs.length];
+  next.focus(); next.scrollIntoView({ block: "nearest", inline: "nearest" }); showView(next.dataset.view);
+});
 
 /* ---------------- session state ---------------- */
 const S = {
@@ -146,7 +155,7 @@ async function pollSensor(generation) {
       headers: sensor.key ? { "X-API-Key": sensor.key } : {}, cache: "no-store",
       signal: sensor.controller.signal });
     if (!response.ok) {
-      if (response.status === 401) { disconnectSensor("API key required or incorrect"); return; }
+      if (response.status === 401) { disconnectSensor(auth.required ? "Sign in or enter a valid API key" : "API key incorrect"); return; }
       throw new Error(`Feed unavailable (${response.status})`);
     }
     const feed = await response.json();
@@ -482,6 +491,7 @@ function openDrawer(a) {
   const steps = (att.guidance || "").split(/;\s*/).filter(Boolean);
   const vb = a.verdict ? `<div class="verdict-banner ${a.verdict === "correct" ? "correct" : a.verdict === "false positive" ? "fp" : "other"}">
       <b>${a.verdict === "correct" ? "Dataset match" : a.verdict === "false positive" ? "False alarm" : "Other attack class"}</b> · label <code>${esc(a.truth)}</code></div>` : "";
+  const serverHeld = !STATIC && sensor.alerts.has(a.alert_id);
   $("#drawer-body").innerHTML = `
     <span class="tag sev-${esc(a.severity)}">${esc(a.severity)}</span>
     <h2>${esc(a.display || a.predicted_class)}</h2>
@@ -503,14 +513,22 @@ function openDrawer(a) {
       <button class="btn good" data-s="confirmed">✓ Confirm</button>
       <button class="btn bad" data-s="dismissed" data-tip="False alarm: this flow was normal. Used for retraining only if it resembles this site's normal traffic.">✗ Dismiss</button>
       <button class="btn ghost" data-s="open">Reopen</button>
-      <span class="hint">Status <b id="cur-status">${esc(status)}</b></span></div></section>`;
+      <span class="hint">Status <b id="cur-status">${esc(status)}</b> <span id="save-state" role="status" aria-live="polite">${serverHeld ? "" : "· this browser only"}</span></span></div></section>`;
   $$("#drawer-body .triage button").forEach(b => (b.onclick = () => {
     S.triage[a.alert_id] = b.dataset.s; store.set("triage", S.triage);
     $("#cur-status").textContent = b.dataset.s;
-    if (!STATIC) api(`alerts/${encodeURIComponent(a.alert_id)}/status?status=${b.dataset.s}`, { method: "POST", headers: sensor.key ? { "X-API-Key": sensor.key } : {} })
-      .then(r => { if (r?.repair_eligible === false) toast("Dismissed. Not used for retraining: this flow doesn't resemble this site's normal traffic."); })
-      .catch(() => { /* replay alerts live only in the browser; the local record above still applies */ });
+    // Replay and file alerts are demo data the server never keeps; only sensor alerts are saved for retraining.
+    if (serverHeld) {
+      const saved = $("#save-state"); saved.textContent = "· saving…";
+      api(`alerts/${encodeURIComponent(a.alert_id)}/status?status=${b.dataset.s}`, { method: "POST", headers: sensor.key ? { "X-API-Key": sensor.key } : {} })
+        .then(r => {
+          saved.textContent = "· saved";
+          if (r?.repair_eligible === false) toast("Dismissed. Not used for retraining: this flow doesn't resemble this site's normal traffic.");
+        })
+        .catch(e => { saved.textContent = `· not saved (${e.message})`; });
+    }
     $$(`.alert-card[data-id="${a.alert_id}"]`).forEach(c => c.classList.toggle("triaged", b.dataset.s !== "open"));
+    if ($("#queue-filter").value === "open") $("#queue-filter").onchange();
     updateKpis(false);
   }));
   if (!$("#drawer").classList.contains("open")) drawerReturn = document.activeElement;
@@ -635,7 +653,9 @@ function renderLab() {
     <div class="stat"><span tabindex="0" data-tip="F1 per class, averaged with every class weighted equally, so rare attacks count as much as common ones.">Macro F1</span><strong>${pct(m.macro.f1)}</strong></div>
     <div class="stat"><span tabindex="0" data-tip="Benign test flows wrongly flagged as an attack.">False alarms</span><strong>${pct(m.benign_fpr, 2)}</strong></div>
     <div class="stat"><span tabindex="0" data-tip="Classifier prediction time per flow on a 5,000-flow batch; excludes SHAP and network time.">Classifier time</span><strong>${m.latency_ms.toFixed(3)} ms</strong></div>`
-    : `<div class="stat"><span>Model</span><strong>Synthetic demo</strong></div>`;
+    : `<div class="stat"><span>Model</span><strong>Synthetic demo</strong></div>
+       <p class="hint">Charts appear when a trained detector is loaded (models/model_card.json from scripts/train_baseline.py).</p>`;
+  $(".lab-grid").hidden = !m;
   if (!m) return;
   const metrics = [["Macro F1", x => x.macro.f1], ["Macro precision", x => x.macro.precision], ["Macro recall", x => x.macro.recall], ["Attack PR-AUC", x => x.pr_auc]];
   chart("c-compare").setOption({ ...base(), legend: { textStyle: { color: p.muted }, top: 0 }, tooltip: { ...base().tooltip, trigger: "axis", valueFormatter: v => v.toFixed(3) },
@@ -838,6 +858,7 @@ $("#signout").onclick = async () => {
 /* ---------------- boot ---------------- */
 async function boot() {
   const pill = $("#model-pill");
+  let firstView = "sensor";
   try {
     const [h, c] = await Promise.all([api("health"), api("model")]);
     S.health = h; S.card = c;
@@ -847,11 +868,15 @@ async function boot() {
     pill.title = `${h.classifier.toUpperCase()} trained on ${c.dataset}`;
     if (synthetic) { $("#replay-hint").textContent = "Synthetic demo flows"; $("#replay-hint").dataset.tip = "Generated flows from the demo model; not benchmark evidence."; }
     $("#play").disabled = false;
+    if (synthetic) firstView = "live";  // the demo model cannot accept sensor batches; start where it works
+    $("#sensor-access").textContent = h.sign_in || h.sensor_key_required
+      ? "Feed is disconnected. Sign in, or enter the API key a collector uses, to read it."
+      : "Feed is disconnected. With no server key, local development access is open; keep the app bound to localhost.";
   } catch (e) {
     pill.className = "pill err"; $("span", pill).textContent = "Replay unavailable"; pill.title = e.message;
   }
   refreshAuth();
   updateKpis(false); drawTimeline(); drawClasses(); drawMatrix();
-  showView(store.get("view", "sensor"));
+  showView(store.get("view", firstView));
 }
 boot();

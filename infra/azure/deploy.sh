@@ -4,11 +4,10 @@
 #
 #   IMAGE=ghcr.io/<owner>/explainids:<tag> \
 #   EXPLAINIDS_USERS='analyst:pbkdf2_sha256$...' \
-#   BUDGET_EMAIL=<address for cost alerts> \
 #   bash infra/azure/deploy.sh
 #
 # Optional: RG (explainids-rg), LOCATION (australiaeast), APP (explainids), ENV_NAME (explainids-env),
-# BUDGET (10, USD per month), EXPLAINIDS_API_KEY (for a remote collector), EXPLAINIDS_SESSION_SECRET.
+# BUDGET (10, USD per month), BUDGET_EMAIL (default: alert the subscription Owners), EXPLAINIDS_API_KEY (for a remote collector), EXPLAINIDS_SESSION_SECRET.
 # Cost: one replica of 0.5 vCPU / 1 GiB only while requests arrive, inside the monthly free grant
 # (180,000 vCPU-s, 360,000 GiB-s, 2 million requests); no registry, no log workspace. Remove everything with
 # infra/azure/shutdown.sh.
@@ -49,20 +48,15 @@ fi
 # HTTPS only at the edge as well as in the app.
 az containerapp ingress update -n "$APP" -g "$RG" --allow-insecure false -o none
 
-if [ -n "${BUDGET_EMAIL:-}" ]; then
-  start=$(date -u +%Y-%m-01)
-  cat > /tmp/explainids-budget.json <<JSON
-{"actual50": {"enabled": true, "operator": "GreaterThanOrEqualTo", "threshold": 50, "contact-emails": ["$BUDGET_EMAIL"]},
- "actual100": {"enabled": true, "operator": "GreaterThanOrEqualTo", "threshold": 100, "contact-emails": ["$BUDGET_EMAIL"]}}
+# Alerts go to BUDGET_EMAIL if set, otherwise to the subscription's Owners (no address needed in this script).
+if [ -n "${BUDGET_EMAIL:-}" ]; then TO="\"contact-emails\": [\"$BUDGET_EMAIL\"]"; else TO='"contact-roles": ["Owner"]'; fi
+start=$(date -u +%Y-%m-01)
+cat > /tmp/explainids-budget.json <<JSON
+{"actual50": {"enabled": true, "operator": "GreaterThanOrEqualTo", "threshold": 50, $TO},
+ "actual100": {"enabled": true, "operator": "GreaterThanOrEqualTo", "threshold": 100, $TO}}
 JSON
-  az consumption budget create-with-rg -g "$RG" -n explainids-budget --amount "$BUDGET" --category Cost \
-      --time-grain Monthly --time-period "{\"start-date\":\"${start}T00:00:00Z\",\"end-date\":\"2027-12-31T00:00:00Z\"}" \
-      --notifications @/tmp/explainids-budget.json -o none \
-    || echo "Budget not created from the CLI; set one in the portal: Cost Management > Budgets (US\$$BUDGET, alerts at 50%/100%)."
-  rm -f /tmp/explainids-budget.json
-else
-  echo "BUDGET_EMAIL not set: no budget alert created. Rerun with it, or set one in Cost Management > Budgets."
-fi
+az consumption budget create-with-rg -g "$RG" -n explainids-budget --amount "$BUDGET" --category Cost     --time-grain Monthly --time-period "{\"start-date\":\"${start}T00:00:00Z\",\"end-date\":\"2027-12-31T00:00:00Z\"}"     --notifications @/tmp/explainids-budget.json -o none   || echo "Budget not created from the CLI; set one in the portal: Cost Management > Budgets (US\$$BUDGET, alerts at 50%/100%)."
+rm -f /tmp/explainids-budget.json
 
 FQDN=$(az containerapp show -n "$APP" -g "$RG" --query properties.configuration.ingress.fqdn -o tsv)
 echo "Console: https://$FQDN   (first request after idle takes ~30 s while a replica starts)"

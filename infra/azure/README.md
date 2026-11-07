@@ -46,11 +46,11 @@ only `src/`, `api/`, `web/` and the three model artefacts; coursework, data and 
 In [Azure Cloud Shell](https://shell.azure.com) (bash; nothing to install), after cloning the repository:
 
 ```bash
-IMAGE=ghcr.io/<owner>/explainids:v0.3.0 EXPLAINIDS_USERS='<name:hash,...>' BUDGET_EMAIL=<you@example.com> bash infra/azure/deploy.sh
+IMAGE=ghcr.io/<owner>/explainids:v0.3.0 EXPLAINIDS_USERS='<name:hash,...>' bash infra/azure/deploy.sh
 ```
 
 It creates resource group `explainids-rg`, the environment, the app with secrets, HTTPS-only ingress and the
-budget, then prints the console URL. Rerun it with a new `IMAGE` to update. The first request after an idle
+budget (alerts go to the subscription's Owners, or to `BUDGET_EMAIL` if set), then prints the console URL. Rerun it with a new `IMAGE` to update. The first request after an idle
 period takes about 30 seconds while a replica starts.
 
 A collector on your own network sends batches to `https://<app>/sensor/ingest` with the API key printed by the
