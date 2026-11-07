@@ -70,6 +70,8 @@ def run_with(monkeypatch, tmp_path, emit, returncode=0):
     """Install a fake wsl.exe that writes `emit` files into the output directory."""
     monkeypatch.setattr(wsl_convert, "distro_available", lambda *a, **k: True)
     monkeypatch.setattr(wsl_convert, "EXTRACTOR", tmp_path / "run.sh")
+    # tmp_path is a POSIX path on Linux CI; path translation has its own tests above.
+    monkeypatch.setattr(wsl_convert, "to_wsl_path", lambda p: "/mnt/x/" + Path(p).name)
     (tmp_path / "run.sh").write_text("#!/bin/bash\n")
 
     def fake_run(argv, **kwargs):
