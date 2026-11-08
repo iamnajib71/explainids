@@ -188,6 +188,20 @@ def stability(res: dict | None) -> dict | None:
                     f"skipped because the prediction changed. Source: docs/results/shap_stability_{res['dataset']}.md")}
 
 
+def attack_night(portable: dict | None, full: dict | None) -> dict | None:
+    """Minutes an inserted lab attack waits behind the alert queue (one alert reviewed per minute)."""
+    if not portable:
+        return None
+    def at60(res):
+        s = res["summary"]["60"]
+        return {c: {"minutes": s[c]["median_minutes"], "alerts_per_hour": s[c]["household_alerts_per_hour"]}
+                for c in ("Deployed", "Repaired", "Poisoned", "Poisoned, gated")}
+    return {"portable": at60(portable), "all_features": at60(full) if full else None,
+            "p": portable["summary"]["60"]["_h1"]["p"], "injections": portable["summary"]["60"]["_h1"]["pairs"],
+            "dismissed_types_flagged": {c: portable["summary"]["60"][c]["dismissed_types_flagged"]
+                                        for c in ("Repaired", "Poisoned", "Poisoned, gated")}}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", default="docs/results")
@@ -201,6 +215,7 @@ def main():
                             next((load(f) for f in sorted(r.glob("unseen_*.json"))
                                   if args.dataset not in f.stem and not f.stem.endswith("_log")), None)),
            "real": real_network(load(r / "real_network_portable.json"), load(r / "real_network_day2_portable.json")),
+           "attack_night": attack_night(load(r / "attack_night_portable.json"), load(r / "attack_night.json")),
            "sources": [{"label": label, "url": url} for label, url in SOURCES]}
     calib = load(r / "local_calibration.json")
     if out["transfer"] and calib:

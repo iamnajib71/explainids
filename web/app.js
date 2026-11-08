@@ -112,6 +112,7 @@ function showView(name) {
     if (name === "incidents") renderIncidents();
     if (name === "attack") renderAttack();
     if (name === "research") renderResearch();
+    if (name === "night") renderNight();
     if (name === "live") map.resize();
   });
 }
@@ -818,6 +819,91 @@ async function renderResearch() {
   }
 }
 redrawers.renderResearch = () => $("#view-research").classList.contains("active") && research && renderResearch();
+
+/* ---------------- Attack Night: an attack waiting behind the alert queue ---------------- */
+const NIGHT_LANES = ["Deployed", "Repaired"];
+const night = { data: null, t: 0, timer: null, last: 0 };
+const dur = s => s < 60 ? `${Math.round(s)} s` : s < 3600 ? `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`
+  : `${Math.floor(s / 3600)} h ${String(Math.floor((s % 3600) / 60)).padStart(2, "0")} min`;
+function nightBacklog(tl, bin, perAlert) {
+  // Alerts waiting at the end of each bin: arrivals minus what one analyst clears.
+  let q = 0;
+  return tl.household.map((h, i) => (q = Math.max(0, q + h + tl.attack[i] - bin / perAlert)));
+}
+async function renderNight() {
+  if (!night.data) {
+    try {
+      const [tl, rs] = await Promise.all([fetch("data/attack_night.json", { cache: "no-cache" }).then(r => r.json()),
+        research ? research : fetch("data/research.json", { cache: "no-cache" }).then(r => r.json())]);
+      research = research || rs;
+      night.data = tl;
+    } catch { $("#night-kpis").innerHTML = '<div class="card empty">Attack Night data unavailable</div>'; return; }
+  }
+  const A = research.attack_night;
+  if (A) {
+    const P = A.portable, F = A.all_features || P;
+    $("#night-kpis").innerHTML = `
+      <div class="kpi card"><span tabindex="0" data-tip="Median over ${A.injections} attacks inserted at random moments, 5 training seeds, without port and window features. All features: ${dur(F.Deployed.minutes * 60)} → ${dur(F.Repaired.minutes * 60)}.">Attacker unnoticed, median</span>
+        <strong>${dur(P.Deployed.minutes * 60)} → ${dur(P.Repaired.minutes * 60)}</strong><small>as deployed → repaired</small></div>
+      <div class="kpi card"><span tabindex="0" data-tip="Household traffic the detector flags in one hour; each one is a false alarm an analyst must clear before reaching the attack.">False alarms per hour</span>
+        <strong>${Math.round(P.Deployed.alerts_per_hour)} → ${Math.round(P.Repaired.alerts_per_hour)}</strong><small>the queue the attack waits behind</small></div>
+      <div class="kpi card"><span tabindex="0" data-tip="An analyst wrongly dismissed three attacks the day before. Without the gate the retrained model learns them as normal; with it, those dismissals are not used for retraining.">Scans caught after 3 wrong dismissals</span>
+        <strong>${pct(A.dismissed_types_flagged.Poisoned, 0)} → ${pct(A.dismissed_types_flagged["Poisoned, gated"], 0)}</strong><small>without → with the gate</small></div>`;
+  }
+  drawNight();
+}
+function drawNight() {
+  const D = night.data; if (!D) return;
+  const p = palette(), bin = D.bin_seconds, t = night.t, perMin = 60 / bin, minutes = D.hour_seconds / 60;
+  const attackMin = Math.floor(D.attack_start / 60);
+  // One shared scale, so the lanes compare honestly.
+  const yMax = Math.max(4, ...NIGHT_LANES.flatMap(c => Array.from({ length: minutes }, (_, m) =>
+    D.conditions[c].timeline.household.slice(m * perMin, (m + 1) * perMin).reduce((a, b) => a + b, 0))));
+  NIGHT_LANES.forEach(c => {
+    const C = D.conditions[c], tl = C.timeline, lane = $(`#lane-${c}`), seen = D.attack_start + C.time_to_notice;
+    // Household alarms per minute; the attack is drawn as a marker so its own burst does not hide them.
+    const perMinute = Array.from({ length: minutes }, (_, m) => tl.household.slice(m * perMin, (m + 1) * perMin).reduce((a, b) => a + b, 0));
+    // False alarms queued ahead of the attack: the household-only backlog at the moment the attack starts.
+    const ahead = C.householdBacklog ??= nightBacklog({ household: tl.household, attack: tl.household.map(() => 0) }, bin, D.analyst_seconds_per_alert);
+    const at = s => ahead[Math.min(ahead.length - 1, Math.max(0, Math.floor(s / bin)))];
+    $("[data-k=wait]", lane).textContent = fmt(Math.round(t < D.attack_start ? at(t) : at(D.attack_start)));
+    $("[data-k=wait]", lane).nextElementSibling.textContent = t < D.attack_start ? "false alarms waiting" : "false alarms ahead of the attack";
+    const free = $("[data-k=free]", lane);
+    free.className = t < D.attack_start ? "" : t < seen ? "hot" : "done";
+    free.textContent = t < D.attack_start ? "—" : t < seen ? dur(t - D.attack_start) : `noticed after ${dur(C.time_to_notice)}`;
+    chart(`c-night-${c}`).setOption({ ...base(), animation: false, grid: { left: 4, right: 12, top: 22, bottom: 4, containLabel: true },
+      tooltip: { ...base().tooltip, trigger: "axis", formatter: q => `minute ${q[0].name}: ${q[0].value ?? 0} false alarms` },
+      xAxis: axis({ type: "category", data: perMinute.map((_, m) => m), axisLabel: { color: p.muted, interval: 14, formatter: v => `${v} min` }, splitLine: { show: false } }),
+      yAxis: axis({ type: "value", minInterval: 1, splitNumber: 2, max: yMax }),
+      series: [{ name: "Household false alarms", type: "bar", barCategoryGap: "18%", color: p.muted,
+        itemStyle: { borderRadius: [2, 2, 0, 0] }, data: perMinute.map((v, m) => (m * 60 < t ? v : null)),
+        markLine: t >= D.attack_start ? { symbol: "none", silent: true, data: [{ xAxis: attackMin, lineStyle: { color: p.attack, width: 2 },
+          label: { color: p.attack, formatter: "Attack", position: "end" } }] } : undefined }] }, true);
+  });
+  const clock = Math.floor(t);
+  $("#night-clock").textContent = `${Math.floor(clock / 3600)}:${String(Math.floor((clock % 3600) / 60)).padStart(2, "0")}`;
+}
+function nightEnd() {
+  const D = night.data;
+  return Math.max(...NIGHT_LANES.map(c => D.attack_start + D.conditions[c].time_to_notice)) + 60;
+}
+function nightStop(label) { clearInterval(night.timer); night.timer = null; $("#night-play").textContent = label; }
+$("#night-play").onclick = () => {
+  if (!night.data) return;
+  if (night.timer) return nightStop("▶ Resume");
+  if (night.t >= nightEnd()) night.t = 0;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { night.t = nightEnd(); drawNight(); return; }
+  $("#night-play").textContent = "❚❚ Pause";
+  night.last = performance.now();
+  night.timer = setInterval(() => {
+    const now = performance.now(), dt = (now - night.last) / 1000; night.last = now;
+    // The hour plays in about 40 s; once it is over only the queue drains, so time runs faster.
+    night.t += dt * (night.t < night.data.hour_seconds ? 90 : 900);
+    if (night.t >= nightEnd()) { night.t = nightEnd(); nightStop("↻ Replay"); }
+    drawNight();
+  }, 100);
+};
+redrawers.renderNight = () => $("#view-night").classList.contains("active") && night.data && drawNight();
 
 /* ---------------- sign-in (hosted deployments; the session is an HttpOnly cookie) ---------------- */
 const auth = { user: null, required: false };

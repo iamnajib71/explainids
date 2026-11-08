@@ -330,3 +330,20 @@ main:focus { outline: none; }
   .tabs button, .seg button, .btn, .icon-btn, .queue-card select { min-height: 44px; }
   .icon-btn { min-width: 44px; }
 }
+
+/* Attack Night */
+.night-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.night-head h3 { margin: 0 0 4px; }
+.night-controls { display: flex; align-items: center; gap: 14px; }
+.night-clock { font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 700; min-width: 4.5ch; text-align: right; }
+.night-lanes { display: grid; gap: 14px; margin-top: 14px; }
+.lane-head { display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap; }
+.lane-head b { flex: 1; min-width: 12ch; }
+.lane-stat { display: grid; justify-items: end; }
+.lane-stat strong { font-size: 20px; font-variant-numeric: tabular-nums; transition: color .3s; }
+.lane-stat small { color: var(--muted); font-size: 11px; }
+.lane-stat strong.hot { color: var(--attack); }
+.lane-stat strong.done { color: var(--text); }
+.night-chart { height: 150px; }
+.night-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
+@media (max-width: 860px) { .night-kpis { grid-template-columns: 1fr; } .night-chart { height: 130px; } }

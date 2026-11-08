@@ -157,6 +157,51 @@
   ],
   "tip": "Home WiFi in ordinary use, 4,634 flows in 12 five-minute blocks; nothing was attacked, so every alert counts as a false alert (an upper bound). Few-shot model (k = 50) against the same model repaired with 30 analyst-triaged local flows and a local model of normal traffic, fitted only on an earlier evening; port and TCP-window features removed. Evening 1: lower in 12/12 blocks (sign test p = 0.0005); Evening 2, pre-registered: lower in 12/12 blocks (sign test p = 0.0005). Benchmark detection 0.962 \u2192 0.960. 30 lab service flows instead: lower in only 5/11 blocks. Triage beat least-confident selection in 12/12 blocks. Source: docs/results/real_network_day2_portable.md, docs/PREREGISTRATION_DAY2.md"
  },
+ "attack_night": {
+  "portable": {
+   "Deployed": {
+    "minutes": 125.13152052533854,
+    "alerts_per_hour": 308.0
+   },
+   "Repaired": {
+    "minutes": 13.079658165353978,
+    "alerts_per_hour": 93.8
+   },
+   "Poisoned": {
+    "minutes": 12.989638327996,
+    "alerts_per_hour": 93.8
+   },
+   "Poisoned, gated": {
+    "minutes": 13.324286777068034,
+    "alerts_per_hour": 93.4
+   }
+  },
+  "all_features": {
+   "Deployed": {
+    "minutes": 125.94112595152674,
+    "alerts_per_hour": 287.6
+   },
+   "Repaired": {
+    "minutes": 5.539513988569166,
+    "alerts_per_hour": 46.0
+   },
+   "Poisoned": {
+    "minutes": 5.927499306251447,
+    "alerts_per_hour": 47.2
+   },
+   "Poisoned, gated": {
+    "minutes": 5.979256903828095,
+    "alerts_per_hour": 47.4
+   }
+  },
+  "p": 1.434670571762471e-34,
+  "injections": 200,
+  "dismissed_types_flagged": {
+   "Repaired": 1.0,
+   "Poisoned": 0.590328125,
+   "Poisoned, gated": 1.0
+  }
+ },
  "sources": [
   {
    "label": "Cantone et al., 2024",

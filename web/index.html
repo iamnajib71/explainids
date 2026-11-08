@@ -22,6 +22,7 @@
     <button role="tab" data-view="incidents">Incidents</button>
     <button role="tab" data-view="attack">ATT&amp;CK</button>
     <button role="tab" data-view="lab">Model lab</button>
+    <button role="tab" data-view="night">Attack Night</button>
     <button role="tab" data-view="research">Findings</button>
     <button role="tab" data-view="upload">Analyse a file</button>
   </nav>
@@ -140,6 +141,28 @@
     <div class="card wide"><div class="card-head"><h3 tabindex="0" data-tip="Number above each group = test flows in that class. Rare classes have very few flows, so their scores are uncertain.">Per-class scores</h3></div><div id="c-perclass" class="chart"></div></div>
     <div class="card wide"><div class="card-head"><h3>Confusion matrix</h3></div><div id="c-confusion" class="chart tall"></div></div>
   </div>
+</section>
+
+<!-- ATTACK NIGHT: how long an attack waits behind the alert queue -->
+<section id="view-night" class="view">
+<h2 class="sr-only">Attack Night</h2>
+  <div class="card night-head">
+    <div><h3>Attack Night</h3>
+      <span class="hint" tabindex="0" data-tip="One real hour of household traffic (1 November). A one-minute attack from the isolated lab is inserted at a random moment and scored as the detector would see it; no attack was sent on the home network. An analyst reviews one alert a minute, oldest first.">One real household hour · a one-minute attack · one alert reviewed per minute</span></div>
+    <div class="night-controls"><span class="night-clock" id="night-clock" aria-live="off">0:00</span>
+      <button id="night-play" class="btn primary">▶ Play</button></div>
+  </div>
+  <div class="night-lanes">
+    <div class="card lane" id="lane-Deployed"><div class="lane-head"><b>As deployed</b>
+      <span class="lane-stat"><strong data-k="wait">0</strong><small>false alarms waiting</small></span>
+      <span class="lane-stat"><strong data-k="free">—</strong><small>attacker unnoticed</small></span></div>
+      <div class="chart night-chart" id="c-night-Deployed"></div></div>
+    <div class="card lane" id="lane-Repaired"><div class="lane-head"><b>Repaired with this site's traffic</b>
+      <span class="lane-stat"><strong data-k="wait">0</strong><small>false alarms waiting</small></span>
+      <span class="lane-stat"><strong data-k="free">—</strong><small>attacker unnoticed</small></span></div>
+      <div class="chart night-chart" id="c-night-Repaired"></div></div>
+  </div>
+  <div class="kpis night-kpis" id="night-kpis"></div>
 </section>
 
 <!-- RESEARCH -->
