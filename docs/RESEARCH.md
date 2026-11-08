@@ -412,7 +412,7 @@ smoke run are labelled exploratory (commit `55f3a66`). Results:
 | Test (5 seeds) | Without port and window features | All features | Rule |
 |---|---|---|---|
 | R1 retention: lab attack recall, few-shot → triaged + envelope | 86.4% → 86.4%; benchmark 0.962 → 0.960 | 90.9% → 90.9%; 0.980 → 0.981 | Retained |
-| Share of caught attacks that only the anomaly layer catches (lab / benchmark) | 0% / 0% | 0% / 0% | — |
+| Share of caught attacks that only the anomaly layer catches (lab / benchmark) | 0% / about 0.0004% (1–8 flows per seed) | 0% / about 0.0001% (1 per seed) | — |
 | R2 up to 264 lab attacks (7.4%) hidden in the local fit pool | recall 86.4% at every level | 90.9% at every level | No effect |
 | R2 attacks wrongly dismissed in triage, 3 / 10 | recall 86.4% → 54.5% / 54.6% | 90.9% → 24.3% / 9.4% | **Large effect** |
 | R5 the same, dismissals gated by the local envelope (exploratory) | 86.4% / 86.4% | 90.9% / 88.2% | Restored |
@@ -422,10 +422,12 @@ smoke run are labelled exploratory (commit `55f3a66`). Results:
 ![Triage poisoning and the gate](figures/fig8_triage_poisoning.png)
 
 **What we found.**
-- **The local model of normal costs nothing on known attacks, and the reason matters.** For every attack class the
-  model was trained on, the classifier makes every detection; the benchmark anomaly layer catches nothing the
-  classifier misses, on the benchmark or in the lab. A veto on anomaly alerts therefore cannot remove a known-attack
-  detection, which is also why hiding attacks in the fit pool (R2) and the evasion stress test (R4) show no effect.
+- **The local model of normal costs almost nothing on known attacks, and the reason matters.** For attack classes
+  the model was trained on, the classifier makes nearly every detection: the benchmark anomaly layer adds none in
+  the lab and only 1–8 benchmark flows per seed (corrected 8 November after an independent audit; the table had
+  rounded them to 0%). Without port and window features the veto removed 12 of these over five runs; with all
+  features it kept them. This is also why hiding attacks in the fit pool (R2) leaves lab recall unchanged and the
+  evasion stress test (R4) shows no gap.
   The anomaly layer's job is unseen attacks; that case is tested separately below.
 - **The triage loop is the attack surface.** Three attack flows wrongly dismissed as benign, one tenth of the repair
   set, cut recall on attacks from the *other* lab captures from 86% to 55% (shortcut-free) and from 91% to 24% (all
