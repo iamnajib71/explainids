@@ -1,0 +1,321 @@
+{
+ "generated": "2026-11-08",
+ "features": 79,
+ "portable": true,
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "hour_seconds": 3600,
+ "evening_flows": 4634,
+ "campaign_flows": {
+  "run_20261025T050628Z": 264,
+  "run_20261025T051149Z": 264
+ },
+ "summary": {
+  "30": {
+   "Deployed": {
+    "median_minutes": 47.39998169283502,
+    "q25_minutes": 41.40332734650028,
+    "q75_minutes": 62.185598131122624,
+    "missed": 0.0,
+    "over_before_noticed": 1.0,
+    "household_alerts_per_hour": 308.0,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     42.563575477847614,
+     47.59923286121208,
+     40.4749487456801,
+     52.68605552692352,
+     54.596829326079295
+    ]
+   },
+   "Repaired": {
+    "median_minutes": 1.6064509943771228,
+    "q25_minutes": 0.12353048333333352,
+    "q75_minutes": 4.833594393908635,
+    "missed": 0.0,
+    "over_before_noticed": 0.56,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     0.290604075095977,
+     0.6368342630640882,
+     13.338459621321565,
+     1.2557459198310539,
+     0.7574499830248366
+    ]
+   },
+   "Poisoned": {
+    "median_minutes": 1.1050412578126876,
+    "q25_minutes": 0.12353048333333495,
+    "q75_minutes": 4.286678544495603,
+    "missed": 0.0,
+    "over_before_noticed": 0.52,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.5450757575757575,
+    "dismissed_types_flagged": 0.590328125,
+    "per_seed_median_minutes": [
+     0.49386739358416015,
+     0.2834360332194933,
+     10.338459621321565,
+     1.1987840168855353,
+     0.7574499830248366
+    ]
+   },
+   "Poisoned, gated": {
+    "median_minutes": 1.1761436894772095,
+    "q25_minutes": 0.1235304833333329,
+    "q75_minutes": 5.179990264937472,
+    "missed": 0.0,
+    "over_before_noticed": 0.53,
+    "household_alerts_per_hour": 93.4,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     0.290604075095977,
+     0.3515544196668884,
+     11.708685513862152,
+     1.4101016694221007,
+     0.7574499830248366
+    ]
+   },
+   "_h1": {
+    "pairs": 200,
+    "p": 1.435135403355504e-34,
+    "repaired_shorter": true
+   }
+  },
+  "60": {
+   "Deployed": {
+    "median_minutes": 125.13152052533854,
+    "q25_minutes": 101.44302619691446,
+    "q75_minutes": 168.9220520262989,
+    "missed": 0.0,
+    "over_before_noticed": 1.0,
+    "household_alerts_per_hour": 308.0,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     110.33888894581979,
+     125.34923286121209,
+     102.07759063970518,
+     138.43605552692352,
+     137.25904525114683
+    ]
+   },
+   "Repaired": {
+    "median_minutes": 13.079658165353978,
+    "q25_minutes": 8.249334021588853,
+    "q75_minutes": 23.27113933127949,
+    "missed": 0.0,
+    "over_before_noticed": 0.975,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     5.260745098928799,
+     13.165449471610545,
+     51.800132729555195,
+     12.1647563550127,
+     11.747309922766297
+    ]
+   },
+   "Poisoned": {
+    "median_minutes": 12.989638327996,
+    "q25_minutes": 7.545121056553202,
+    "q75_minutes": 27.797115961770388,
+    "missed": 0.0,
+    "over_before_noticed": 0.99,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.5450757575757575,
+    "dismissed_types_flagged": 0.590328125,
+    "per_seed_median_minutes": [
+     10.2607450989288,
+     9.165449471610547,
+     45.23602805419082,
+     14.6647563550127,
+     8.565844741460078
+    ]
+   },
+   "Poisoned, gated": {
+    "median_minutes": 13.324286777068034,
+    "q25_minutes": 7.925878178116083,
+    "q75_minutes": 26.877679601303882,
+    "missed": 0.0,
+    "over_before_noticed": 0.965,
+    "household_alerts_per_hour": 93.4,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     4.260745098928799,
+     6.364086982345297,
+     54.688811601521046,
+     15.882845505012707,
+     13.357622772766288
+    ]
+   },
+   "_h1": {
+    "pairs": 200,
+    "p": 1.434670571762471e-34,
+    "repaired_shorter": true
+   }
+  },
+  "120": {
+   "Deployed": {
+    "median_minutes": 279.9930128883885,
+    "q25_minutes": 225.51387557498018,
+    "q75_minutes": 380.7675606962461,
+    "missed": 0.0,
+    "over_before_noticed": 1.0,
+    "household_alerts_per_hour": 308.0,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     248.25836825581789,
+     280.8492328612121,
+     228.66686162132154,
+     309.9360555269235,
+     304.75904525114686
+    ]
+   },
+   "Repaired": {
+    "median_minutes": 53.69875059716842,
+    "q25_minutes": 39.98102146971106,
+    "q75_minutes": 100.49382020422534,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     35.54275771352579,
+     54.63449336867059,
+     133.24233379321473,
+     54.13932415056198,
+     52.19365017952301
+    ]
+   },
+   "Poisoned": {
+    "median_minutes": 49.05432651741738,
+    "q25_minutes": 44.32668756276192,
+    "q75_minutes": 105.97155224903514,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.5450757575757575,
+    "dismissed_types_flagged": 0.590328125,
+    "per_seed_median_minutes": [
+     46.18321416723721,
+     46.63449336867059,
+     121.24233379321474,
+     58.13932415056198,
+     45.04826018093876
+    ]
+   },
+   "Poisoned, gated": {
+    "median_minutes": 54.545554747556885,
+    "q25_minutes": 38.505030996728955,
+    "q75_minutes": 106.9307461968661,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.4,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     34.36312917683925,
+     41.26607767087109,
+     131.24233379321473,
+     62.857413300562,
+     57.11836671838916
+    ]
+   },
+   "_h1": {
+    "pairs": 200,
+    "p": 1.435034340536915e-34,
+    "repaired_shorter": true
+   }
+  },
+  "300": {
+   "Deployed": {
+    "median_minutes": 743.779548657502,
+    "q25_minutes": 587.7385381086516,
+    "q75_minutes": 1012.267560696246,
+    "missed": 0.0,
+    "over_before_noticed": 1.0,
+    "household_alerts_per_hour": 308.0,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     665.2583682558179,
+     747.3492328612122,
+     612.1194551519521,
+     824.4360555269236,
+     807.2590452511469
+    ]
+   },
+   "Repaired": {
+    "median_minutes": 188.8156830922373,
+    "q25_minutes": 141.65052175616015,
+    "q75_minutes": 325.5213593040752,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     123.42996625581786,
+     164.88428928869087,
+     358.65837211896104,
+     187.6076535269235,
+     175.41385496566653
+    ]
+   },
+   "Poisoned": {
+    "median_minutes": 179.38025338642194,
+    "q25_minutes": 143.5627467268431,
+    "q75_minutes": 319.11869202618885,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.8,
+    "attack_flows_flagged": 0.5450757575757575,
+    "dismissed_types_flagged": 0.590328125,
+    "per_seed_median_minutes": [
+     146.10762673085688,
+     144.88428928869087,
+     328.4035742174599,
+     197.6076535269235,
+     157.91385496566653
+    ]
+   },
+   "Poisoned, gated": {
+    "median_minutes": 174.26490483113363,
+    "q25_minutes": 128.17611197204738,
+    "q75_minutes": 332.04218922091667,
+    "missed": 0.0,
+    "over_before_noticed": 0.995,
+    "household_alerts_per_hour": 93.4,
+    "attack_flows_flagged": 0.8636363636363634,
+    "dismissed_types_flagged": 1.0,
+    "per_seed_median_minutes": [
+     118.42996625581786,
+     130.55588728869085,
+     362.79105315195204,
+     207.32574267692354,
+     185.02416781566654
+    ]
+   },
+   "_h1": {
+    "pairs": 200,
+    "p": 1.4349939173497628e-34,
+    "repaired_shorter": true
+   }
+  }
+ },
+ "minutes": 17.183198845000394
+}

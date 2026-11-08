@@ -515,6 +515,34 @@ Results: [`gate_confirm_portable`](results/gate_confirm_portable.md), [`gate_con
   later evening as well as an equal-size pool from two days earlier (2.0–2.3% against 6.6% unrepaired). This bounds
   nothing beyond a few days; a longer gap is needed to set a refit schedule.
 
+### Attack Night: minutes of attacker freedom
+
+False alerts are usually reported as a rate; an analyst meets them as a queue, and an attack behind the queue goes
+unnoticed. Pre-registered in [`PREREGISTRATION_ATTACK_NIGHT.md`](PREREGISTRATION_ATTACK_NIGHT.md) before the first
+run: the untouched second evening (one hour of observed household traffic) with a whole isolated-lab attack campaign
+(about a minute: scan, brute force, probes, SYN burst) inserted at 200 random moments, scored flow by flow as the
+detector would see it had the attack happened there (no attack is ever sent on the home network). An analyst works
+the alerts first in, first out. Results: [`attack_night_portable`](results/attack_night_portable.md),
+[`attack_night`](results/attack_night.md).
+
+| Analyst reviews one alert per minute | Household alerts / hour | Attack noticed after (median, IQR) | Attack over before noticed |
+|---|---|---|---|
+| Deployed (few-shot), no port/window features | 308 | 125 min (101–169) | 100% |
+| Repaired, no port/window features | 94 | **13 min** (8–23) | 98% |
+| Deployed, all features | 288 | 126 min (101–165) | 100% |
+| Repaired, all features | 46 | **5.5 min** (0.4–12.5) | 68% |
+
+- **H1 confirmed:** the repair shortens the time to notice in both feature sets (paired Wilcoxon over 200 injections,
+  p = 1.4 × 10⁻³⁴); it holds at every analyst pace tested (30 s to 5 min per alert) and in every seed, although one
+  seed's median without port/window features was 52 minutes.
+- **H2:** no detector missed an injected campaign outright.
+- **H3:** after three wrongly dismissed attacks, the poisoned model flagged 59% of port-scan and SYN-burst flows (23%
+  with all features) against 100% repaired; the gate restored 100%. Time to notice did not change, because the
+  campaign's other attack types were still caught: poisoning blinds the model to a type, not to a mixed campaign.
+- **What it means.** With the model as deployed, an attacker gets about two hours before an analyst working
+  steadily reaches the first sign of them, long after a one-minute campaign has finished. The repair turns that
+  into minutes. Limits: one evening, an idealised first-in-first-out analyst, and lab campaigns scored offline.
+
 ## RQ2: Stability of explanations
 
 **Why it matters.** An explanation an analyst acts on should not change just because the model was retrained. Lin and Wang (2025) found top-5 SHAP rankings highly concordant across 100 seeds in credit scoring (Kendall's W = 0.93), but much less so further down the ranking. We test the same idea on network flows.
