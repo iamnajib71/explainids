@@ -515,6 +515,46 @@ Results: [`gate_confirm_portable`](results/gate_confirm_portable.md), [`gate_con
   later evening as well as an equal-size pool from two days earlier (2.0–2.3% against 6.6% unrepaired). This bounds
   nothing beyond a few days; a longer gap is needed to set a refit schedule.
 
+### Pre-registered third evening: replication nine days on, and ageing
+
+**Why it matters.** The second evening was two days after the fit pool, and the ageing test (C3) compared pools one
+day apart. Hypotheses for a third evening were committed before either new evening was captured
+([PREREGISTRATION_DAY3.md](PREREGISTRATION_DAY3.md)). Evening A (Saturday 7 November, 12/12 blocks, 4,629 flows) is
+used only as a fresh fit pool; evening B (Sunday 8 November, 12/12 blocks, 4,117 flows) only for evaluation; the old
+pool is the 30 October sessions (Friday), nine days before evening B.
+
+| Hypothesis (5 seeds, per-block sign test) | Result | Verdict |
+|---|---|---|
+| H1: triaged flows + exemplar envelope below few-shot, 30 Oct pool, without port and window features | 5.2% → 2.2% (215 → 90 alerts per hour); lower in 12/12 blocks, p = 0.0005 | **Confirmed** |
+| H2: detection cost no more than 0.01 | 0.962 → 0.960; mean per-seed change −0.002 (−0.007 to +0.002) | **Confirmed** |
+| H3: nine-day-old pool leaves more alerts than a one-day-old pool, equal size, 3 draws | 1.57% vs 0.81% (block means); +0.76 points (95% block bootstrap +0.40 to +1.15); old higher in 12/12 blocks, p = 0.0005 | **Decay detected** |
+| H4: H1–H3 with all 83 features | H1: 5.1% → 0.5% (214 → 21 per hour), 12/12, p = 0.0005; H2: +0.001; H3: 0.43% vs 0.45%, −0.02 points (−0.14 to +0.13), old higher in 4/12, p = 0.39 | H1, H2 **confirmed**; H3 **no decay detected** |
+
+Results: [`real_network_day3_portable`](results/real_network_day3_portable.md),
+[`real_network_day3`](results/real_network_day3.md), [`cadence_day3_portable`](results/cadence_day3_portable.md),
+[`cadence_day3`](results/cadence_day3.md); tests regenerate with `python scripts/preregistered_tests.py --day 3`
+([`preregistered_day3`](results/preregistered_day3.md)).
+
+**What we found.**
+- **The repair replicated a third time, nine days after its fit pool.** Lower in every block of a third untouched
+  evening, with either feature set, at no detection cost. Across three evenings the primary condition has been lower
+  in 36 of 36 blocks.
+- **A site's model of normal does age, but slowly and only in the harder feature set.** Without port and window
+  features the nine-day-old repair left about twice the alerts of a one-day-old one (2.2% against 0.9% at full size),
+  in every block, while still removing most of the unrepaired alerts (5.2%). With all features the two did not
+  differ. Our reading, not tested here: port features describe *which services* a site runs, which changed little in
+  nine days, while the remaining features describe *how much* and *how fast*, which drift with what the household does.
+- **Refit cadence.** A weekly refit from the previous day's traffic is a defensible schedule: a nine-day-old pool is
+  still far better than none, and a one-day-old pool is measurably better without the port shortcut.
+- **Exploratory:** triage again beat least-confident selection (11/12 blocks without port features, p = 0.006;
+  12/12 with); lab service flows were neutral without port features (7 lower, 4 higher, p = 0.55) and worse in
+  12/12 blocks with them, as on both earlier evenings; the local anomaly variants again did not separate from the
+  exemplar envelope (p ≥ 0.06).
+
+**Cautions.** Recency is confounded with day of week: the old pool is a Friday evening, the recent pool a Saturday
+and the evaluation a Sunday, so part of H3 may be a weekend pattern rather than age. Still one network; alert rates
+on unlabelled traffic are upper bounds on false alerts.
+
 ### Attack Night: minutes of attacker freedom
 
 False alerts are usually reported as a rate; an analyst meets them as a queue, and an attack behind the queue goes
@@ -613,6 +653,9 @@ python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessio
 python scripts/offload_counterfactual.py <sessions> --spacing-us 12 --results docs/results/offload_counterfactual_12us.md
 python scripts/envelope_audit.py <2017> <sessions> --results docs/results/envelope_audit_study.md
 python scripts/preregistered_tests.py      # H1–H4 for the pre-registered second evening
+python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessions <30 Oct sessions> --study data/sensor/study_wifi_20261108.json [--portable] --results docs/results/real_network_day3[_portable].md
+python scripts/cadence_eval.py <2017> <2018> --old <30 Oct sessions> --recent <7 Nov sessions> --study data/sensor/study_wifi_20261108.json [--portable] --equal-size both --results docs/results/cadence_day3[_portable].md
+python scripts/preregistered_tests.py --day 3   # H1, H2 and exploratory arms for the third evening
 python scripts/attack_retention_eval.py <2017> <2018> --lab-runs <3 lab replicates> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/attack_retention.md
 python scripts/unseen_veto_eval.py <2017> <2018> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/unseen_veto.md
 python scripts/gate_confirm.py <2017> <2018> --lab-runs <replicate B> <A> <C> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json --seeds 5,6,7,8,9 [--portable]   # C1
