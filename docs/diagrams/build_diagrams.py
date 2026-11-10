@@ -375,6 +375,37 @@ def w7_sequence():
     return d
 
 
+# ---------------------------------------------------------------- A2 Week 7: sequence (sign-in, triage, repair)
+def w7_triage_sequence():
+    d = Diagram("w7_triage_sequence")
+    names = ["Analyst", "Web console", "FastAPI", "Site envelope<br>(local normal)", "Triage store<br>(SQLite)", "Repair script"]
+    xs = [70 + i * 175 for i in range(len(names))]
+    bottom = 640
+    for name, x in zip(names, xs):
+        d.box(b(name), x - 70, 20, 140, 46, "grey" if name == "Analyst" else "blue", size=12)
+        d.free_line([(x, 66), (x, bottom)], "dashed=1;strokeColor=#9AA5B1;")
+
+    def msg(i, j, y, label, ret=False):
+        style = "endArrow=open;endSize=8;" + ("dashed=1;" if ret else "endFill=1;endArrow=block;")
+        d.free_line([(xs[i], y), (xs[j], y)], style)
+        left = min(xs[i], xs[j])
+        d.text(label, left + 6, y - 22, abs(xs[j] - xs[i]) - 12, 20, 11)
+
+    steps = [(0, 1, "Sign in"), (1, 2, "POST /auth/login (HTTPS)"), (2, 1, "session cookie (HttpOnly)", True),
+             (0, 1, "Dismiss alert"), (1, 2, "POST /alerts/{id}/status"),
+             (2, 3, "resembles this site's normal?"), (3, 2, "eligible / not eligible", True),
+             (2, 4, "record decision, features, eligibility"), (2, 1, "saved; retrain: yes / no", True),
+             (1, 0, "toast with the reason", True),
+             (5, 2, "GET /triage/repair-set.csv"), (2, 4, "eligible dismissals"), (4, 2, "model features, no addresses", True),
+             (2, 5, "repair set", True)]
+    for k, (i, j, label, *ret) in enumerate(steps):
+        msg(i, j, 105 + k * 36 + (14 if k >= 3 else 0) + (18 if k >= 10 else 0), label, bool(ret))
+    d.text(small("A dismissal retrains the model only if the flow resembles the site's normal traffic; "
+                 "every write needs a signed-in session or the collector key."),
+           xs[0] - 60, bottom + 8, xs[-1] - xs[0] + 120, 22, 11)
+    return d
+
+
 # ---------------------------------------------------------------- A2 Week 7: evaluation framework
 def w7_evaluation():
     d = Diagram("w7_evaluation")
@@ -460,7 +491,7 @@ def w7_realnet_design():
 
 
 BUILDERS = {f.__name__: f for f in (a1_architecture, w5_ml_pipeline, w5_attack_lab, w5_use_cases, w5_dashboard_wireframe,
-                                    w7_architecture, w7_sequence, w7_evaluation, w7_repair_loop, w7_realnet_design)}
+                                    w7_architecture, w7_sequence, w7_triage_sequence, w7_evaluation, w7_repair_loop, w7_realnet_design)}
 
 
 def export(drawio_path):
