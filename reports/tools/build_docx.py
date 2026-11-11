@@ -31,11 +31,18 @@ FONT = "Calibri"
 BODY_PT = 11
 NAVY = RGBColor(0x1F, 0x38, 0x64)
 TABLE_SHADE = "E8EEF7"
+TABLE_STYLE = "ruled"   # ruled | grid | banded
+HEADING_RULE = False    # a rule under level-1 headings
+JUSTIFY = False
 
 
 def apply_theme(meta):
-    """Per-report look from front matter: font, body_size, heading_color (hex), table_shade (hex)."""
-    global FONT, BODY_PT, NAVY, TABLE_SHADE
+    """Per-report look from front matter: font, body_size, heading_color (hex), table_shade (hex),
+    table_style (ruled | grid | banded), heading_rule (true/false), justify (true/false)."""
+    global FONT, BODY_PT, NAVY, TABLE_SHADE, TABLE_STYLE, HEADING_RULE, JUSTIFY
+    TABLE_STYLE = meta.get("table_style", "ruled")
+    HEADING_RULE = str(meta.get("heading_rule", "false")).lower() == "true"
+    JUSTIFY = str(meta.get("justify", "false")).lower() == "true"
     FONT = meta.get("font", "Calibri")
     BODY_PT = float(meta.get("body_size", 11))
     NAVY = RGBColor.from_string(meta.get("heading_color", "1F3864").lstrip("#"))
@@ -136,7 +143,7 @@ def set_language(doc, lang):
 
 
 # ---------- helpers ----------
-def set_cell_borders(cell, **edges):
+def set_cell_borders(cell, edges_color="000000", **edges):
     tc_pr = cell._tc.get_or_add_tcPr()
     borders = tc_pr.find(qn("w:tcBorders"))
     if borders is None:
@@ -147,7 +154,7 @@ def set_cell_borders(cell, **edges):
         el.set(qn("w:val"), "single" if sz else "nil")
         if sz:
             el.set(qn("w:sz"), str(sz))
-            el.set(qn("w:color"), "000000")
+            el.set(qn("w:color"), edges_color)
         borders.append(el)
 
 
@@ -189,27 +196,68 @@ def format_tables(doc):
             tbl_pr.remove(old)
         tbl_pr.append(width)
         n_rows = len(table.rows)
+        heading_hex = str(NAVY)
         for r, row in enumerate(table.rows):
+            tr_pr = row._tr.get_or_add_trPr()
+            tr_pr.append(OxmlElement("w:cantSplit"))  # a row never breaks across pages
             if r == 0:
-                tr_pr = row._tr.get_or_add_trPr()
-                hdr = OxmlElement("w:tblHeader")
-                tr_pr.append(hdr)
+                tr_pr.append(OxmlElement("w:tblHeader"))
             for cell in row.cells:
-                edges = {"left": 0, "right": 0, "top": 0, "bottom": 0}
-                if r == 0:
-                    edges.update(top=12, bottom=6)
-                    shade(cell, TABLE_SHADE)
-                if r == n_rows - 1:
-                    edges["bottom"] = 12
-                set_cell_borders(cell, **edges)
+                colour = "000000"
+                if TABLE_STYLE == "grid":
+                    edges = {"left": 4, "right": 4, "top": 4, "bottom": 4}
+                    colour = "7F8C8D"
+                    if r == 0:
+                        shade(cell, TABLE_SHADE)
+                elif TABLE_STYLE == "banded":
+                    edges = {"left": 0, "right": 0, "top": 0, "bottom": 0}
+                    if r == 0:
+                        shade(cell, heading_hex)
+                    elif r % 2 == 0:
+                        shade(cell, TABLE_SHADE)
+                    if r == n_rows - 1:
+                        edges["bottom"] = 8
+                        colour = heading_hex
+                else:
+                    edges = {"left": 0, "right": 0, "top": 0, "bottom": 0}
+                    if r == 0:
+                        edges.update(top=12, bottom=6)
+                        shade(cell, TABLE_SHADE)
+                    if r == n_rows - 1:
+                        edges["bottom"] = 12
+                set_cell_borders(cell, colour, **edges)
                 for p in cell.paragraphs:
+                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
                     p.paragraph_format.line_spacing = 1.0
                     p.paragraph_format.space_after = Pt(2)
                     p.paragraph_format.space_before = Pt(2)
+                    # keep the whole table on one page when it fits: every row but the last stays with the next
+                    p.paragraph_format.keep_with_next = r < n_rows - 1 and n_rows <= 14
                     for run in p.runs:
                         run.font.size = Pt(9.5)
                         if r == 0:
                             run.font.bold = True
+                            if TABLE_STYLE == "banded":
+                                run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+
+
+def format_body(doc):
+    """Optional per-report touches: justified body text and a rule under level-1 headings."""
+    in_body = True
+    for p in doc.paragraphs:
+        name = p.style.name
+        if name.startswith("Heading") and p.text.strip() == "References":
+            in_body = False  # references and appendices stay left-aligned
+        if JUSTIFY and in_body and name in ("Body Text", "First Paragraph", "Normal") and not p._p.xpath(".//w:drawing")                 and not re.match(r"^(Table|Figure) [A-Z]?\d+", p.text.strip()):
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        if HEADING_RULE and name == "Heading 1":
+            p_pr = p._p.get_or_add_pPr()
+            bdr = OxmlElement("w:pBdr")
+            bottom = OxmlElement("w:bottom")
+            for k, v in (("val", "single"), ("sz", "8"), ("space", "3"), ("color", str(NAVY))):
+                bottom.set(qn(f"w:{k}"), v)
+            bdr.append(bottom)
+            p_pr.append(bdr)
 
 
 def format_captions_and_figures(doc):
@@ -363,6 +411,7 @@ def build(md_path: str, out_path: str) -> None:
     fit_images(doc)
     format_captions_and_figures(doc)
     format_references(doc)
+    format_body(doc)
     has_cover = meta.get("cover_page", "true") != "false"  # front matter: cover_page: false
     if has_cover:
         add_cover(doc, meta, wc)
