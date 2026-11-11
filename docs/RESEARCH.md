@@ -555,6 +555,40 @@ Results: [`real_network_day3_portable`](results/real_network_day3_portable.md),
 and the evaluation a Sunday, so part of H3 may be a weekend pattern rather than age. Still one network; alert rates
 on unlabelled traffic are upper bounds on false alerts.
 
+### A rule-based baseline: Suricata on the same recordings
+
+**Why it matters.** The obvious question about any learned detector is why not use what already exists. Suricata
+8.0.8 with the Emerging Threats Open ruleset (default configuration, rules as downloaded on 11 November) was run
+over the 8 November home recording and over the isolated-lab recordings
+([`suricata_baseline`](results/suricata_baseline.md)). This is exploratory: nothing was pre-registered.
+
+| On the same data | Suricata + ET Open | ExplainIDS, as transferred → repaired |
+|---|---|---|
+| Home evening, alerts per hour | 103,867 out of the box; 2,912 with checksum events off; **57** from ruleset signatures, all informational (STUN, one remote-management DNS lookup) | 215 → 90 without port and window features; 214 → 21 with all features |
+| Lab PortScan (128 ports) | missed, 0 of 3 replicates | caught, 100% of flows |
+| Lab SYN burst | missed, 0 of 3 | caught, 100% |
+| Lab SSH brute force | caught 3 of 3, only once the attacker is declared external | caught with all features; missed without port and window features |
+| Lab FTP brute force, incomplete HTTP probes | missed, 0 of 3 | missed |
+| Two all-benign lab captures | 520 informational alerts (a server banner) and one false SSH-scan alert | 0 of 3,300 held-out flows after the service repair (E5) |
+
+**What we found.**
+- **Out of the box, the rule engine is far noisier than the learned detector, for the reason E8 names.** 97% of its
+  alerts are checksum events created by offload on the capturing host, not by the network: sensor position decides
+  what any detector sees. A deployment would switch these off.
+- **Tuned, it is quiet on a home network and nearly blind to the lab's behaviours.** It raised no attack-class alert
+  on real traffic, and saw one of five lab attack types, and that one only after the network was described to it
+  (which addresses are inside). It cannot see a slow scan or a SYN burst that no signature names.
+- **The two fail in opposite directions, so they are complements.** Signatures are precise and need the site
+  described to them; the learned detector sees behaviour and needs the site's normal traffic to stop alarming on it.
+  Neither caught FTP brute force or the incomplete HTTP probes.
+
+**Limits.** Default thresholds and the free ruleset only; a tuned commercial ruleset would detect more. Lab attacks
+are five bounded types; no attack traffic exists on the home recording, so its counts are false-alert burden only.
+
+**In the console.** The same queue measure is now available for any uploaded flow file with timestamps: *Analyse a
+file* reports how long an attack would wait behind that traffic's alerts (median and worst case, one alert reviewed
+a minute), so a site can run Attack Night on itself (`src/ids/queueing.py`).
+
 ### Attack Night: minutes of attacker freedom
 
 False alerts are usually reported as a rate; an analyst meets them as a queue, and an attack behind the queue goes
@@ -656,6 +690,8 @@ python scripts/preregistered_tests.py      # H1–H4 for the pre-registered seco
 python scripts/real_network_eval.py <2017> <2018> --lab-profile ... --fit-sessions <30 Oct sessions> --study data/sensor/study_wifi_20261108.json [--portable] --results docs/results/real_network_day3[_portable].md
 python scripts/cadence_eval.py <2017> <2018> --old <30 Oct sessions> --recent <7 Nov sessions> --study data/sensor/study_wifi_20261108.json [--portable] --equal-size both --results docs/results/cadence_day3[_portable].md
 python scripts/preregistered_tests.py --day 3   # H1, H2 and exploratory arms for the third evening
+python scripts/suricata_baseline.py --evening data/suricata/20261108 --hours 0.99 --lab-default data/suricata/lab --lab-external data/suricata/lab_ext   # after running Suricata in Docker (see the script)
+python scripts/escalation_eval.py <2017> <2018> --fit-sessions <30 Oct sessions> --studies data/sensor/study_wifi_20261101.json data/sensor/study_wifi_20261108.json [--portable]
 python scripts/attack_retention_eval.py <2017> <2018> --lab-runs <3 lab replicates> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/attack_retention.md
 python scripts/unseen_veto_eval.py <2017> <2018> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json [--portable] --results docs/results/unseen_veto.md
 python scripts/gate_confirm.py <2017> <2018> --lab-runs <replicate B> <A> <C> --fit-sessions <day-1 sessions> --study data/sensor/study_wifi_20261101.json --seeds 5,6,7,8,9 [--portable]   # C1

@@ -35,6 +35,7 @@ from ids.data import BENIGN, LABEL_COL, feature_columns
 from ids.evaluate import report
 from ids.explain import Explainer
 from ids.models import Detector
+from ids.queueing import queue_estimate
 from ids.scoring import align_columns, interleave_background, score_frame
 from ids.synthetic import make_flows
 from ids.triage_store import STATUSES, TriageStore
@@ -391,6 +392,9 @@ async def score_csv(file: UploadFile = File(...)):
            "outliers": int(flows["outlier"].sum()),
            "top_alerts": representative(alerts, MAX_RETURNED_ALERTS),
            "incidents": aggregate(alerts)[:100]}
+    queue = alert_queue(df, flows)
+    if queue:
+        out["queue"] = queue
     if "truth" in flows:
         rep = report(flows["truth"], flows["predicted"])
         fpr = rep["benign_fpr"]  # undefined (NaN) for attack-only files; JSON has no NaN
@@ -398,6 +402,22 @@ async def score_csv(file: UploadFile = File(...)):
                              "per_class": rep["per_class"].reset_index(names="class").to_dict("records"),
                              "labels": list(rep["confusion"].index), "confusion": rep["confusion"].values.tolist()}
     return out
+
+
+def alert_queue(df: pd.DataFrame, flows: pd.DataFrame) -> dict | None:
+    """Attack Night for the uploaded traffic: how long an attack alert would wait behind this file's alerts.
+
+    Needs flow start times; alerts are placed at the end of their flow. None when the file has no usable times."""
+    if "Timestamp" not in df:
+        return None
+    start = pd.to_datetime(df["Timestamp"], errors="coerce", format="mixed")
+    if start.notna().sum() < 2:
+        return None
+    seconds = (start - start.min()).dt.total_seconds()
+    if "Flow Duration" in df:
+        seconds = seconds + pd.to_numeric(df["Flow Duration"], errors="coerce").fillna(0) / 1e6
+    flagged = ((flows["predicted"] != BENIGN) | flows["outlier"].astype(bool)).to_numpy() & seconds.notna().to_numpy()
+    return queue_estimate(seconds.to_numpy()[flagged], float(seconds.max()))
 
 
 def representative(alerts: list[dict], n: int) -> list[dict]:

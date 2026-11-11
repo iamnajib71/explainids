@@ -61,6 +61,19 @@ def test_sample_csv_round_trips_through_upload_with_evaluation():
     assert 0 <= body["evaluation"]["macro"]["f1"] <= 1
 
 
+def test_upload_with_flow_times_reports_how_long_an_attack_would_wait():
+    import pandas as pd
+    frame = pd.read_csv(io.BytesIO(client.get("/sample.csv", params={"rows": 200}).content))
+    plain = client.post("/score-csv", files={"file": ("flows.csv", io.BytesIO(frame.drop(
+        columns=[c for c in frame.columns if c == "Timestamp"]).to_csv(index=False).encode()), "text/csv")}).json()
+    assert "queue" not in plain                       # no times, no estimate
+    frame["Timestamp"] = pd.Timestamp("2026-11-01 20:00:00") + pd.to_timedelta(range(len(frame)), unit="s") * 9
+    q = client.post("/score-csv", files={"file": ("flows.csv", io.BytesIO(frame.to_csv(index=False).encode()),
+                                                  "text/csv")}).json()["queue"]
+    assert q["span_seconds"] >= 1790 and q["worst_seconds"] >= q["median_seconds"] >= 0
+    assert q["keeps_up"] == (q["alerts_per_hour"] <= 60)
+
+
 def test_upload_reports_missing_features():
     r = client.post("/score-csv", files={"file": ("x.csv", io.BytesIO(b"a,b\n1,2\n"), "text/csv")})
     assert r.status_code == 422 and "missing" in r.json()["detail"]

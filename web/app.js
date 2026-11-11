@@ -733,7 +733,9 @@ function renderUpload(r) {
       <div class="kpi card"><span>Alerts</span><strong>${fmt(r.alerts)}</strong><small>${pct(r.alerts / r.rows)} of flows</small></div>
       <div class="kpi card"><span>Incidents</span><strong>${fmt(r.incidents.length)}</strong></div>
       <div class="kpi card good"><span>Macro F1</span><strong>${ev ? pct(ev.macro.f1) : "—"}</strong><small>${ev ? `P ${pct(ev.macro.precision)} · R ${pct(ev.macro.recall)}` : "unlabelled"}</small></div>
-      <div class="kpi card"><span>False alarms</span><strong>${ev ? pct(ev.benign_fpr, 2) : "—"}</strong></div></div>
+      <div class="kpi card"><span>False alarms</span><strong>${ev ? pct(ev.benign_fpr, 2) : "—"}</strong></div>
+      ${r.queue ? `<div class="kpi card${r.queue.keeps_up ? " good" : ""}"><span tabindex="0" data-tip="Attack Night for this file: if an attack began at a random moment in this traffic, how long its alert would wait behind the alerts already raised, with one alert reviewed per minute, first in, first out.">Attack would wait</span>
+        <strong>${dur(r.queue.median_seconds)}</strong><small>worst ${dur(r.queue.worst_seconds)} · ${fmt(Math.round(r.queue.alerts_per_hour))} alerts an hour</small></div>` : ""}</div>
     <div class="result-grid">
       <div class="card"><div class="card-head"><h3>${ev ? "Per-class scores" : "Predicted classes"}</h3></div><div id="u-classes" class="chart"></div></div>
       <div class="card"><div class="card-head"><h3 tabindex="0" data-tip="The most severe alerts of each class first. Select a row to investigate.">Alerts by class</h3></div>
