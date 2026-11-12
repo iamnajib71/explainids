@@ -1,7 +1,8 @@
 """Convert a corrected CIC-IDS release (folder of CSVs) into one cleaned, float32 Parquet file.
 
 Usage: python scripts/build_processed.py data/raw/cicids2017 data/processed/cicids2017.parquet
-Cleaning is per file (labels harmonised, NaN/inf and duplicate rows dropped) to keep memory low.
+Cleaning is per file (labels harmonised, NaN/inf and duplicate rows dropped) to keep memory low; the
+result is then deduplicated globally on the float32 features so no vector can land in two splits.
 """
 import argparse
 from pathlib import Path
@@ -9,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ids.data import LABEL_COL, clean, feature_columns
+from ids.data import LABEL_COL, clean, dedup_global, feature_columns
 
 KEEP_META = ["Src IP", "Dst IP", "Src Port", "Timestamp", "source_file"]
 
@@ -32,6 +33,9 @@ def main():
         print(f"{path.name}: {len(raw):,} -> {len(df):,} rows", flush=True)
         del raw
     out = pd.concat(frames, ignore_index=True)
+    before = len(out)
+    out = dedup_global(out)
+    print(f"global dedup: {before:,} -> {len(out):,} rows")
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     out.to_parquet(args.out, index=False)
     print(f"saved {len(out):,} rows x {out.shape[1]} cols to {args.out}")

@@ -25,17 +25,18 @@ Chronological split per class (70/10/20): each attack's later flows are predicte
 
 | Model | Test macro precision | Test macro recall | Test macro F1 | Benign false-positive rate | Latency |
 |---|---|---|---|---|---|
-| **LightGBM (selected)** | 0.859 | 0.925 | 0.872 | 0.52% | 0.023 ms/flow |
-| XGBoost | 0.833 | 0.926 | 0.856 | 0.36% | 0.008 ms/flow |
-| RandomForest | 0.966 | 0.884 | 0.913 | 0.52% | 0.012 ms/flow |
+| **LightGBM (selected)** | 0.844 | 0.928 | 0.862 | 0.55% | 0.0256 ms/flow |
+| XGBoost | 0.817 | 0.940 | 0.847 | 0.35% | 0.0061 ms/flow |
+| RandomForest | 0.990 | 0.879 | 0.920 | 0.55% | 0.0121 ms/flow |
 
-Where it struggles: **DoS-SlowHTTPTest** (F1 0.43) is confused with Slowloris and benign traffic, and most false alarms are benign flows flagged as PortScan. Cross-dataset testing on corrected CSE-CIC-IDS2018 is in progress. Accuracy is never reported on its own because benign traffic dominates.
+Where it struggles: **DoS-SlowHTTPTest** (F1 0.461) is confused with Slowloris and benign traffic. Cross-dataset and legitimate-service experiments expose substantial transfer and false-alert limitations; see [research evidence](docs/RESEARCH.md). Benchmark performance does not establish effectiveness on a new network.
 
 ## Run it
 **Python (3.11+)**
 ```bash
 pip install -e ".[api]"
-uvicorn api.main:app --port 8000      # open http://localhost:8000
+python scripts/run_app.py --check
+python scripts/run_app.py           # opens http://127.0.0.1:8000
 ```
 **Docker**
 ```bash
@@ -47,7 +48,11 @@ Without trained artefacts the app starts in synthetic demo mode. To train on rea
 python scripts/build_processed.py data/raw/cicids2017 data/processed/cicids2017.parquet
 python scripts/train_baseline.py data/processed/cicids2017.parquet --models lgbm,xgb,rf --results docs/results/cicids2017_baseline.md
 ```
-The API is documented at `/docs` (OpenAPI). Set `EXPLAINIDS_API_KEY` to require an `X-API-Key` header on the alert endpoints.
+The API is documented at `/docs` (OpenAPI). Set `EXPLAINIDS_API_KEY` to require an `X-API-Key` header on the alert endpoints, and `EXPLAINIDS_USERS` (from `python scripts/hash_password.py <name>`) to require browser sign-in; a signed-in session is an HttpOnly cookie and works in place of the key. `EXPLAINIDS_REQUIRE_HTTPS=1` refuses plain HTTP except on localhost.
+
+**Cloud:** [`infra/azure/`](infra/azure/README.md) deploys the same image to Azure Container Apps at $0 (scale to zero, HTTPS, sign-in, budget alert) and removes it with one command.
+
+For passive observations, use the separate [local sensor](docs/LOCAL_SENSOR.md) and the console's **Local sensor** tab. It requires an explicitly selected interface, capture tools and a compatible flow extractor. App startup never starts capture. Live observations have no ground-truth performance metrics. See [local setup and portability limits](docs/APP_START.md).
 
 ## How it works
 | Layer | Tech |

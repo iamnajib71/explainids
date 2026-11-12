@@ -1,5 +1,7 @@
 # Data and models
 data/
+# the console findings summary is small and derived (no datasets)
+!web/data/
 *.csv
 *.parquet
 *.pcap
@@ -45,6 +47,7 @@ reports/A1/
 reports/A2/
 reports/A3/
 reports/A4/
+reports/paper/
 reports/course_details.json
 
 .venv-ml/

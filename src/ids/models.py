@@ -24,11 +24,18 @@ def make_classifier(name: str):
     raise ValueError(f"unknown model {name!r}")
 
 
+def signed_log(X: pd.DataFrame) -> np.ndarray:
+    """sign(x) * log1p(|x|): tames heavy-tailed flow features (keeps CICFlowMeter's -1 sentinels distinct)."""
+    arr = np.asarray(X, dtype=np.float64)
+    return np.sign(arr) * np.log1p(np.abs(arr))
+
+
 class Detector:
     """A fitted multi-class classifier plus an optional benign-only Isolation Forest."""
 
-    def __init__(self, name: str = "lgbm"):
+    def __init__(self, name: str = "lgbm", anomaly_log: bool = False):
         self.name = name
+        self.anomaly_log = anomaly_log
         self.model = make_classifier(name)
         self.encoder = LabelEncoder()
         self.features: list[str] = []
@@ -45,12 +52,16 @@ class Detector:
         return self
 
     def fit_anomaly(self, X_benign: pd.DataFrame) -> "Detector":
-        self.iforest = IsolationForest(n_estimators=200, random_state=SEED, n_jobs=-1).fit(X_benign[self.features])
+        self.iforest = IsolationForest(n_estimators=200, random_state=SEED, n_jobs=-1).fit(self._anomaly_input(X_benign))
         return self
+
+    def _anomaly_input(self, X: pd.DataFrame):
+        X = X[self.features]
+        return signed_log(X) if getattr(self, "anomaly_log", False) else X  # older pickles lack the flag
 
     def tune_anomaly_threshold(self, X_val_benign: pd.DataFrame, target_fpr: float = 0.01) -> float:
         """Pick the score below which a benign validation flow is flagged at most `target_fpr` of the time."""
-        scores = self.iforest.score_samples(X_val_benign[self.features])
+        scores = self.iforest.score_samples(self._anomaly_input(X_val_benign))
         self.anomaly_threshold = float(np.quantile(scores, target_fpr))
         return self.anomaly_threshold
 
@@ -61,8 +72,30 @@ class Detector:
         return self.model.predict_proba(X[self.features])
 
     def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
-        scores = self.iforest.score_samples(X[self.features])
-        return scores, scores < self.anomaly_threshold
+        scores, out, _ = self.anomaly_detail(X)
+        return scores, out
+
+    def anomaly_detail(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Scores, outliers after the site envelope, and outliers the envelope vetoed.
+
+        Vetoed flows are unusual for the benchmark but resemble this site's normal traffic. They are demoted,
+        not discarded: the veto also hides some unseen slow-DoS attacks (docs/RESEARCH.md, E11).
+        """
+        scores = self.iforest.score_samples(self._anomaly_input(X))
+        out = scores < self.anomaly_threshold
+        vetoed = np.zeros(len(out), dtype=bool)
+        local = getattr(self, "local_normal", None)  # optional site envelope (ids.envelope.LocalNormal)
+        if local is not None and out.any():
+            idx = np.flatnonzero(out)
+            usual = local.usual(X.iloc[idx])
+            vetoed[idx] = usual
+            out[idx] = ~usual
+        return scores, out, vetoed
+
+    def resembles_site_normal(self, X: pd.DataFrame) -> np.ndarray | None:
+        """Whether each flow lies inside the site envelope; None when no envelope is attached."""
+        local = getattr(self, "local_normal", None)
+        return None if local is None else np.asarray(local.usual(X))
 
     @property
     def classes(self) -> list[str]:

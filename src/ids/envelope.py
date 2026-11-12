@@ -1,0 +1,108 @@
+"""Two-envelope anomaly rule: unusual for the benchmark's normal *and* for the site's normal."""
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import NearestNeighbors
+
+from ids import SEED
+from ids.models import signed_log
+
+
+class TwoEnvelope:
+    """A flow is anomalous only if it is unusual for the benchmark's normal *and* for this site's normal.
+
+    The benchmark-trained anomaly detector flags whatever falls outside the benign envelope it was fitted
+    on; on a modern network that includes ordinary bulk transfers larger than anything in the benchmark.
+    A second isolation forest, fitted on the site's own earlier traffic (70%) with its threshold set on
+    the rest (30%) at the same 1% budget, vetoes those. No labels are used.
+    """
+
+    def __init__(self, det, local: pd.DataFrame, budget: float = 0.01, seed: int = SEED):
+        self.det, self.features = det, det.features
+        order = np.random.default_rng(seed).permutation(len(local))
+        cut = int(len(local) * 0.7)
+        fit, cal = local.iloc[order[:cut]], local.iloc[order[cut:]]
+        self.local = IsolationForest(n_estimators=200, random_state=seed, n_jobs=-1).fit(det._anomaly_input(fit))
+        self.local_threshold = float(np.quantile(self.local.score_samples(det._anomaly_input(cal)), budget))
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.det.predict(X)
+
+    def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        scores, source_out = self.det.anomaly(X)
+        local_out = self.local.score_samples(self.det._anomaly_input(X)) < self.local_threshold
+        return scores, source_out & local_out
+
+
+class LocalNormal:
+    """The site's own normal traffic as exemplars: a flow is usual if it lies near *any* of them.
+
+    An isolation forest is density-based, so a service the site has shown only once or twice still looks
+    isolated. A nearest-neighbour envelope needs only one example per behaviour, which matches a repair
+    budget of one or two flows per service. Features are signed-log transformed and scaled by the local
+    median and IQR; the threshold is the (1 - budget) quantile of each local flow's leave-one-out distance
+    to its nearest neighbour, so at most `budget` of the site's own normal traffic counts as unusual.
+    """
+
+    def __init__(self, features: list[str], local: pd.DataFrame, budget: float = 0.01):
+        self.features = list(features)
+        Z = np.asarray(signed_log(local[self.features]), dtype=float)
+        self.center = np.median(Z, axis=0)
+        iqr = np.subtract(*np.percentile(Z, [75, 25], axis=0))
+        self.scale = np.where(iqr > 0, iqr, 1.0)
+        self.nn = NearestNeighbors(n_neighbors=2).fit((Z - self.center) / self.scale)
+        loo = self.nn.kneighbors()[0][:, 0]                 # nearest *other* local flow
+        self.threshold = float(np.quantile(loo, 1 - budget))
+        self.size = len(local)
+
+    def usual(self, X: pd.DataFrame) -> np.ndarray:
+        Z = (np.asarray(signed_log(X[self.features]), dtype=float) - self.center) / self.scale
+        return self.nn.kneighbors(Z, n_neighbors=1)[0][:, 0] <= self.threshold
+
+
+class ExemplarEnvelope:
+    """Two-envelope rule with an exemplar local envelope: a benchmark anomaly alert stands only if the
+    flow is also unlike every known-normal local flow (see LocalNormal)."""
+
+    def __init__(self, det, local: pd.DataFrame, budget: float = 0.01):
+        self.det, self.features = det, det.features
+        self.local = LocalNormal(det.features, local, budget)
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.det.predict(X)
+
+    def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        scores, source_out = self.det.anomaly(X)
+        out = np.zeros(len(X), dtype=bool)
+        idx = np.flatnonzero(source_out)
+        if len(idx):
+            out[idx] = ~self.local.usual(X.iloc[idx])
+        return scores, out
+
+
+class LocalRefit:
+    """Distribution-level baseline: refit the anomaly detector on benchmark and local benign traffic together.
+
+    In the spirit of normality-shift adaptation (Han et al., 2023): the model's notion of normal is
+    re-estimated with the site's traffic included, and its threshold is set on held-back local traffic at
+    the same budget. Unlike the exemplar envelope it replaces the benchmark envelope rather than vetoing it.
+    """
+
+    def __init__(self, det, source_benign: pd.DataFrame, local: pd.DataFrame, budget: float = 0.01,
+                 seed: int = SEED):
+        self.det, self.features = det, det.features
+        order = np.random.default_rng(seed).permutation(len(local))
+        cut = int(len(local) * 0.7)
+        fit, cal = local.iloc[order[:cut]], local.iloc[order[cut:]]
+        both = pd.concat([source_benign[self.features], fit[self.features]])
+        self.forest = IsolationForest(n_estimators=200, random_state=seed, n_jobs=-1).fit(det._anomaly_input(both))
+        self.threshold = float(np.quantile(self.forest.score_samples(det._anomaly_input(cal)), budget))
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        return self.det.predict(X)
+
+    def anomaly(self, X: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        scores = self.forest.score_samples(self.det._anomaly_input(X))
+        return scores, scores < self.threshold

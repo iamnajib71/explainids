@@ -1,0 +1,142 @@
+{
+ "generated": "2026-11-11",
+ "evening": {
+  "flows": 3385,
+  "alerts": 102828,
+  "by_kind": {
+   "capture artefact (checksum)": 99946,
+   "protocol anomaly": 2826,
+   "ruleset signature": 56
+  },
+  "hours": 0.99,
+  "rule_signatures": {
+   "ET INFO Session Traversal Utilities for NAT (STUN Binding Request On Non-Standard High Port)": 34,
+   "ET INFO Session Traversal Utilities for NAT (STUN Binding Request)": 10,
+   "ET INFO Session Traversal Utilities for NAT (STUN Binding Response)": 10,
+   "ET INFO Remote Monitoring and Management (RMM) Tool in DNS Lookup (* .remotedesktop-pa .googleapis .com)": 2
+  },
+  "rule_flows": 24,
+  "alerting_flows": 2930
+ },
+ "lab_default": {
+  "attacks": {
+   "PortScan": [
+    {},
+    {},
+    {}
+   ],
+   "SSH-BruteForce": [
+    {},
+    {},
+    {}
+   ],
+   "FTP-BruteForce": [
+    {},
+    {},
+    {}
+   ],
+   "Incomplete-HTTP-Probe": [
+    {},
+    {},
+    {}
+   ],
+   "SYN-Burst": [
+    {},
+    {},
+    {}
+   ]
+  },
+  "benign": {
+   "BENIGN": [
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 200
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 200
+    }
+   ]
+  }
+ },
+ "lab_external": {
+  "attacks": {
+   "PortScan": [
+    {},
+    {},
+    {}
+   ],
+   "SSH-BruteForce": [
+    {
+     "ET SCAN Potential SSH Scan": 1
+    },
+    {
+     "ET SCAN Potential SSH Scan": 1
+    },
+    {
+     "ET SCAN Potential SSH Scan": 1
+    }
+   ],
+   "FTP-BruteForce": [
+    {},
+    {},
+    {}
+   ],
+   "Incomplete-HTTP-Probe": [
+    {},
+    {},
+    {}
+   ],
+   "SYN-Burst": [
+    {},
+    {},
+    {}
+   ]
+  },
+  "benign": {
+   "BENIGN": [
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 20
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 200,
+     "ET SCAN Potential SSH Scan": 1
+    },
+    {
+     "ET INFO Python SimpleHTTP ServerBanner": 200
+    }
+   ]
+  }
+ }
+}

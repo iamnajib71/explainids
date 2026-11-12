@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor A as Analyst
+    participant C as Web console
+    participant F as FastAPI
+    participant D as Detector (classifier + Isolation Forest)
+    participant E as Explainer (TreeSHAP)
+    participant T as Threat map (ATT&CK)
+    A->>C: Start replay
+    loop every second while replaying
+        C->>F: GET /replay?cursor&n
+        F->>D: predict + anomaly (batch)
+        D-->>F: classes, outlier flags
+        F->>E: top_features (flagged flows)
+        E-->>F: SHAP top-5 per alert
+        F->>T: context_for (class)
+        T-->>F: technique, tactic, severity, response
+        F-->>C: flows + alerts (JSON)
+        C-->>A: alert queue, KPIs, network map
+    end
+    A->>C: open alert
+    C-->>A: why (SHAP), candidate technique, response
+    A->>C: Confirm / Dismiss (kept in the browser)

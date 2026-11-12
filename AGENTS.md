@@ -40,3 +40,12 @@ Python 3.11, pandas, scikit-learn, XGBoost, LightGBM, imbalanced-learn, SHAP, Fa
 8. **Small commits** with clear messages; work on feature branches.
 10. **Public repository: privacy.** The GitHub repo is public. Never commit student names, student IDs, emails, assessment briefs/rubrics, report drafts or submissions, cover sheets or meeting records. These live in gitignored paths (`private/`, `assessments/`, `templates/`, `meetings/`, `reports/A1..A4/`, `reports/course_details.json`). Run `git grep` for names and IDs before every push.
 9. **Group assessments (A1, A3, A4) use the ECA Group Assessment Cover Sheet** at `templates/Group_Assessment_Cover_Sheet.docx` (never edit the template). Shared details live in `reports/course_details.json`; per-assessment details and AI acknowledgements live in `reports/<A>/cover_sheet.json`. Build the submission with `python reports/tools/make_submission.py <A>`, which produces `reports/<A>/submission/` (filled cover sheet + report .docx + merged `*_SUBMISSION.pdf`). Declaration checkboxes are the students' sign-off: only they set them to true. A2 is individual and needs the individual cover sheet (not yet provided).
+
+## Console UI rules (web/)
+Adapted from the Vercel Web Interface Guidelines (MIT, github.com/vercel-labs/web-interface-guidelines). Keep the console's own look; these are checks, not a restyle.
+- Hit targets at least 24×24 px (44×44 px on touch); never disable browser zoom.
+- Every control has a label or `aria-label`; headings stay hierarchical (one `h1`, then `h2` per view); keep the skip link.
+- Async actions show a pending state; status messages and toasts use `aria-live="polite"`.
+- Animate only named properties (never `transition: all`); honour `prefers-reduced-motion`; inputs are 16px on phones.
+- Every API route that scores, writes or returns alerts requires the API key (`tests/test_api.py` enforces this).
+- After a UI change, check it in the browser at desktop and phone width and read the console for errors.

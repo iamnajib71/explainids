@@ -1,0 +1,2120 @@
+{
+ "generated": "2026-11-11",
+ "model": "lgbm",
+ "features": 79,
+ "portable": true,
+ "k": 50,
+ "service_flows": 30,
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "fit_pool_flows": 3307,
+ "window_seconds": 60,
+ "rows": [
+  {
+   "seed": 42,
+   "class": "Bot",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 148,
+     "classifier": 0,
+     "anomaly_only": 10,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 28585,
+     "classifier": 114,
+     "anomaly_only": 393,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 58,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 37,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DDoS-HTTP",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 19029,
+     "classifier": 14153,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 274325,
+     "classifier": 264144,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 59,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DDoS-UDP",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 506,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 137,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 212,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DoS-GoldenEye",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 1514,
+     "classifier": 750,
+     "anomaly_only": 1,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 4512,
+     "classifier": 267,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 66,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 75,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DoS-Hulk",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 31694,
+     "classifier": 1939,
+     "anomaly_only": 7,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 360632,
+     "classifier": 9844,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 61,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 44,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DoS-SlowHTTPTest",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 348,
+     "classifier": 139,
+     "anomaly_only": 1,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 72,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 59,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "DoS-Slowloris",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 772,
+     "classifier": 571,
+     "anomaly_only": 43,
+     "vetoed": 43,
+     "escalated": 36
+    },
+    "csecicids2018": {
+     "flows": 1698,
+     "classifier": 911,
+     "anomaly_only": 155,
+     "vetoed": 152,
+     "escalated": 140
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 68,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 51,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "FTP-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 795,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 72,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 72,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "Infiltration",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 58,
+     "classifier": 0,
+     "anomaly_only": 7,
+     "vetoed": 6,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 80,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "PortScan",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 25485,
+     "classifier": 57,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 10309,
+     "classifier": 84,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 60,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 67,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "SSH-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 593,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 18840,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 87,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 89,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "Web-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 15,
+     "classifier": 15,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 27,
+     "classifier": 26,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 73,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 88,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 42,
+   "class": "Web-XSS",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 23,
+     "classifier": 23,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 84,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "Bot",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 148,
+     "classifier": 0,
+     "anomaly_only": 10,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 28585,
+     "classifier": 24,
+     "anomaly_only": 393,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 66,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 29,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DDoS-HTTP",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 19029,
+     "classifier": 14466,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 274325,
+     "classifier": 254361,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 67,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DDoS-UDP",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 506,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 178,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 379,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DoS-GoldenEye",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 1514,
+     "classifier": 797,
+     "anomaly_only": 2,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 4512,
+     "classifier": 203,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 68,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 56,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DoS-Hulk",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 31694,
+     "classifier": 1392,
+     "anomaly_only": 7,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 360632,
+     "classifier": 2895,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 72,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 33,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DoS-SlowHTTPTest",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 348,
+     "classifier": 175,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 62,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 47,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "DoS-Slowloris",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 772,
+     "classifier": 283,
+     "anomaly_only": 112,
+     "vetoed": 43,
+     "escalated": 36
+    },
+    "csecicids2018": {
+     "flows": 1698,
+     "classifier": 1055,
+     "anomaly_only": 146,
+     "vetoed": 144,
+     "escalated": 132
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 76,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 64,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "FTP-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 795,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 62,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 58,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "Infiltration",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 58,
+     "classifier": 0,
+     "anomaly_only": 7,
+     "vetoed": 6,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 55,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 48,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "PortScan",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 25485,
+     "classifier": 54,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 10309,
+     "classifier": 49,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 65,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 56,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "SSH-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 593,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 18840,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 85,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 90,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "Web-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 15,
+     "classifier": 15,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 27,
+     "classifier": 26,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 78,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 69,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 1,
+   "class": "Web-XSS",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 23,
+     "classifier": 22,
+     "anomaly_only": 1,
+     "vetoed": 1,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 68,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 58,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "Bot",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 148,
+     "classifier": 0,
+     "anomaly_only": 10,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 28585,
+     "classifier": 107,
+     "anomaly_only": 393,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 55,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 27,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DDoS-HTTP",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 19029,
+     "classifier": 15210,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 274325,
+     "classifier": 265402,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 70,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DDoS-UDP",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 506,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 122,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 192,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DoS-GoldenEye",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 1514,
+     "classifier": 761,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 4512,
+     "classifier": 425,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 71,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 64,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DoS-Hulk",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 31694,
+     "classifier": 1462,
+     "anomaly_only": 7,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 360632,
+     "classifier": 973,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 59,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 30,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DoS-SlowHTTPTest",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 348,
+     "classifier": 182,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 66,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 51,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "DoS-Slowloris",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 772,
+     "classifier": 549,
+     "anomaly_only": 43,
+     "vetoed": 43,
+     "escalated": 36
+    },
+    "csecicids2018": {
+     "flows": 1698,
+     "classifier": 934,
+     "anomaly_only": 169,
+     "vetoed": 144,
+     "escalated": 132
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 73,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 54,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "FTP-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 795,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 88,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 75,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "Infiltration",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 58,
+     "classifier": 0,
+     "anomaly_only": 7,
+     "vetoed": 6,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 72,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 87,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "PortScan",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 25485,
+     "classifier": 71,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 10309,
+     "classifier": 111,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 59,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 50,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "SSH-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 593,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 18840,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 58,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 70,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "Web-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 15,
+     "classifier": 14,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 27,
+     "classifier": 26,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 95,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 123,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "class": "Web-XSS",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 23,
+     "classifier": 23,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 96,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 111,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "Bot",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 148,
+     "classifier": 0,
+     "anomaly_only": 10,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 28585,
+     "classifier": 201,
+     "anomaly_only": 393,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 97,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 50,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DDoS-HTTP",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 19029,
+     "classifier": 16258,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 274325,
+     "classifier": 270662,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 91,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 86,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DDoS-UDP",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 506,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 133,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 129,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DoS-GoldenEye",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 1514,
+     "classifier": 579,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 4512,
+     "classifier": 267,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 87,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 69,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DoS-Hulk",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 31694,
+     "classifier": 2945,
+     "anomaly_only": 7,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 360632,
+     "classifier": 5970,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 67,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 55,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DoS-SlowHTTPTest",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 348,
+     "classifier": 174,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 62,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 56,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "DoS-Slowloris",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 772,
+     "classifier": 452,
+     "anomaly_only": 20,
+     "vetoed": 1,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 1698,
+     "classifier": 1001,
+     "anomaly_only": 144,
+     "vetoed": 144,
+     "escalated": 132
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 102,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 53,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "FTP-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 795,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 124,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 82,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "Infiltration",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 58,
+     "classifier": 0,
+     "anomaly_only": 6,
+     "vetoed": 5,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 63,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 51,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "PortScan",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 25485,
+     "classifier": 36,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 10309,
+     "classifier": 179,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 98,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 103,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "SSH-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 593,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 18840,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 77,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 81,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "Web-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 15,
+     "classifier": 14,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 27,
+     "classifier": 26,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 86,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 76,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "class": "Web-XSS",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 23,
+     "classifier": 23,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 115,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 74,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "Bot",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 148,
+     "classifier": 0,
+     "anomaly_only": 9,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 28585,
+     "classifier": 215,
+     "anomaly_only": 393,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 67,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 31,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DDoS-HTTP",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 19029,
+     "classifier": 16674,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 274325,
+     "classifier": 271305,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 85,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 65,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DDoS-UDP",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 506,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 139,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 240,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DoS-GoldenEye",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 1514,
+     "classifier": 1122,
+     "anomaly_only": 1,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 4512,
+     "classifier": 245,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 62,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 25,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DoS-Hulk",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 31694,
+     "classifier": 1509,
+     "anomaly_only": 6,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 360632,
+     "classifier": 7643,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 96,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 67,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DoS-SlowHTTPTest",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 348,
+     "classifier": 193,
+     "anomaly_only": 2,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 66,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 54,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "DoS-Slowloris",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 772,
+     "classifier": 416,
+     "anomaly_only": 110,
+     "vetoed": 43,
+     "escalated": 36
+    },
+    "csecicids2018": {
+     "flows": 1698,
+     "classifier": 802,
+     "anomaly_only": 167,
+     "vetoed": 151,
+     "escalated": 139
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 82,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 68,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "FTP-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 795,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 68,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 61,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "Infiltration",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 58,
+     "classifier": 0,
+     "anomaly_only": 8,
+     "vetoed": 7,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 77,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 66,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "PortScan",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 25485,
+     "classifier": 37,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 10309,
+     "classifier": 53,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 76,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 57,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "SSH-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 593,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 18840,
+     "classifier": 0,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 76,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 58,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "Web-BruteForce",
+   "n": 7,
+   "splits": {
+    "cicids2017": {
+     "flows": 15,
+     "classifier": 14,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    },
+    "csecicids2018": {
+     "flows": 27,
+     "classifier": 26,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 100,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 104,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "class": "Web-XSS",
+   "n": 7,
+   "splits": {
+    "csecicids2018": {
+     "flows": 23,
+     "classifier": 22,
+     "anomaly_only": 0,
+     "vetoed": 0,
+     "escalated": 0
+    }
+   },
+   "evenings": {
+    "study_wifi_20261101": {
+     "flows": 4634,
+     "alerts": 89,
+     "escalated": 0,
+     "hours": 0.9928648872222221
+    },
+    "study_wifi_20261108": {
+     "flows": 4117,
+     "alerts": 89,
+     "escalated": 0,
+     "hours": 0.9901250763888889
+    }
+   }
+  }
+ ],
+ "minutes": 114.76132302000005
+}

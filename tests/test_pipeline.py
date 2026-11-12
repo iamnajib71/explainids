@@ -139,3 +139,62 @@ def test_verdict_compares_alert_with_label():
     assert verdict("PortScan", "PortScan") == "correct"
     assert verdict(BENIGN, "PortScan") == "false positive"
     assert verdict("DoS-Hulk", "DDoS-HTTP") == "attack, other class"
+
+
+def test_binary_report_counts_any_attack_as_hit():
+    from ids.evaluate import binary_report
+    r = binary_report([BENIGN, BENIGN, "Bot", "PortScan"], [False, True, True, False])
+    assert (r["tp"], r["fp"], r["fn"], r["tn"]) == (1, 1, 1, 1)
+    assert r["precision"] == 0.5 and r["recall"] == 0.5 and r["fpr"] == 0.5
+
+
+def test_dedup_global_drops_cross_file_copies_and_label_conflicts():
+    from ids.data import dedup_global
+    df = clean(make_flows(10))
+    feats = feature_columns(df)
+    copy = df.iloc[[0]].assign(source_file="other")              # same vector, another file
+    clash = df.iloc[[1]].assign(**{LABEL_COL: "Bot" if df.iloc[1][LABEL_COL] != "Bot" else BENIGN})
+    out = dedup_global(pd.concat([df, copy, clash], ignore_index=True))
+    assert not out.duplicated(subset=feats).any()
+    assert len(out) == len(df) - 1                                  # the conflicting vector is gone entirely
+
+
+def test_signed_log_anomaly_option_keeps_fpr_target(flows):
+    from ids.models import signed_log
+    assert signed_log(pd.DataFrame({"a": [-1.0, 0.0, np.e - 1]})).ravel().round(6).tolist() == [-0.693147, 0.0, 1.0]
+    X, y = flows[feature_columns(flows)], flows[LABEL_COL]
+    det = Detector("rf", anomaly_log=True).fit(X, y).fit_anomaly(X[y == BENIGN])
+    det.tune_anomaly_threshold(X[y == BENIGN], target_fpr=0.05)
+    assert det.anomaly(X[y == BENIGN])[1].mean() <= 0.06
+
+
+def test_wilson_interval_is_honest_about_small_samples():
+    from ids.evaluate import wilson_interval
+    lo, hi = wilson_interval(0, 40)
+    assert lo == 0 and 0.08 < hi < 0.09          # 0 false alarms in 40 flows still allows ~9%
+    lo, hi = wilson_interval(12, 12)
+    assert 0.75 < lo < 0.76 and hi == 1.0
+    lo, hi = wilson_interval(500, 1000)
+    assert lo < 0.5 < hi and hi - lo < 0.07
+
+
+class _AllUsual:
+    """A site envelope under which every flow resembles the site's normal traffic."""
+    def usual(self, X):
+        return np.ones(len(X), dtype=bool)
+
+
+def test_site_envelope_demotes_outliers_instead_of_dropping_them(flows):
+    from ids.scoring import score_frame
+    X, y = flows[feature_columns(flows)], flows[LABEL_COL]
+    det = Detector("rf").fit(X, y).fit_anomaly(X[y == BENIGN])
+    det.tune_anomaly_threshold(X[y == BENIGN], target_fpr=0.2)
+    _, before = det.anomaly(X)
+    assert det.resembles_site_normal(X) is None
+    det.local_normal = _AllUsual()
+    _, after, vetoed = det.anomaly_detail(X)
+    assert before.any() and not after.any() and (vetoed == before).all()
+    scored, alerts = score_frame(det, Explainer(det), flows)
+    assert scored["demoted"].sum() == int((vetoed & (det.predict(X) == BENIGN)).sum())
+    assert not any(a["outlier"] for a in alerts)
+    assert det.resembles_site_normal(X).all()

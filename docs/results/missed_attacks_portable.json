@@ -1,0 +1,286 @@
+{
+ "generated": "2026-11-07",
+ "features": 79,
+ "portable": true,
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "label_source": "run_20261025T050509Z",
+ "held_out_attacks": {
+  "FTP-BruteForce": 24,
+  "Incomplete-HTTP-Probe": 24
+ },
+ "profile_flows": 660,
+ "diagnosis": {
+  "FTP-BruteForce": {
+   "separability": {
+    "recall": 1.0,
+    "benign_fpr": 0.1685714285714286,
+    "per_replicate_recall": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nearest_source_training_label": {
+    "BENIGN": 1.0
+   },
+   "in_source_training": true,
+   "in_target_training": false,
+   "deployed_predictions": {
+    "BENIGN": 36
+   }
+  },
+  "Incomplete-HTTP-Probe": {
+   "separability": {
+    "recall": 1.0,
+    "benign_fpr": 0.0,
+    "per_replicate_recall": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nearest_source_training_label": {
+    "BENIGN": 1.0
+   },
+   "in_source_training": false,
+   "in_target_training": false,
+   "deployed_predictions": {
+    "BENIGN": 36
+   }
+  }
+ },
+ "rows": [
+  {
+   "seed": 42,
+   "k": 0,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.09242424242424242,
+   "real_network_rate": 0.017479499352611134,
+   "benchmark_detection": 0.9590478162684531
+  },
+  {
+   "seed": 42,
+   "k": 3,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 0.9167,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.10757575757575757,
+   "real_network_rate": 0.015968925334484248,
+   "benchmark_detection": 0.9497157987741943
+  },
+  {
+   "seed": 42,
+   "k": 12,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.10757575757575757,
+   "real_network_rate": 0.018774277082434183,
+   "benchmark_detection": 0.9517537975099
+  },
+  {
+   "seed": 1,
+   "k": 0,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.09242424242424242,
+   "real_network_rate": 0.017479499352611134,
+   "benchmark_detection": 0.9577417279962196
+  },
+  {
+   "seed": 1,
+   "k": 3,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.19545454545454546,
+   "real_network_rate": 0.019421665947345707,
+   "benchmark_detection": 0.9733615133731283
+  },
+  {
+   "seed": 1,
+   "k": 12,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.3803030303030303,
+   "real_network_rate": 0.020500647388864913,
+   "benchmark_detection": 0.9603406870309409
+  },
+  {
+   "seed": 2,
+   "k": 0,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.19545454545454546,
+   "real_network_rate": 0.01812688821752266,
+   "benchmark_detection": 0.9570595439305386
+  },
+  {
+   "seed": 2,
+   "k": 3,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.10757575757575757,
+   "real_network_rate": 0.016184721622788088,
+   "benchmark_detection": 0.9690606485433252
+  },
+  {
+   "seed": 2,
+   "k": 12,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.10757575757575757,
+   "real_network_rate": 0.018990073370738023,
+   "benchmark_detection": 0.9704789095277433
+  },
+  {
+   "seed": 3,
+   "k": 0,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.27121212121212124,
+   "real_network_rate": 0.03085886922744929,
+   "benchmark_detection": 0.9499543145995273
+  },
+  {
+   "seed": 3,
+   "k": 3,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.11515151515151516,
+   "real_network_rate": 0.02913249892101856,
+   "benchmark_detection": 0.9614679964611735
+  },
+  {
+   "seed": 3,
+   "k": 12,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 0.9167,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.1484848484848485,
+   "real_network_rate": 0.021148036253776436,
+   "benchmark_detection": 0.9720505297265644
+  },
+  {
+   "seed": 4,
+   "k": 0,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.3803030303030303,
+   "real_network_rate": 0.017263703064307294,
+   "benchmark_detection": 0.9749408501848654
+  },
+  {
+   "seed": 4,
+   "k": 3,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.3939393939393939,
+   "real_network_rate": 0.01661631419939577,
+   "benchmark_detection": 0.9698641873392608
+  },
+  {
+   "seed": 4,
+   "k": 12,
+   "held_out_recall": {
+    "BENIGN": 0.0,
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 1.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "profile_fpr": 0.3939393939393939,
+   "real_network_rate": 0.018774277082434183,
+   "benchmark_detection": 0.9673507664627854
+  }
+ ],
+ "minutes": 30.615733151665577
+}

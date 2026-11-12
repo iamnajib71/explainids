@@ -21,8 +21,12 @@ RUN pip install -r requirements-deploy.txt && pip install --no-deps .
 COPY --chown=app api ./api
 COPY --chown=app web ./web
 COPY --chown=app models ./models
+# Writable only where the app keeps triage decisions (SQLite); everything else stays root-owned
+RUN mkdir -p data && chown app data
 
 USER app
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD python -c "import urllib.request,os;urllib.request.urlopen(f'http://127.0.0.1:{os.environ[\"PORT\"]}/health')"
-CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT}"]
+# Behind a TLS-terminating ingress (Azure Container Apps, Spaces) trust its X-Forwarded-Proto so HTTPS is detected.
+# The container is reachable only through that ingress.
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips='*'"]

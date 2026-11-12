@@ -1,0 +1,522 @@
+{
+ "generated": "2026-11-04",
+ "model": "lgbm",
+ "features": 79,
+ "portable": true,
+ "k": 50,
+ "service_flows": 30,
+ "seed": 1,
+ "fit_pool_flows": 3307,
+ "eval_flows": 4634,
+ "rows": [
+  {
+   "class": "Bot",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03452740612861459,
+    "exemplar envelope": 0.014242555028053518,
+    "local anomaly threshold": 0.017479499352611134
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 148,
+      "classifier": 0,
+      "anomaly_only": 10,
+      "vetoed": 0,
+      "caught": 10,
+      "caught_variant": 10
+     },
+     "local anomaly threshold": {
+      "flows": 148,
+      "classifier": 0,
+      "anomaly_only": 10,
+      "vetoed": 10,
+      "caught": 10,
+      "caught_variant": 0
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 28585,
+      "classifier": 24,
+      "anomaly_only": 393,
+      "vetoed": 0,
+      "caught": 417,
+      "caught_variant": 417
+     },
+     "local anomaly threshold": {
+      "flows": 28585,
+      "classifier": 24,
+      "anomaly_only": 393,
+      "vetoed": 321,
+      "caught": 417,
+      "caught_variant": 96
+     }
+    }
+   }
+  },
+  {
+   "class": "DDoS-HTTP",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03495899870522227,
+    "exemplar envelope": 0.014458351316357358,
+    "local anomaly threshold": 0.017263703064307294
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 19029,
+      "classifier": 14466,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 14466,
+      "caught_variant": 14466
+     },
+     "local anomaly threshold": {
+      "flows": 19029,
+      "classifier": 14466,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 14466,
+      "caught_variant": 14466
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 274325,
+      "classifier": 254361,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 254361,
+      "caught_variant": 254361
+     },
+     "local anomaly threshold": {
+      "flows": 274325,
+      "classifier": 254361,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 254361,
+      "caught_variant": 254361
+     }
+    }
+   }
+  },
+  {
+   "class": "DDoS-UDP",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.0586965904186448,
+    "exemplar envelope": 0.038411739318083726,
+    "local anomaly threshold": 0.041432887354337505
+   },
+   "splits": {
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 506,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     },
+     "local anomaly threshold": {
+      "flows": 506,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     }
+    }
+   }
+  },
+  {
+   "class": "DoS-GoldenEye",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.035390591281829954,
+    "exemplar envelope": 0.0146741476046612,
+    "local anomaly threshold": 0.017695295640914977
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 1514,
+      "classifier": 797,
+      "anomaly_only": 2,
+      "vetoed": 0,
+      "caught": 799,
+      "caught_variant": 799
+     },
+     "local anomaly threshold": {
+      "flows": 1514,
+      "classifier": 797,
+      "anomaly_only": 2,
+      "vetoed": 2,
+      "caught": 799,
+      "caught_variant": 797
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 4512,
+      "classifier": 203,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 203,
+      "caught_variant": 203
+     },
+     "local anomaly threshold": {
+      "flows": 4512,
+      "classifier": 203,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 203,
+      "caught_variant": 203
+     }
+    }
+   }
+  },
+  {
+   "class": "DoS-Hulk",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.035390591281829954,
+    "exemplar envelope": 0.015537332757876565,
+    "local anomaly threshold": 0.01855848079413034
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 31694,
+      "classifier": 1392,
+      "anomaly_only": 7,
+      "vetoed": 0,
+      "caught": 1399,
+      "caught_variant": 1399
+     },
+     "local anomaly threshold": {
+      "flows": 31694,
+      "classifier": 1392,
+      "anomaly_only": 7,
+      "vetoed": 7,
+      "caught": 1399,
+      "caught_variant": 1392
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 360632,
+      "classifier": 2895,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 2895,
+      "caught_variant": 2895
+     },
+     "local anomaly threshold": {
+      "flows": 360632,
+      "classifier": 2895,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 2895,
+      "caught_variant": 2895
+     }
+    }
+   }
+  },
+  {
+   "class": "DoS-SlowHTTPTest",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03366422097539922,
+    "exemplar envelope": 0.013379369874838154,
+    "local anomaly threshold": 0.016184721622788088
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 348,
+      "classifier": 175,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 175,
+      "caught_variant": 175
+     },
+     "local anomaly threshold": {
+      "flows": 348,
+      "classifier": 175,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 175,
+      "caught_variant": 175
+     }
+    }
+   }
+  },
+  {
+   "class": "DoS-Slowloris",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03711696158826068,
+    "exemplar envelope": 0.01640051791109193,
+    "local anomaly threshold": 0.01855848079413034
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 772,
+      "classifier": 283,
+      "anomaly_only": 112,
+      "vetoed": 43,
+      "caught": 395,
+      "caught_variant": 352
+     },
+     "local anomaly threshold": {
+      "flows": 772,
+      "classifier": 283,
+      "anomaly_only": 112,
+      "vetoed": 112,
+      "caught": 395,
+      "caught_variant": 283
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 1698,
+      "classifier": 1055,
+      "anomaly_only": 146,
+      "vetoed": 144,
+      "caught": 1201,
+      "caught_variant": 1057
+     },
+     "local anomaly threshold": {
+      "flows": 1698,
+      "classifier": 1055,
+      "anomaly_only": 146,
+      "vetoed": 146,
+      "caught": 1201,
+      "caught_variant": 1055
+     }
+    }
+   }
+  },
+  {
+   "class": "FTP-BruteForce",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03409581355200691,
+    "exemplar envelope": 0.013379369874838154,
+    "local anomaly threshold": 0.015753129046180404
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 795,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     },
+     "local anomaly threshold": {
+      "flows": 795,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     }
+    }
+   }
+  },
+  {
+   "class": "Infiltration",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03258523953388002,
+    "exemplar envelope": 0.011868795856711264,
+    "local anomaly threshold": 0.015105740181268883
+   },
+   "splits": {
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 58,
+      "classifier": 0,
+      "anomaly_only": 7,
+      "vetoed": 6,
+      "caught": 7,
+      "caught_variant": 1
+     },
+     "local anomaly threshold": {
+      "flows": 58,
+      "classifier": 0,
+      "anomaly_only": 7,
+      "vetoed": 5,
+      "caught": 7,
+      "caught_variant": 2
+     }
+    }
+   }
+  },
+  {
+   "class": "PortScan",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03560638757013379,
+    "exemplar envelope": 0.014026758739749677,
+    "local anomaly threshold": 0.017479499352611134
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 25485,
+      "classifier": 54,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 54,
+      "caught_variant": 54
+     },
+     "local anomaly threshold": {
+      "flows": 25485,
+      "classifier": 54,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 54,
+      "caught_variant": 54
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 10309,
+      "classifier": 49,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 49,
+      "caught_variant": 49
+     },
+     "local anomaly threshold": {
+      "flows": 10309,
+      "classifier": 49,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 49,
+      "caught_variant": 49
+     }
+    }
+   }
+  },
+  {
+   "class": "SSH-BruteForce",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03927492447129909,
+    "exemplar envelope": 0.0183426845058265,
+    "local anomaly threshold": 0.021148036253776436
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 593,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     },
+     "local anomaly threshold": {
+      "flows": 593,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 18840,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     },
+     "local anomaly threshold": {
+      "flows": 18840,
+      "classifier": 0,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 0,
+      "caught_variant": 0
+     }
+    }
+   }
+  },
+  {
+   "class": "Web-BruteForce",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03474320241691843,
+    "exemplar envelope": 0.01683211048769961,
+    "local anomaly threshold": 0.019205869659041863
+   },
+   "splits": {
+    "cicids2017": {
+     "exemplar envelope": {
+      "flows": 15,
+      "classifier": 15,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 15,
+      "caught_variant": 15
+     },
+     "local anomaly threshold": {
+      "flows": 15,
+      "classifier": 15,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 15,
+      "caught_variant": 15
+     }
+    },
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 27,
+      "classifier": 26,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 26,
+      "caught_variant": 26
+     },
+     "local anomaly threshold": {
+      "flows": 27,
+      "classifier": 26,
+      "anomaly_only": 0,
+      "vetoed": 0,
+      "caught": 26,
+      "caught_variant": 26
+     }
+    }
+   }
+  },
+  {
+   "class": "Web-XSS",
+   "real_network_rate": {
+    "benchmark anomaly layer": 0.03517479499352611,
+    "exemplar envelope": 0.0146741476046612,
+    "local anomaly threshold": 0.017479499352611134
+   },
+   "splits": {
+    "csecicids2018": {
+     "exemplar envelope": {
+      "flows": 23,
+      "classifier": 22,
+      "anomaly_only": 1,
+      "vetoed": 1,
+      "caught": 23,
+      "caught_variant": 22
+     },
+     "local anomaly threshold": {
+      "flows": 23,
+      "classifier": 22,
+      "anomaly_only": 1,
+      "vetoed": 1,
+      "caught": 23,
+      "caught_variant": 22
+     }
+    }
+   }
+  }
+ ],
+ "minutes": 17.615751190000445
+}

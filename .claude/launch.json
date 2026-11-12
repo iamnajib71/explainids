@@ -4,8 +4,47 @@
     {
       "name": "explainids",
       "runtimeExecutable": ".venv-ml/Scripts/python.exe",
-      "runtimeArgs": ["-m", "uvicorn", "api.main:app", "--port", "8000"],
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "api.main:app",
+        "--port",
+        "8000"
+      ],
       "port": 8000
+    },
+    {
+      "name": "explainids-demo",
+      "runtimeExecutable": ".venv-ml/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "api.main:app", "--port", "8020"],
+      "env": { "EXPLAINIDS_MODEL_DIR": "data/no_model", "EXPLAINIDS_TRIAGE_DB": "data/demo_triage.sqlite" },
+      "port": 8020
+    },
+    {
+      "name": "demo-before",
+      "runtimeExecutable": ".venv-ml/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "api.main:app", "--port", "8030"],
+      "env": { "EXPLAINIDS_MODEL_DIR": "models", "EXPLAINIDS_TRIAGE_DB": "data/demo/triage_before.sqlite" },
+      "port": 8030
+    },
+    {
+      "name": "demo-after",
+      "runtimeExecutable": ".venv-ml/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "api.main:app", "--port", "8031"],
+      "env": { "EXPLAINIDS_MODEL_DIR": "data/demo/models_repaired", "EXPLAINIDS_TRIAGE_DB": "data/demo/triage_after.sqlite" },
+      "port": 8031
+    },
+    {
+      "name": "explainids-static",
+      "runtimeExecutable": ".venv-ml/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8090",
+        "--directory",
+        "data/static_site"
+      ],
+      "port": 8090
     }
   ]
 }

@@ -1,0 +1,74 @@
+{
+ "generated": "2026-11-03",
+ "shipped": {
+  "day2": {
+   "flows": 4634,
+   "alerts": 236,
+   "alert_rate": 0.050927924039706515,
+   "low_priority": 0
+  },
+  "lab_recall": 0.9090909090909091
+ },
+ "triage": {
+  "day1": {
+   "flows": 3307,
+   "alerts": 190,
+   "alert_rate": 0.05745388569700635,
+   "low_priority": 0
+  },
+  "dismissed_household": 190,
+  "dismissed_attacks": 3,
+  "eligibility_at_decision": [
+   null,
+   null,
+   null
+  ],
+  "summary": {
+   "decisions": {
+    "confirmed": 0,
+    "dismissed": 193,
+    "open": 0
+   },
+   "repair_set_flows": 193,
+   "held_back": 0,
+   "ungated": 193
+  }
+ },
+ "repair": {
+  "repair_flows": 190,
+  "repair_flows_held_back": 3,
+  "local_normal_flows": 3307,
+  "benchmark": {
+   "before": {
+    "macro_f1": 0.8617167172471808,
+    "attack_recall": 0.9976122669783984,
+    "benign_fpr": 0.005468499491140264
+   },
+   "after": {
+    "macro_f1": 0.879959111684958,
+    "attack_recall": 0.9975625225404484,
+    "benign_fpr": 0.005426675403253914
+   }
+  },
+  "wrong_dismissals_inside_envelope": 0
+ },
+ "repaired": {
+  "day2": {
+   "flows": 4634,
+   "alerts": 45,
+   "alert_rate": 0.009710832973672853,
+   "low_priority": 93
+  },
+  "lab_recall": 0.9090909090909091,
+  "wrong_dismissals_eligible": [
+   false,
+   false,
+   false
+  ]
+ },
+ "lab": {
+  "poison_attacks": 264,
+  "held_out_attacks": 528
+ },
+ "minutes": 1.5445293500000843
+}

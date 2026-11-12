@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import shap
 
+from . import SEED
+
 
 class Explainer:
     def __init__(self, detector):
@@ -23,6 +25,16 @@ class Explainer:
             out.append([{"feature": self.detector.features[j], "value": float(X.iloc[i][self.detector.features[j]]),
                          "contribution": float(row[j])} for j in order])
         return out
+
+
+def global_importance(det, X: pd.DataFrame, n: int = 2000, k: int = 15) -> list[dict]:
+    """Mean |SHAP| per feature over a test sample, summed across classes."""
+    sample = X.sample(min(n, len(X)), random_state=SEED)
+    values = Explainer(det)._explainer.shap_values(sample[det.features])
+    arr = np.abs(np.stack(values, axis=-1) if isinstance(values, list) else np.asarray(values))
+    imp = arr.mean(axis=0).sum(axis=-1) if arr.ndim == 3 else arr.mean(axis=0)
+    top = np.argsort(-imp)[:k]
+    return [{"feature": det.features[j], "importance": float(imp[j])} for j in top]
 
 
 def _row_values(values, i: int, cls: int) -> np.ndarray:

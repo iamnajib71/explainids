@@ -1,0 +1,4918 @@
+{
+ "generated": "2026-11-02",
+ "model": "lgbm",
+ "source": "cicids2017",
+ "features": 79,
+ "portable": true,
+ "target": "csecicids2018",
+ "k": 50,
+ "service_flows": 30,
+ "seeds": [
+  42,
+  1,
+  2,
+  3,
+  4
+ ],
+ "fit_sessions": 12,
+ "fit_pool_flows": 3307,
+ "eval_blocks": 12,
+ "eval_flows": 4634,
+ "eval_hours": 0.9928648872222223,
+ "runs": [
+  {
+   "config": "source only",
+   "training_rows": 254686,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014648553371368776,
+    "recall_ci": [
+     0.014369661807830513,
+     0.01493277575570329
+    ],
+    "fpr": 0.033477317227524284,
+    "macro_detection": 0.3066773362524134,
+    "per_class": {
+     "Bot": 0.02,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0293,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8881,
+     "Infiltration": 0.2241,
+     "PortScan": 0.7751,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 249,
+    "rate": 0.05373327578765645,
+    "rate_ci": [
+     0.03827731745142133,
+     0.06980896012312376
+    ],
+    "block_rates": [
+     0.0977,
+     0.0583,
+     0.0517,
+     0.0306,
+     0.0138,
+     0.0529,
+     0.061,
+     0.0599,
+     0.0497,
+     0.0615,
+     0.0487,
+     0.0181
+    ],
+    "alerts_per_hour": 250.78941072902398,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "PortScan": 28,
+     "SSH-BruteForce": 4,
+     "Infiltration": 29,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 81,
+     "1900": 49,
+     "5353": 20,
+     "0": 10,
+     "5351": 8,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "source only + local anomaly threshold",
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014511316997439684,
+    "recall_ci": [
+     0.014233728549327257,
+     0.014794237773673663
+    ],
+    "fpr": 0.029181160620617305,
+    "macro_detection": 0.30427401424575723,
+    "per_class": {
+     "Bot": 0.0183,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0293,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.861,
+     "Infiltration": 0.2241,
+     "PortScan": 0.7751,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 174,
+    "rate": 0.03754855416486837,
+    "rate_ci": [
+     0.02500571908053344,
+     0.05003010982280595
+    ],
+    "block_rates": [
+     0.0704,
+     0.0408,
+     0.0374,
+     0.0136,
+     0.0,
+     0.0481,
+     0.0488,
+     0.0412,
+     0.0318,
+     0.0449,
+     0.0304,
+     0.0159
+    ],
+    "alerts_per_hour": 175.2504315937758,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "PortScan": 28,
+     "SSH-BruteForce": 4,
+     "Infiltration": 29,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "1900": 48,
+     "443": 34,
+     "0": 10,
+     "5351": 8,
+     "13246": 6,
+     "2710": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 65,
+     "services_partial": 14
+    }
+   }
+  },
+  {
+   "config": "source only + two-envelope anomaly",
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014581364729965992,
+    "recall_ci": [
+     0.014303110349617598,
+     0.014864950669071982
+    ],
+    "fpr": 0.02901763908886652,
+    "macro_detection": 0.3029829967319498,
+    "per_class": {
+     "Bot": 0.02,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0293,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.861,
+     "Infiltration": 0.2069,
+     "PortScan": 0.7751,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 175,
+    "rate": 0.0377643504531722,
+    "rate_ci": [
+     0.024775711893718196,
+     0.051539377612829416
+    ],
+    "block_rates": [
+     0.0747,
+     0.0437,
+     0.0402,
+     0.0102,
+     0.0034,
+     0.0481,
+     0.0457,
+     0.0449,
+     0.0278,
+     0.0449,
+     0.0264,
+     0.0159
+    ],
+    "alerts_per_hour": 176.2576179822458,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "PortScan": 28,
+     "SSH-BruteForce": 4,
+     "Infiltration": 29,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "1900": 48,
+     "443": 38,
+     "0": 10,
+     "5351": 8,
+     "13246": 6,
+     "2710": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 65,
+     "services_partial": 14
+    }
+   }
+  },
+  {
+   "config": "source only + exemplar envelope",
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014581364729965992,
+    "recall_ci": [
+     0.014303110349617598,
+     0.014864950669071982
+    ],
+    "fpr": 0.030136805936043967,
+    "macro_detection": 0.3029829967319498,
+    "per_class": {
+     "Bot": 0.02,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0293,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.861,
+     "Infiltration": 0.2069,
+     "PortScan": 0.7751,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 172,
+    "rate": 0.03711696158826068,
+    "rate_ci": [
+     0.02442969476085768,
+     0.0500571973227736
+    ],
+    "block_rates": [
+     0.0704,
+     0.0437,
+     0.0431,
+     0.0136,
+     0.0,
+     0.0433,
+     0.0488,
+     0.0449,
+     0.0278,
+     0.0473,
+     0.0223,
+     0.0159
+    ],
+    "alerts_per_hour": 173.23605881683585,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "PortScan": 28,
+     "SSH-BruteForce": 4,
+     "Infiltration": 29,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "1900": 48,
+     "443": 34,
+     "0": 10,
+     "5351": 8,
+     "13246": 6,
+     "2710": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 64,
+     "services_partial": 15
+    }
+   }
+  },
+  {
+   "config": "source only + local refit anomaly",
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014509887451877923,
+    "recall_ci": [
+     0.014232312611678363,
+     0.014792794635900343
+    ],
+    "fpr": 0.02878828421316412,
+    "macro_detection": 0.3028372326365618,
+    "per_class": {
+     "Bot": 0.0183,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0293,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.861,
+     "Infiltration": 0.2069,
+     "PortScan": 0.7751,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 166,
+    "rate": 0.035822183858437634,
+    "rate_ci": [
+     0.02334701497866931,
+     0.048873855936650015
+    ],
+    "block_rates": [
+     0.0704,
+     0.0408,
+     0.0374,
+     0.0102,
+     0.0,
+     0.0481,
+     0.0427,
+     0.0412,
+     0.0278,
+     0.0449,
+     0.0243,
+     0.0159
+    ],
+    "alerts_per_hour": 167.192940486016,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "PortScan": 28,
+     "SSH-BruteForce": 4,
+     "Infiltration": 29,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "1900": 48,
+     "443": 27,
+     "0": 10,
+     "5351": 8,
+     "13246": 6,
+     "2710": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 65,
+     "services_partial": 14
+    }
+   }
+  },
+  {
+   "config": "both environments",
+   "training_rows": 614668,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9979800521212312,
+    "recall_ci": [
+     0.9978720650714845,
+     0.9980825696448512
+    ],
+    "fpr": 0.007806560398907592,
+    "macro_detection": 0.9822285248068076,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9966,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9998,
+     "DoS-Hulk": 0.9995,
+     "DoS-Slowloris": 0.8439,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9987,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 233,
+    "rate": 0.05028053517479499,
+    "rate_ci": [
+     0.03727611463431659,
+     0.06298405749914501
+    ],
+    "block_rates": [
+     0.0862,
+     0.0641,
+     0.0517,
+     0.034,
+     0.031,
+     0.0192,
+     0.0457,
+     0.0412,
+     0.0417,
+     0.0449,
+     0.0669,
+     0.0249
+    ],
+    "alerts_per_hour": 234.67442851350438,
+    "called": {
+     "PortScan": 55,
+     "DDoS-HTTP": 6,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 1,
+     "DoS-Hulk": 1,
+     "Infiltration": 18,
+     "Heartbleed": 3,
+     "SSH-BruteForce": 1,
+     "Bot": 4,
+     "DoS-GoldenEye": 1
+    },
+    "alerts_by_port": {
+     "443": 115,
+     "5353": 25,
+     "5351": 16,
+     "53": 15,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 16,
+     "share_in_collapsed": 0.06866952789699571,
+     "services_clean": 62,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "few-shot",
+   "seed": 42,
+   "training_rows": 256263,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8891816280522584,
+    "recall_ci": [
+     0.8884438651763975,
+     0.8899151163812302
+    ],
+    "fpr": 0.008350216400572538,
+    "macro_detection": 0.9595400472791691,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7732,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9942,
+     "DoS-Hulk": 0.9602,
+     "DoS-Slowloris": 0.9564,
+     "Infiltration": 0.931,
+     "PortScan": 0.9192,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 326,
+    "rate": 0.07034958998705222,
+    "rate_ci": [
+     0.05318691021087143,
+     0.08854261105135597
+    ],
+    "block_rates": [
+     0.1221,
+     0.0671,
+     0.0575,
+     0.051,
+     0.0345,
+     0.0721,
+     0.0762,
+     0.0749,
+     0.0517,
+     0.078,
+     0.0791,
+     0.034
+    ],
+    "alerts_per_hour": 328.3427626412121,
+    "called": {
+     "PortScan": 155,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 6,
+     "DoS-GoldenEye": 2,
+     "Infiltration": 20,
+     "Heartbleed": 4,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 91,
+     "1900": 81,
+     "5353": 17,
+     "5351": 15,
+     "53": 14,
+     "0": 11,
+     "4749": 7,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.046012269938650305,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 lab service flows",
+   "seed": 42,
+   "training_rows": 256300,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8664175445267703,
+    "recall_ci": [
+     0.8656182839832121,
+     0.8672127805510239
+    ],
+    "fpr": 0.008825915402029367,
+    "macro_detection": 0.9571855603086576,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7453,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9885,
+     "DoS-Hulk": 0.9371,
+     "DoS-Slowloris": 0.9594,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9275,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 304,
+    "rate": 0.06560207164436772,
+    "rate_ci": [
+     0.04709334249944471,
+     0.08559392566918124
+    ],
+    "block_rates": [
+     0.1236,
+     0.0612,
+     0.0517,
+     0.0442,
+     0.0207,
+     0.0577,
+     0.0701,
+     0.0674,
+     0.0537,
+     0.0709,
+     0.0751,
+     0.0295
+    ],
+    "alerts_per_hour": 306.1846620948727,
+    "called": {
+     "PortScan": 133,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 6,
+     "DoS-GoldenEye": 1,
+     "Infiltration": 24,
+     "Heartbleed": 3,
+     "Bot": 11
+    },
+    "alerts_by_port": {
+     "443": 90,
+     "1900": 65,
+     "5353": 18,
+     "5351": 15,
+     "53": 13,
+     "0": 11,
+     "4749": 7,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.049342105263157895,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 local flows",
+   "seed": 42,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8363241809061317,
+    "recall_ci": [
+     0.8354553032542901,
+     0.8371893645668452
+    ],
+    "fpr": 0.008356587369342049,
+    "macro_detection": 0.9482110832473619,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.653,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9902,
+     "DoS-Hulk": 0.9491,
+     "DoS-Slowloris": 0.9547,
+     "Infiltration": 0.931,
+     "PortScan": 0.9203,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 283,
+    "rate": 0.061070349589987055,
+    "rate_ci": [
+     0.04506684418187546,
+     0.07612451748618589
+    ],
+    "block_rates": [
+     0.102,
+     0.0583,
+     0.0489,
+     0.034,
+     0.0207,
+     0.0577,
+     0.0701,
+     0.0674,
+     0.0477,
+     0.078,
+     0.073,
+     0.0295
+    ],
+    "alerts_per_hour": 285.03374793700317,
+    "called": {
+     "PortScan": 116,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 6,
+     "DoS-GoldenEye": 1,
+     "Heartbleed": 5,
+     "Infiltration": 18,
+     "Bot": 11
+    },
+    "alerts_by_port": {
+     "443": 93,
+     "1900": 61,
+     "5353": 16,
+     "53": 13,
+     "0": 11,
+     "4749": 7,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows",
+   "seed": 42,
+   "triaged_alerts": 30,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9017845017247467,
+    "recall_ci": [
+     0.9010848703399257,
+     0.9024797201399715
+    ],
+    "fpr": 0.008384194900676597,
+    "macro_detection": 0.9608281392989283,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9388,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 182,
+    "rate": 0.03927492447129909,
+    "rate_ci": [
+     0.02859082518038368,
+     0.04751342256033502
+    ],
+    "block_rates": [
+     0.0532,
+     0.0525,
+     0.046,
+     0.0306,
+     0.0172,
+     0.0192,
+     0.0427,
+     0.0337,
+     0.0298,
+     0.0496,
+     0.0609,
+     0.0091
+    ],
+    "alerts_per_hour": 183.3079227015356,
+    "called": {
+     "PortScan": 18,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 1,
+     "Infiltration": 3,
+     "Heartbleed": 1,
+     "Bot": 18
+    },
+    "alerts_by_port": {
+     "443": 84,
+     "53": 18,
+     "5353": 17,
+     "0": 11,
+     "4749": 7,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local anomaly threshold",
+   "seed": 42,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9017744949058144,
+    "recall_ci": [
+     0.901074831918064,
+     0.9024697450338778
+    ],
+    "fpr": 0.0036080919797997816,
+    "macro_detection": 0.9604845978776484,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.931,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 95,
+    "rate": 0.020500647388864913,
+    "rate_ci": [
+     0.013691786536505273,
+     0.026474712205605634
+    ],
+    "block_rates": [
+     0.023,
+     0.0321,
+     0.0259,
+     0.0136,
+     0.0,
+     0.0144,
+     0.0274,
+     0.0112,
+     0.0099,
+     0.0307,
+     0.0385,
+     0.0068
+    ],
+    "alerts_per_hour": 95.6827069046477,
+    "called": {
+     "PortScan": 18,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 1,
+     "Infiltration": 3,
+     "Heartbleed": 1,
+     "Bot": 18
+    },
+    "alerts_by_port": {
+     "443": 29,
+     "53": 18,
+     "0": 11,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "5351": 3,
+     "4749": 3
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 69,
+     "services_partial": 10
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + two-envelope anomaly",
+   "seed": 42,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.003450941416818508,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 92,
+    "rate": 0.01985325852395339,
+    "rate_ci": [
+     0.012097353866459588,
+     0.02633219484589767
+    ],
+    "block_rates": [
+     0.0302,
+     0.0321,
+     0.0172,
+     0.0068,
+     0.0034,
+     0.0144,
+     0.0213,
+     0.0112,
+     0.006,
+     0.0307,
+     0.0385,
+     0.0068
+    ],
+    "alerts_per_hour": 92.66114773923778,
+    "called": {
+     "PortScan": 18,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 1,
+     "Infiltration": 3,
+     "Heartbleed": 1,
+     "Bot": 18
+    },
+    "alerts_by_port": {
+     "443": 36,
+     "53": 18,
+     "0": 11,
+     "13246": 4,
+     "5351": 3,
+     "10004": 3,
+     "2710": 3,
+     "13177": 3
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + exemplar envelope",
+   "seed": 42,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.004525511482609379,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 81,
+    "rate": 0.017479499352611134,
+    "rate_ci": [
+     0.010838231521634805,
+     0.023235229098634888
+    ],
+    "block_rates": [
+     0.0244,
+     0.0292,
+     0.0201,
+     0.0102,
+     0.0,
+     0.0096,
+     0.0183,
+     0.0037,
+     0.006,
+     0.0355,
+     0.0284,
+     0.0068
+    ],
+    "alerts_per_hour": 81.58209746606805,
+    "called": {
+     "PortScan": 18,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 1,
+     "Infiltration": 3,
+     "Heartbleed": 1,
+     "Bot": 18
+    },
+    "alerts_by_port": {
+     "443": 33,
+     "53": 18,
+     "0": 11,
+     "5351": 3,
+     "4749": 3,
+     "80": 2,
+     "13036": 1,
+     "4752": 1
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local refit anomaly",
+   "seed": 42,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9017730653602526,
+    "recall_ci": [
+     0.9010733978579797,
+     0.9024683200185397
+    ],
+    "fpr": 0.0032215865411161088,
+    "macro_detection": 0.9590478162684531,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7958,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9976,
+     "DoS-Hulk": 0.9675,
+     "DoS-Slowloris": 0.9346,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9191,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 87,
+    "rate": 0.018774277082434183,
+    "rate_ci": [
+     0.011704504941509432,
+     0.02471788078708424
+    ],
+    "block_rates": [
+     0.0244,
+     0.0321,
+     0.023,
+     0.0068,
+     0.0,
+     0.0144,
+     0.0213,
+     0.0112,
+     0.006,
+     0.0307,
+     0.0345,
+     0.0068
+    ],
+    "alerts_per_hour": 87.6252157968879,
+    "called": {
+     "PortScan": 18,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 1,
+     "Infiltration": 3,
+     "Heartbleed": 1,
+     "Bot": 18
+    },
+    "alerts_by_port": {
+     "443": 24,
+     "53": 18,
+     "0": 11,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "5351": 3,
+     "4749": 3
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows",
+   "seed": 42,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.7891548955502535,
+    "recall_ci": [
+     0.7881973967973269,
+     0.7901092183923196
+    ],
+    "fpr": 0.008562582026222907,
+    "macro_detection": 0.9395987376433661,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.5552,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9934,
+     "DoS-Hulk": 0.9319,
+     "DoS-Slowloris": 0.9417,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9245,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 291,
+    "rate": 0.06279671989641779,
+    "rate_ci": [
+     0.043946435016323164,
+     0.08236895176935373
+    ],
+    "block_rates": [
+     0.1178,
+     0.0612,
+     0.0517,
+     0.034,
+     0.0207,
+     0.0625,
+     0.0732,
+     0.0674,
+     0.0477,
+     0.0709,
+     0.071,
+     0.0227
+    ],
+    "alerts_per_hour": 293.091239044763,
+    "called": {
+     "PortScan": 126,
+     "DoS-SlowHTTPTest": 6,
+     "Infiltration": 11,
+     "Heartbleed": 1,
+     "Bot": 13
+    },
+    "alerts_by_port": {
+     "443": 81,
+     "1900": 63,
+     "5353": 19,
+     "5351": 15,
+     "53": 15,
+     "0": 11,
+     "4749": 7,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.05154639175257732,
+     "services_clean": 61,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows + exemplar envelope",
+   "seed": 42,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.7891534660046917,
+    "recall_ci": [
+     0.7881959648848819,
+     0.7901077912293423
+    ],
+    "fpr": 0.004599839451587008,
+    "macro_detection": 0.9381619560341706,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.5552,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9934,
+     "DoS-Hulk": 0.9319,
+     "DoS-Slowloris": 0.9417,
+     "Infiltration": 0.931,
+     "PortScan": 0.9245,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 187,
+    "rate": 0.0403539059128183,
+    "rate_ci": [
+     0.025350733974314085,
+     0.057404613348641165
+    ],
+    "block_rates": [
+     0.0891,
+     0.035,
+     0.0259,
+     0.0136,
+     0.0034,
+     0.0481,
+     0.0457,
+     0.0449,
+     0.0239,
+     0.0544,
+     0.0365,
+     0.0204
+    ],
+    "alerts_per_hour": 188.3438546438855,
+    "called": {
+     "PortScan": 126,
+     "DoS-SlowHTTPTest": 6,
+     "Infiltration": 11,
+     "Heartbleed": 1,
+     "Bot": 13
+    },
+    "alerts_by_port": {
+     "1900": 62,
+     "443": 24,
+     "5351": 15,
+     "53": 15,
+     "0": 11,
+     "55068": 4,
+     "60858": 4,
+     "61199": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.08021390374331551,
+     "services_clean": 67,
+     "services_partial": 11
+    }
+   }
+  },
+  {
+   "config": "source only + 30 local flows",
+   "seed": 42,
+   "training_rows": 254716,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.01524610341618503,
+    "recall_ci": [
+     0.01496161091177028,
+     0.015535920178250442
+    ],
+    "fpr": 0.03325008600807839,
+    "macro_detection": 0.30505869168444955,
+    "per_class": {
+     "Bot": 0.0353,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0273,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8704,
+     "Infiltration": 0.2069,
+     "PortScan": 0.7773,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 234,
+    "rate": 0.050496331463098836,
+    "rate_ci": [
+     0.03634374277541655,
+     0.06399537135734533
+    ],
+    "block_rates": [
+     0.0862,
+     0.0554,
+     0.0517,
+     0.0272,
+     0.0103,
+     0.0529,
+     0.0579,
+     0.0524,
+     0.0497,
+     0.0615,
+     0.0467,
+     0.0181
+    ],
+    "alerts_per_hour": 235.68161490197434,
+    "called": {
+     "DoS-SlowHTTPTest": 77,
+     "Infiltration": 32,
+     "SSH-BruteForce": 4,
+     "PortScan": 15,
+     "Heartbleed": 5,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 76,
+     "1900": 48,
+     "5353": 20,
+     "0": 9,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot",
+   "seed": 1,
+   "training_rows": 256263,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.929747842458361,
+    "recall_ci": [
+     0.9291465612231743,
+     0.9303444035907197
+    ],
+    "fpr": 0.009573442404318667,
+    "macro_detection": 0.9650502573815535,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.883,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.951,
+     "DoS-Hulk": 0.9554,
+     "DoS-Slowloris": 0.9605,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9367,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 296,
+    "rate": 0.06387570133793699,
+    "rate_ci": [
+     0.044414445360314636,
+     0.08111425917944665
+    ],
+    "block_rates": [
+     0.1092,
+     0.0641,
+     0.0517,
+     0.034,
+     0.0172,
+     0.0577,
+     0.0671,
+     0.0599,
+     0.0477,
+     0.078,
+     0.0933,
+     0.0272
+    ],
+    "alerts_per_hour": 298.12717098711283,
+    "called": {
+     "PortScan": 121,
+     "Infiltration": 36,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 5,
+     "Bot": 24
+    },
+    "alerts_by_port": {
+     "443": 84,
+     "1900": 64,
+     "53": 26,
+     "5353": 17,
+     "0": 12,
+     "5351": 11,
+     "4749": 6,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 lab service flows",
+   "seed": 1,
+   "training_rows": 256300,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9357576520000057,
+    "recall_ci": [
+     0.935180679556013,
+     0.9363298383328834
+    ],
+    "fpr": 0.00990260912407674,
+    "macro_detection": 0.9581262862836404,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9017,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.953,
+     "DoS-Hulk": 0.9533,
+     "DoS-Slowloris": 0.881,
+     "Infiltration": 0.8966,
+     "PortScan": 0.9317,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 292,
+    "rate": 0.06301251618472162,
+    "rate_ci": [
+     0.04363330879770271,
+     0.08276923795760151
+    ],
+    "block_rates": [
+     0.1193,
+     0.0612,
+     0.0517,
+     0.0442,
+     0.0172,
+     0.0625,
+     0.0732,
+     0.0599,
+     0.0477,
+     0.0686,
+     0.073,
+     0.0227
+    ],
+    "alerts_per_hour": 294.09842543323293,
+    "called": {
+     "PortScan": 132,
+     "Infiltration": 37,
+     "FTP-BruteForce": 4,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 4,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 79,
+     "1900": 65,
+     "5353": 17,
+     "5351": 14,
+     "53": 14,
+     "0": 13,
+     "4749": 6,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 14,
+     "share_in_collapsed": 0.04794520547945205,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 local flows",
+   "seed": 1,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9384552044750494,
+    "recall_ci": [
+     0.9378895996621189,
+     0.9390159935485017
+    ],
+    "fpr": 0.009564947779292652,
+    "macro_detection": 0.9628841795003747,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9083,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9532,
+     "DoS-Hulk": 0.9533,
+     "DoS-Slowloris": 0.9134,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9323,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 289,
+    "rate": 0.0623651273198101,
+    "rate_ci": [
+     0.04501700750379372,
+     0.07710541378264642
+    ],
+    "block_rates": [
+     0.0963,
+     0.0612,
+     0.0517,
+     0.034,
+     0.0172,
+     0.0577,
+     0.0671,
+     0.0599,
+     0.0477,
+     0.0827,
+     0.0933,
+     0.0295
+    ],
+    "alerts_per_hour": 291.07686626782305,
+    "called": {
+     "PortScan": 110,
+     "Infiltration": 34,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 6,
+     "Heartbleed": 4,
+     "Bot": 26,
+     "DoS-GoldenEye": 1
+    },
+    "alerts_by_port": {
+     "443": 88,
+     "1900": 61,
+     "53": 28,
+     "5353": 16,
+     "0": 11,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows",
+   "seed": 1,
+   "triaged_alerts": 30,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.009713603717247912,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 171,
+    "rate": 0.036901165299956844,
+    "rate_ci": [
+     0.02416590522349075,
+     0.04787598731296666
+    ],
+    "block_rates": [
+     0.046,
+     0.0525,
+     0.0402,
+     0.0272,
+     0.0138,
+     0.0144,
+     0.0427,
+     0.0225,
+     0.0258,
+     0.0496,
+     0.0751,
+     0.0023
+    ],
+    "alerts_per_hour": 172.22887242836586,
+    "called": {
+     "PortScan": 9,
+     "Infiltration": 4,
+     "Heartbleed": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 31
+    },
+    "alerts_by_port": {
+     "443": 72,
+     "53": 33,
+     "5353": 15,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "5126": 3
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local anomaly threshold",
+   "seed": 1,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9358863111005642,
+    "recall_ci": [
+     0.9353098741263633,
+     0.9364579605505324
+    ],
+    "fpr": 0.00489927498375403,
+    "macro_detection": 0.959178509605415,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8621,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 93,
+    "rate": 0.02006905481225723,
+    "rate_ci": [
+     0.011278008557304865,
+     0.02930292529406091
+    ],
+    "block_rates": [
+     0.0158,
+     0.0292,
+     0.023,
+     0.0102,
+     0.0034,
+     0.0096,
+     0.0213,
+     0.0112,
+     0.0119,
+     0.0331,
+     0.0568,
+     0.0
+    ],
+    "alerts_per_hour": 93.66833412770775,
+    "called": {
+     "PortScan": 9,
+     "Infiltration": 4,
+     "Heartbleed": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 31
+    },
+    "alerts_by_port": {
+     "53": 33,
+     "443": 23,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2,
+     "1677": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + two-envelope anomaly",
+   "seed": 1,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004597715795330504,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 88,
+    "rate": 0.018990073370738023,
+    "rate_ci": [
+     0.009306689159789217,
+     0.02831759880432662
+    ],
+    "block_rates": [
+     0.023,
+     0.0292,
+     0.0144,
+     0.0034,
+     0.0034,
+     0.0096,
+     0.0213,
+     0.0075,
+     0.006,
+     0.0331,
+     0.0548,
+     0.0
+    ],
+    "alerts_per_hour": 88.63240218535788,
+    "called": {
+     "PortScan": 9,
+     "Infiltration": 4,
+     "Heartbleed": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 31
+    },
+    "alerts_by_port": {
+     "53": 33,
+     "443": 28,
+     "13246": 4,
+     "10004": 3,
+     "2710": 3,
+     "80": 2,
+     "4749": 2,
+     "13177": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + exemplar envelope",
+   "seed": 1,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.005786963298972575,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 81,
+    "rate": 0.017479499352611134,
+    "rate_ci": [
+     0.009058913982433574,
+     0.025702761228092584
+    ],
+    "block_rates": [
+     0.0172,
+     0.0262,
+     0.0144,
+     0.0068,
+     0.0034,
+     0.0048,
+     0.0183,
+     0.0075,
+     0.008,
+     0.0378,
+     0.0467,
+     0.0
+    ],
+    "alerts_per_hour": 81.58209746606805,
+    "called": {
+     "PortScan": 9,
+     "Infiltration": 4,
+     "Heartbleed": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 31
+    },
+    "alerts_by_port": {
+     "53": 33,
+     "443": 28,
+     "4749": 3,
+     "80": 2,
+     "5351": 1,
+     "55354": 1,
+     "8641": 1,
+     "13036": 1
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local refit anomaly",
+   "seed": 1,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9358848815550025,
+    "recall_ci": [
+     0.9353084386275161,
+     0.9364565369739577
+    ],
+    "fpr": 0.004361989950858594,
+    "macro_detection": 0.9577417279962196,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8968,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9574,
+     "DoS-Hulk": 0.9571,
+     "DoS-Slowloris": 0.927,
+     "Infiltration": 0.8448,
+     "PortScan": 0.9296,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 86,
+    "rate": 0.01855848079413034,
+    "rate_ci": [
+     0.010095993047046602,
+     0.02716402475624003
+    ],
+    "block_rates": [
+     0.0172,
+     0.0292,
+     0.0201,
+     0.0034,
+     0.0034,
+     0.0096,
+     0.0213,
+     0.0112,
+     0.008,
+     0.0331,
+     0.0507,
+     0.0
+    ],
+    "alerts_per_hour": 86.61802940841793,
+    "called": {
+     "PortScan": 9,
+     "Infiltration": 4,
+     "Heartbleed": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 31
+    },
+    "alerts_by_port": {
+     "53": 33,
+     "443": 19,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2,
+     "13177": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows",
+   "seed": 1,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.945478561819983,
+    "recall_ci": [
+     0.9449440463693085,
+     0.9460081843906668
+    ],
+    "fpr": 0.009675377904630845,
+    "macro_detection": 0.9665658458200012,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9122,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9512,
+     "DoS-Hulk": 0.9639,
+     "DoS-Slowloris": 0.9653,
+     "Infiltration": 0.8966,
+     "PortScan": 0.9295,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 274,
+    "rate": 0.05912818299525248,
+    "rate_ci": [
+     0.04159758789030436,
+     0.07385030289782872
+    ],
+    "block_rates": [
+     0.0934,
+     0.0583,
+     0.0489,
+     0.034,
+     0.0207,
+     0.0577,
+     0.0671,
+     0.0562,
+     0.0457,
+     0.0709,
+     0.0913,
+     0.0204
+    ],
+    "alerts_per_hour": 275.9690704407734,
+    "called": {
+     "PortScan": 106,
+     "Infiltration": 25,
+     "DoS-SlowHTTPTest": 5,
+     "FTP-BruteForce": 1,
+     "Bot": 25
+    },
+    "alerts_by_port": {
+     "443": 76,
+     "1900": 59,
+     "53": 26,
+     "5353": 17,
+     "0": 11,
+     "4749": 7,
+     "13246": 6,
+     "5351": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows + exemplar envelope",
+   "seed": 1,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9454771322744213,
+    "recall_ci": [
+     0.9449426102586701,
+     0.9460067614258832
+    ],
+    "fpr": 0.005695646079942916,
+    "macro_detection": 0.9651290642108057,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9122,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9512,
+     "DoS-Hulk": 0.9639,
+     "DoS-Slowloris": 0.9653,
+     "Infiltration": 0.8793,
+     "PortScan": 0.9295,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 193,
+    "rate": 0.04164868364264135,
+    "rate_ci": [
+     0.02879368449477195,
+     0.052340132820881936
+    ],
+    "block_rates": [
+     0.0647,
+     0.0466,
+     0.0402,
+     0.0136,
+     0.0069,
+     0.0481,
+     0.0518,
+     0.0412,
+     0.0239,
+     0.0567,
+     0.0609,
+     0.0181
+    ],
+    "alerts_per_hour": 194.38697297470534,
+    "called": {
+     "PortScan": 106,
+     "Infiltration": 25,
+     "DoS-SlowHTTPTest": 5,
+     "FTP-BruteForce": 1,
+     "Bot": 25
+    },
+    "alerts_by_port": {
+     "1900": 58,
+     "443": 27,
+     "53": 26,
+     "0": 11,
+     "5351": 5,
+     "2710": 5,
+     "13246": 5,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 64,
+     "services_partial": 15
+    }
+   }
+  },
+  {
+   "config": "source only + 30 local flows",
+   "seed": 1,
+   "training_rows": 254716,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.01453990790867491,
+    "recall_ci": [
+     0.014262047449167363,
+     0.014823100382277906
+    ],
+    "fpr": 0.033638715103018565,
+    "macro_detection": 0.30435533506290186,
+    "per_class": {
+     "Bot": 0.0196,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0264,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8645,
+     "Infiltration": 0.2241,
+     "PortScan": 0.7741,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 230,
+    "rate": 0.04963314630988347,
+    "rate_ci": [
+     0.035828396587385646,
+     0.062323788058264176
+    ],
+    "block_rates": [
+     0.0833,
+     0.0525,
+     0.0517,
+     0.0272,
+     0.0103,
+     0.0481,
+     0.061,
+     0.0487,
+     0.0497,
+     0.0615,
+     0.0467,
+     0.0181
+    ],
+    "alerts_per_hour": 231.65286934809444,
+    "called": {
+     "DoS-SlowHTTPTest": 76,
+     "Infiltration": 31,
+     "SSH-BruteForce": 2,
+     "Heartbleed": 7,
+     "PortScan": 15,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 73,
+     "1900": 47,
+     "5353": 20,
+     "0": 9,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot",
+   "seed": 2,
+   "training_rows": 256263,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9247072648075904,
+    "recall_ci": [
+     0.9240865806210117,
+     0.9253232842541435
+    ],
+    "fpr": 0.010575808157388412,
+    "macro_detection": 0.9604783421075899,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8801,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9517,
+     "DoS-Hulk": 0.9493,
+     "DoS-Slowloris": 0.947,
+     "Infiltration": 0.931,
+     "PortScan": 0.8864,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 306,
+    "rate": 0.0660336642209754,
+    "rate_ci": [
+     0.05023166874155312,
+     0.08321743859515995
+    ],
+    "block_rates": [
+     0.1135,
+     0.0671,
+     0.0546,
+     0.0374,
+     0.0276,
+     0.0673,
+     0.0762,
+     0.0787,
+     0.0577,
+     0.0709,
+     0.0649,
+     0.034
+    ],
+    "alerts_per_hour": 308.1990348718126,
+    "called": {
+     "PortScan": 142,
+     "FTP-BruteForce": 9,
+     "Infiltration": 38,
+     "DoS-SlowHTTPTest": 5,
+     "SSH-BruteForce": 2,
+     "Heartbleed": 3,
+     "Bot": 2
+    },
+    "alerts_by_port": {
+     "443": 99,
+     "1900": 86,
+     "5351": 15,
+     "5353": 13,
+     "4749": 10,
+     "0": 8,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.049019607843137254,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 lab service flows",
+   "seed": 2,
+   "training_rows": 256300,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9283854855380024,
+    "recall_ci": [
+     0.9277788757207588,
+     0.9289873902157619
+    ],
+    "fpr": 0.010295485531529924,
+    "macro_detection": 0.9611688973767877,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8819,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9555,
+     "DoS-Hulk": 0.9551,
+     "DoS-Slowloris": 0.9664,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8812,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 277,
+    "rate": 0.059775571860164,
+    "rate_ci": [
+     0.043294661993605286,
+     0.07760287633653583
+    ],
+    "block_rates": [
+     0.1106,
+     0.0583,
+     0.0517,
+     0.0306,
+     0.0207,
+     0.0577,
+     0.0732,
+     0.0674,
+     0.0497,
+     0.0615,
+     0.0609,
+     0.0272
+    ],
+    "alerts_per_hour": 278.9906296061833,
+    "called": {
+     "PortScan": 114,
+     "Infiltration": 41,
+     "FTP-BruteForce": 9,
+     "DoS-SlowHTTPTest": 6,
+     "Heartbleed": 2
+    },
+    "alerts_by_port": {
+     "443": 95,
+     "1900": 60,
+     "5351": 15,
+     "5353": 14,
+     "4749": 11,
+     "0": 8,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.05415162454873646,
+     "services_clean": 61,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 local flows",
+   "seed": 2,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9253619966748771,
+    "recall_ci": [
+     0.9247437853340998,
+     0.9259755360844308
+    ],
+    "fpr": 0.010565189876105894,
+    "macro_detection": 0.9627553955254616,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8776,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9619,
+     "DoS-Hulk": 0.9523,
+     "DoS-Slowloris": 0.9676,
+     "Infiltration": 0.931,
+     "PortScan": 0.8823,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 193,
+    "rate": 0.04164868364264135,
+    "rate_ci": [
+     0.030050024431957,
+     0.050509331629894044
+    ],
+    "block_rates": [
+     0.0575,
+     0.0525,
+     0.046,
+     0.0272,
+     0.0103,
+     0.024,
+     0.0579,
+     0.0449,
+     0.0358,
+     0.0449,
+     0.0609,
+     0.0113
+    ],
+    "alerts_per_hour": 194.38697297470534,
+    "called": {
+     "PortScan": 27,
+     "FTP-BruteForce": 7,
+     "Infiltration": 33,
+     "Heartbleed": 4,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 91,
+     "5353": 13,
+     "53": 12,
+     "1900": 10,
+     "0": 8,
+     "4749": 7,
+     "13246": 6,
+     "5351": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows",
+   "seed": 2,
+   "triaged_alerts": 30,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.010641641501340027,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 183,
+    "rate": 0.039490720759602936,
+    "rate_ci": [
+     0.028384668660218857,
+     0.048465539677842825
+    ],
+    "block_rates": [
+     0.056,
+     0.0554,
+     0.0431,
+     0.0272,
+     0.0103,
+     0.0144,
+     0.0518,
+     0.0375,
+     0.0318,
+     0.0473,
+     0.0568,
+     0.0113
+    ],
+    "alerts_per_hour": 184.3151090900056,
+    "called": {
+     "PortScan": 13,
+     "FTP-BruteForce": 8,
+     "Infiltration": 9,
+     "Heartbleed": 3,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 97,
+     "53": 17,
+     "5353": 13,
+     "4749": 6,
+     "13246": 6,
+     "5351": 5,
+     "2710": 5,
+     "10004": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local anomaly threshold",
+   "seed": 2,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9287786105674867,
+    "recall_ci": [
+     0.9281735317937553,
+     0.9293789798838751
+    ],
+    "fpr": 0.006349732206946055,
+    "macro_detection": 0.958496325539734,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.931,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 96,
+    "rate": 0.020716443677168753,
+    "rate_ci": [
+     0.014028899342682703,
+     0.02626058792654218
+    ],
+    "block_rates": [
+     0.0273,
+     0.0321,
+     0.0259,
+     0.0102,
+     0.0,
+     0.0096,
+     0.0335,
+     0.0112,
+     0.0119,
+     0.0284,
+     0.0325,
+     0.0091
+    ],
+    "alerts_per_hour": 96.68989329311768,
+    "called": {
+     "PortScan": 13,
+     "FTP-BruteForce": 8,
+     "Infiltration": 9,
+     "Heartbleed": 3,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 37,
+     "53": 17,
+     "13246": 6,
+     "5351": 5,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + two-envelope anomaly",
+   "seed": 2,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9287757514763632,
+    "recall_ci": [
+     0.9281706615486078,
+     0.9293761319781781
+    ],
+    "fpr": 0.006175592393912752,
+    "macro_detection": 0.9556227623213432,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.8966,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 96,
+    "rate": 0.020716443677168753,
+    "rate_ci": [
+     0.012924145575500683,
+     0.0270586257600163
+    ],
+    "block_rates": [
+     0.033,
+     0.035,
+     0.0172,
+     0.0034,
+     0.0034,
+     0.0096,
+     0.0335,
+     0.0112,
+     0.0099,
+     0.0284,
+     0.0325,
+     0.0091
+    ],
+    "alerts_per_hour": 96.68989329311768,
+    "called": {
+     "PortScan": 13,
+     "FTP-BruteForce": 8,
+     "Infiltration": 9,
+     "Heartbleed": 3,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 47,
+     "53": 17,
+     "5351": 5,
+     "13246": 4,
+     "10004": 3,
+     "2710": 3,
+     "80": 2,
+     "4749": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + exemplar envelope",
+   "seed": 2,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.007288388272320689,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 84,
+    "rate": 0.01812688821752266,
+    "rate_ci": [
+     0.011469538980527083,
+     0.02407916566337882
+    ],
+    "block_rates": [
+     0.0273,
+     0.0292,
+     0.0172,
+     0.0068,
+     0.0,
+     0.0048,
+     0.0305,
+     0.0037,
+     0.0099,
+     0.0331,
+     0.0243,
+     0.0091
+    ],
+    "alerts_per_hour": 84.60365663147797,
+    "called": {
+     "PortScan": 13,
+     "FTP-BruteForce": 8,
+     "Infiltration": 9,
+     "Heartbleed": 3,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 43,
+     "53": 17,
+     "5351": 5,
+     "4749": 3,
+     "80": 2,
+     "13036": 1,
+     "4752": 1,
+     "5580": 1
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local refit anomaly",
+   "seed": 2,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.928777181021925,
+    "recall_ci": [
+     0.9281720966711465,
+     0.9293775559310619
+    ],
+    "fpr": 0.005939866549440841,
+    "macro_detection": 0.9570595439305386,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8838,
+     "DDoS-UDP": 0.9862,
+     "DoS-GoldenEye": 0.9568,
+     "DoS-Hulk": 0.9546,
+     "DoS-Slowloris": 0.9064,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8832,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 91,
+    "rate": 0.019637462235649546,
+    "rate_ci": [
+     0.012627032194006245,
+     0.025434937281919725
+    ],
+    "block_rates": [
+     0.0287,
+     0.0321,
+     0.023,
+     0.0034,
+     0.0,
+     0.0096,
+     0.0335,
+     0.0112,
+     0.0099,
+     0.0284,
+     0.0284,
+     0.0091
+    ],
+    "alerts_per_hour": 91.6539613507678,
+    "called": {
+     "PortScan": 13,
+     "FTP-BruteForce": 8,
+     "Infiltration": 9,
+     "Heartbleed": 3,
+     "DoS-SlowHTTPTest": 5,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 35,
+     "53": 17,
+     "13246": 6,
+     "5351": 5,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows",
+   "seed": 2,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9287757514763632,
+    "recall_ci": [
+     0.9281706615486078,
+     0.9293761319781781
+    ],
+    "fpr": 0.010484490938358753,
+    "macro_detection": 0.9534667727225604,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8812,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9597,
+     "DoS-Hulk": 0.9569,
+     "DoS-Slowloris": 0.874,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8758,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 252,
+    "rate": 0.054380664652567974,
+    "rate_ci": [
+     0.03839177678807572,
+     0.06840505146721437
+    ],
+    "block_rates": [
+     0.0905,
+     0.0496,
+     0.0489,
+     0.0272,
+     0.0172,
+     0.0481,
+     0.0579,
+     0.0674,
+     0.0437,
+     0.0662,
+     0.0751,
+     0.0181
+    ],
+    "alerts_per_hour": 253.81096989443392,
+    "called": {
+     "DoS-SlowHTTPTest": 67,
+     "PortScan": 29,
+     "Infiltration": 30,
+     "DoS-GoldenEye": 1,
+     "Heartbleed": 1,
+     "Bot": 14
+    },
+    "alerts_by_port": {
+     "443": 81,
+     "1900": 49,
+     "53": 16,
+     "5353": 14,
+     "4749": 8,
+     "0": 8,
+     "13246": 6,
+     "5351": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows + exemplar envelope",
+   "seed": 2,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9287743219308014,
+    "recall_ci": [
+     0.9281692264261396,
+     0.9293747080252244
+    ],
+    "fpr": 0.006991076396410172,
+    "macro_detection": 0.9520299911133651,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.8812,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9597,
+     "DoS-Hulk": 0.9569,
+     "DoS-Slowloris": 0.874,
+     "Infiltration": 0.8966,
+     "PortScan": 0.8758,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 172,
+    "rate": 0.03711696158826068,
+    "rate_ci": [
+     0.025513680383074024,
+     0.04772417196301362
+    ],
+    "block_rates": [
+     0.0618,
+     0.0379,
+     0.0431,
+     0.0136,
+     0.0,
+     0.0385,
+     0.0488,
+     0.0449,
+     0.0219,
+     0.052,
+     0.0426,
+     0.0159
+    ],
+    "alerts_per_hour": 173.23605881683585,
+    "called": {
+     "DoS-SlowHTTPTest": 67,
+     "PortScan": 29,
+     "Infiltration": 30,
+     "DoS-GoldenEye": 1,
+     "Heartbleed": 1,
+     "Bot": 14
+    },
+    "alerts_by_port": {
+     "1900": 48,
+     "443": 26,
+     "53": 16,
+     "0": 8,
+     "13246": 6,
+     "5351": 5,
+     "2710": 5,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 63,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "source only + 30 local flows",
+   "seed": 2,
+   "training_rows": 254716,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.014567069274348378,
+    "recall_ci": [
+     0.014288950662620726,
+     0.014850519601846678
+    ],
+    "fpr": 0.03333715591459504,
+    "macro_detection": 0.30254191142215703,
+    "per_class": {
+     "Bot": 0.0191,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0279,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8781,
+     "Infiltration": 0.2241,
+     "PortScan": 0.7748,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.0,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 223,
+    "rate": 0.04812257229175658,
+    "rate_ci": [
+     0.034347681093601846,
+     0.06104095768911279
+    ],
+    "block_rates": [
+     0.0833,
+     0.0554,
+     0.046,
+     0.0272,
+     0.0138,
+     0.0433,
+     0.0549,
+     0.0449,
+     0.0477,
+     0.0544,
+     0.0507,
+     0.0159
+    ],
+    "alerts_per_hour": 224.60256462880463,
+    "called": {
+     "DoS-SlowHTTPTest": 77,
+     "Infiltration": 31,
+     "SSH-BruteForce": 2,
+     "PortScan": 6,
+     "Heartbleed": 5,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 76,
+     "1900": 46,
+     "5353": 20,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 63,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "few-shot",
+   "seed": 3,
+   "training_rows": 256263,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8480450249670133,
+    "recall_ci": [
+     0.8472018697240735,
+     0.8488843574838234
+    ],
+    "fpr": 0.007562339929409666,
+    "macro_detection": 0.950482785506961,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6668,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9694,
+     "DoS-Hulk": 0.9621,
+     "DoS-Slowloris": 0.957,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9022,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 299,
+    "rate": 0.06452309020284851,
+    "rate_ci": [
+     0.044843305552340486,
+     0.0820025512486592
+    ],
+    "block_rates": [
+     0.1078,
+     0.0554,
+     0.046,
+     0.0374,
+     0.0207,
+     0.0529,
+     0.0701,
+     0.0674,
+     0.0497,
+     0.0827,
+     0.0994,
+     0.0249
+    ],
+    "alerts_per_hour": 301.1487301525228,
+    "called": {
+     "PortScan": 113,
+     "Infiltration": 40,
+     "DoS-SlowHTTPTest": 6,
+     "Web-XSS": 1,
+     "SSH-BruteForce": 2,
+     "Heartbleed": 3,
+     "Bot": 36,
+     "FTP-BruteForce": 1
+    },
+    "alerts_by_port": {
+     "443": 87,
+     "1900": 64,
+     "53": 36,
+     "5353": 15,
+     "5351": 11,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 lab service flows",
+   "seed": 3,
+   "training_rows": 256300,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8816650774885172,
+    "recall_ci": [
+     0.8809060373569327,
+     0.8824199256306754
+    ],
+    "fpr": 0.007687635648543384,
+    "macro_detection": 0.9540451228359211,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7541,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9712,
+     "DoS-Hulk": 0.9611,
+     "DoS-Slowloris": 0.9499,
+     "Infiltration": 0.9138,
+     "PortScan": 0.8985,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 332,
+    "rate": 0.07164436771687527,
+    "rate_ci": [
+     0.05627532174371904,
+     0.08765736692793888
+    ],
+    "block_rates": [
+     0.1164,
+     0.0758,
+     0.0575,
+     0.051,
+     0.0379,
+     0.0673,
+     0.0762,
+     0.0824,
+     0.0596,
+     0.0757,
+     0.0791,
+     0.0385
+    ],
+    "alerts_per_hour": 334.385880972032,
+    "called": {
+     "PortScan": 152,
+     "Infiltration": 44,
+     "FTP-BruteForce": 11,
+     "DoS-SlowHTTPTest": 6,
+     "Web-XSS": 2,
+     "Web-BruteForce": 2,
+     "SSH-BruteForce": 2,
+     "Heartbleed": 3,
+     "Bot": 12,
+     "DDoS-UDP": 1,
+     "DoS-GoldenEye": 1
+    },
+    "alerts_by_port": {
+     "443": 106,
+     "1900": 84,
+     "5353": 15,
+     "0": 14,
+     "53": 12,
+     "5351": 11,
+     "4749": 6,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 61,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 local flows",
+   "seed": 3,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8584020825619744,
+    "recall_ci": [
+     0.8575831013449637,
+     0.8592171272968989
+    ],
+    "fpr": 0.008023173337070968,
+    "macro_detection": 0.9502294154687134,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6878,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9639,
+     "DoS-Hulk": 0.9666,
+     "DoS-Slowloris": 0.9629,
+     "Infiltration": 0.931,
+     "PortScan": 0.8906,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 182,
+    "rate": 0.03927492447129909,
+    "rate_ci": [
+     0.028583894153934374,
+     0.04784640121991705
+    ],
+    "block_rates": [
+     0.0532,
+     0.0612,
+     0.0489,
+     0.0272,
+     0.0207,
+     0.0144,
+     0.0457,
+     0.0412,
+     0.0298,
+     0.0378,
+     0.0588,
+     0.0091
+    ],
+    "alerts_per_hour": 183.3079227015356,
+    "called": {
+     "PortScan": 10,
+     "Infiltration": 45,
+     "DoS-SlowHTTPTest": 6,
+     "Web-BruteForce": 4,
+     "Heartbleed": 3,
+     "SSH-BruteForce": 1,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 94,
+     "5353": 15,
+     "53": 15,
+     "4749": 6,
+     "13246": 6,
+     "5351": 5,
+     "2710": 5,
+     "10004": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows",
+   "seed": 3,
+   "triaged_alerts": 30,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.0077194904923909395,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 237,
+    "rate": 0.05114372032801036,
+    "rate_ci": [
+     0.03345199882022102,
+     0.06754305905629181
+    ],
+    "block_rates": [
+     0.0977,
+     0.0583,
+     0.0489,
+     0.0374,
+     0.0138,
+     0.0144,
+     0.0518,
+     0.0337,
+     0.0358,
+     0.0591,
+     0.0771,
+     0.0159
+    ],
+    "alerts_per_hour": 238.70317406738428,
+    "called": {
+     "PortScan": 54,
+     "Infiltration": 14,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "SSH-BruteForce": 1,
+     "Bot": 27
+    },
+    "alerts_by_port": {
+     "443": 130,
+     "53": 27,
+     "5353": 16,
+     "0": 11,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 63,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local anomaly threshold",
+   "seed": 3,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8568510256274633,
+    "recall_ci": [
+     0.8560283328994123,
+     0.8576697989093442
+    ],
+    "fpr": 0.0032088446035770865,
+    "macro_detection": 0.9513910962087228,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.931,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 152,
+    "rate": 0.03280103582218386,
+    "rate_ci": [
+     0.019056441955109544,
+     0.04619940751608375
+    ],
+    "block_rates": [
+     0.0704,
+     0.035,
+     0.0287,
+     0.0204,
+     0.0,
+     0.0096,
+     0.0366,
+     0.015,
+     0.0179,
+     0.0378,
+     0.0527,
+     0.0136
+    ],
+    "alerts_per_hour": 153.09233104743635,
+    "called": {
+     "PortScan": 54,
+     "Infiltration": 14,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "SSH-BruteForce": 1,
+     "Bot": 27
+    },
+    "alerts_by_port": {
+     "443": 75,
+     "53": 27,
+     "0": 11,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + two-envelope anomaly",
+   "seed": 3,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0030920435094693834,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 150,
+    "rate": 0.032369443245576175,
+    "rate_ci": [
+     0.017345039174054933,
+     0.04785607235038218
+    ],
+    "block_rates": [
+     0.0776,
+     0.035,
+     0.023,
+     0.0136,
+     0.0034,
+     0.0096,
+     0.0305,
+     0.015,
+     0.0139,
+     0.0378,
+     0.0527,
+     0.0136
+    ],
+    "alerts_per_hour": 151.07795827049637,
+    "called": {
+     "PortScan": 54,
+     "Infiltration": 14,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "SSH-BruteForce": 1,
+     "Bot": 27
+    },
+    "alerts_by_port": {
+     "443": 82,
+     "53": 27,
+     "0": 11,
+     "13246": 4,
+     "10004": 3,
+     "2710": 3,
+     "80": 2,
+     "4749": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + exemplar envelope",
+   "seed": 3,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.004134758731412698,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 143,
+    "rate": 0.03085886922744929,
+    "rate_ci": [
+     0.016834764166979484,
+     0.04497811604594365
+    ],
+    "block_rates": [
+     0.0718,
+     0.0379,
+     0.023,
+     0.017,
+     0.0,
+     0.0048,
+     0.0305,
+     0.0075,
+     0.0159,
+     0.0426,
+     0.0446,
+     0.0136
+    ],
+    "alerts_per_hour": 144.02765355120655,
+    "called": {
+     "PortScan": 54,
+     "Infiltration": 14,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "SSH-BruteForce": 1,
+     "Bot": 27
+    },
+    "alerts_by_port": {
+     "443": 80,
+     "53": 27,
+     "0": 11,
+     "4749": 3,
+     "80": 2,
+     "67": 2,
+     "68": 2,
+     "13246": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 69,
+     "services_partial": 10
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local refit anomaly",
+   "seed": 3,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8568495960819015,
+    "recall_ci": [
+     0.8560268999483053,
+     0.857668372785029
+    ],
+    "fpr": 0.0028605649775104804,
+    "macro_detection": 0.9499543145995273,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.6905,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9623,
+     "DoS-Hulk": 0.961,
+     "DoS-Slowloris": 0.9611,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9108,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 146,
+    "rate": 0.03150625809236081,
+    "rate_ci": [
+     0.01762916842546101,
+     0.04537624672844308
+    ],
+    "block_rates": [
+     0.0718,
+     0.035,
+     0.0287,
+     0.0136,
+     0.0,
+     0.0096,
+     0.0305,
+     0.015,
+     0.0159,
+     0.0378,
+     0.0487,
+     0.0136
+    ],
+    "alerts_per_hour": 147.04921271661647,
+    "called": {
+     "PortScan": 54,
+     "Infiltration": 14,
+     "FTP-BruteForce": 8,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "SSH-BruteForce": 1,
+     "Bot": 27
+    },
+    "alerts_by_port": {
+     "443": 71,
+     "53": 27,
+     "0": 11,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "4749": 3,
+     "80": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows",
+   "seed": 3,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8990669356118384,
+    "recall_ci": [
+     0.8983588025486224,
+     0.8997706855536394
+    ],
+    "fpr": 0.0075878238044877104,
+    "macro_detection": 0.9612349433316028,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7981,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9778,
+     "DoS-Hulk": 0.9612,
+     "DoS-Slowloris": 0.9523,
+     "Infiltration": 0.9483,
+     "PortScan": 0.8971,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 294,
+    "rate": 0.0634441087613293,
+    "rate_ci": [
+     0.04287435123980984,
+     0.08668313659887308
+    ],
+    "block_rates": [
+     0.1307,
+     0.0641,
+     0.0489,
+     0.034,
+     0.0207,
+     0.0529,
+     0.0701,
+     0.0712,
+     0.0457,
+     0.0662,
+     0.069,
+     0.0227
+    ],
+    "alerts_per_hour": 296.1127982101729,
+    "called": {
+     "PortScan": 124,
+     "Infiltration": 40,
+     "DoS-SlowHTTPTest": 6,
+     "SSH-BruteForce": 1,
+     "Web-BruteForce": 1,
+     "Bot": 12,
+     "DDoS-UDP": 1
+    },
+    "alerts_by_port": {
+     "443": 122,
+     "1900": 58,
+     "5353": 16,
+     "53": 14,
+     "4749": 6,
+     "13246": 6,
+     "2710": 5,
+     "0": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows + exemplar envelope",
+   "seed": 3,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.8990655060662766,
+    "recall_ci": [
+     0.8983573685730036,
+     0.899769260453836
+    ],
+    "fpr": 0.004109274856334655,
+    "macro_detection": 0.9597981617224075,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.7981,
+     "DDoS-UDP": 1.0,
+     "DoS-GoldenEye": 0.9778,
+     "DoS-Hulk": 0.9612,
+     "DoS-Slowloris": 0.9523,
+     "Infiltration": 0.931,
+     "PortScan": 0.8971,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 215,
+    "rate": 0.046396201985325854,
+    "rate_ci": [
+     0.029329472953342678,
+     0.06636297199481603
+    ],
+    "block_rates": [
+     0.1034,
+     0.0525,
+     0.0431,
+     0.017,
+     0.0069,
+     0.0433,
+     0.0549,
+     0.0524,
+     0.0239,
+     0.0496,
+     0.0406,
+     0.0204
+    ],
+    "alerts_per_hour": 216.5450735210448,
+    "called": {
+     "PortScan": 124,
+     "Infiltration": 40,
+     "DoS-SlowHTTPTest": 6,
+     "SSH-BruteForce": 1,
+     "Web-BruteForce": 1,
+     "Bot": 12,
+     "DDoS-UDP": 1
+    },
+    "alerts_by_port": {
+     "443": 71,
+     "1900": 57,
+     "53": 14,
+     "13246": 6,
+     "2710": 5,
+     "0": 4,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 63,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "source only + 30 local flows",
+   "seed": 3,
+   "training_rows": 254716,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.015329017058767188,
+    "recall_ci": [
+     0.015043756526078658,
+     0.015619600938430674
+    ],
+    "fpr": 0.0336599516655836,
+    "macro_detection": 0.30435860959683075,
+    "per_class": {
+     "Bot": 0.0369,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0266,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8987,
+     "Infiltration": 0.1724,
+     "PortScan": 0.7741,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 220,
+    "rate": 0.047475183426845056,
+    "rate_ci": [
+     0.03393569292123629,
+     0.06027714822490941
+    ],
+    "block_rates": [
+     0.0819,
+     0.0554,
+     0.046,
+     0.0272,
+     0.0103,
+     0.0433,
+     0.0549,
+     0.0487,
+     0.0477,
+     0.0544,
+     0.0467,
+     0.0159
+    ],
+    "alerts_per_hour": 221.5810054633947,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "Infiltration": 30,
+     "SSH-BruteForce": 3,
+     "PortScan": 6,
+     "Heartbleed": 5,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 74,
+     "1900": 46,
+     "5353": 20,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5,
+     "55068": 4,
+     "60858": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 63,
+     "services_partial": 16
+    }
+   }
+  },
+  {
+   "config": "few-shot",
+   "seed": 4,
+   "training_rows": 256263,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9639625859335575,
+    "recall_ci": [
+     0.9635232525296185,
+     0.9643968234396294
+    ],
+    "fpr": 0.007220431272112571,
+    "macro_detection": 0.9734199960513639,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9509,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9825,
+     "DoS-Hulk": 0.9707,
+     "DoS-Slowloris": 0.9647,
+     "Infiltration": 0.931,
+     "PortScan": 0.9011,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 313,
+    "rate": 0.06754423823910229,
+    "rate_ci": [
+     0.0497603214851336,
+     0.08426327816107151
+    ],
+    "block_rates": [
+     0.1121,
+     0.07,
+     0.0603,
+     0.034,
+     0.031,
+     0.0577,
+     0.0793,
+     0.0787,
+     0.0497,
+     0.078,
+     0.0832,
+     0.0295
+    ],
+    "alerts_per_hour": 315.24933959110245,
+    "called": {
+     "PortScan": 117,
+     "Infiltration": 49,
+     "Web-BruteForce": 7,
+     "DoS-GoldenEye": 2,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "FTP-BruteForce": 1,
+     "Bot": 19
+    },
+    "alerts_by_port": {
+     "443": 107,
+     "1900": 61,
+     "53": 21,
+     "5353": 19,
+     "5351": 13,
+     "0": 10,
+     "4749": 7,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 13,
+     "share_in_collapsed": 0.04153354632587859,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 lab service flows",
+   "seed": 4,
+   "training_rows": 256300,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9575768059091695,
+    "recall_ci": [
+     0.9571019597813033,
+     0.9580466262768987
+    ],
+    "fpr": 0.007827796961472629,
+    "macro_detection": 0.9735089128826523,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9478,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9867,
+     "DoS-Hulk": 0.9603,
+     "DoS-Slowloris": 0.9629,
+     "Infiltration": 0.931,
+     "PortScan": 0.9132,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 310,
+    "rate": 0.06689684937419077,
+    "rate_ci": [
+     0.04923033810511606,
+     0.0842362733430305
+    ],
+    "block_rates": [
+     0.1149,
+     0.0729,
+     0.0603,
+     0.034,
+     0.0276,
+     0.0529,
+     0.0823,
+     0.0749,
+     0.0497,
+     0.0733,
+     0.0771,
+     0.0317
+    ],
+    "alerts_per_hour": 312.2277804256925,
+    "called": {
+     "PortScan": 122,
+     "FTP-BruteForce": 8,
+     "Infiltration": 46,
+     "Web-BruteForce": 5,
+     "DoS-SlowHTTPTest": 6,
+     "Heartbleed": 2,
+     "Bot": 10
+    },
+    "alerts_by_port": {
+     "443": 111,
+     "1900": 62,
+     "5353": 19,
+     "5351": 15,
+     "53": 12,
+     "0": 11,
+     "4749": 7,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.04838709677419355,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 local flows",
+   "seed": 4,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9438674639718779,
+    "recall_ci": [
+     0.9433256136963195,
+     0.9444044390628168
+    ],
+    "fpr": 0.007180081803239,
+    "macro_detection": 0.970243888761115,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9184,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9792,
+     "DoS-Hulk": 0.9562,
+     "DoS-Slowloris": 0.9658,
+     "Infiltration": 0.931,
+     "PortScan": 0.9121,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 301,
+    "rate": 0.0649546827794562,
+    "rate_ci": [
+     0.050416151814236615,
+     0.07797011500362451
+    ],
+    "block_rates": [
+     0.0977,
+     0.0729,
+     0.0603,
+     0.0374,
+     0.031,
+     0.0529,
+     0.0732,
+     0.0749,
+     0.0497,
+     0.0804,
+     0.0771,
+     0.034
+    ],
+    "alerts_per_hour": 303.16310292946275,
+    "called": {
+     "PortScan": 109,
+     "Infiltration": 46,
+     "Web-BruteForce": 7,
+     "FTP-BruteForce": 7,
+     "DoS-SlowHTTPTest": 5,
+     "Heartbleed": 2,
+     "Bot": 12,
+     "DoS-GoldenEye": 1
+    },
+    "alerts_by_port": {
+     "443": 114,
+     "1900": 58,
+     "5353": 19,
+     "53": 14,
+     "0": 13,
+     "4749": 7,
+     "13246": 6,
+     "2710": 5
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 60,
+     "services_partial": 19
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows",
+   "seed": 4,
+   "triaged_alerts": 30,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.007054786084105282,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 176,
+    "rate": 0.03798014674147605,
+    "rate_ci": [
+     0.029569870886803396,
+     0.04501285664700755
+    ],
+    "block_rates": [
+     0.0445,
+     0.0583,
+     0.046,
+     0.0238,
+     0.0241,
+     0.0144,
+     0.0549,
+     0.0337,
+     0.0318,
+     0.0449,
+     0.0487,
+     0.0136
+    ],
+    "alerts_per_hour": 177.26480437071575,
+    "called": {
+     "Infiltration": 22,
+     "PortScan": 10,
+     "Heartbleed": 2,
+     "DoS-SlowHTTPTest": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 92,
+     "5353": 16,
+     "53": 14,
+     "4749": 7,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "80": 3
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local anomaly threshold",
+   "seed": 4,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9625330403717962,
+    "recall_ci": [
+     0.9620854664668513,
+     0.962975534080179
+    ],
+    "fpr": 0.0022680648819459488,
+    "macro_detection": 0.9763776317940609,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9483,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 94,
+    "rate": 0.02028485110056107,
+    "rate_ci": [
+     0.014918211956688606,
+     0.02592125097998952
+    ],
+    "block_rates": [
+     0.0172,
+     0.0379,
+     0.0259,
+     0.0102,
+     0.0069,
+     0.0048,
+     0.0396,
+     0.015,
+     0.0139,
+     0.0236,
+     0.0304,
+     0.0113
+    ],
+    "alerts_per_hour": 94.67552051617773,
+    "called": {
+     "Infiltration": 22,
+     "PortScan": 10,
+     "Heartbleed": 2,
+     "DoS-SlowHTTPTest": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 42,
+     "53": 14,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "80": 3,
+     "4749": 3,
+     "13177": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + two-envelope anomaly",
+   "seed": 4,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.00200473150613949,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 89,
+    "rate": 0.019205869659041863,
+    "rate_ci": [
+     0.013177071917658096,
+     0.024553039664885895
+    ],
+    "block_rates": [
+     0.023,
+     0.0379,
+     0.0201,
+     0.0034,
+     0.0103,
+     0.0048,
+     0.0335,
+     0.015,
+     0.008,
+     0.0236,
+     0.0284,
+     0.0113
+    ],
+    "alerts_per_hour": 89.63958857382785,
+    "called": {
+     "Infiltration": 22,
+     "PortScan": 10,
+     "Heartbleed": 2,
+     "DoS-SlowHTTPTest": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 46,
+     "53": 14,
+     "13246": 4,
+     "80": 3,
+     "10004": 3,
+     "2710": 3,
+     "4749": 2,
+     "13177": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + exemplar envelope",
+   "seed": 4,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0031769897597295313,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 80,
+    "rate": 0.017263703064307294,
+    "rate_ci": [
+     0.012094390184137474,
+     0.02271963740046747
+    ],
+    "block_rates": [
+     0.0172,
+     0.035,
+     0.0172,
+     0.0068,
+     0.0069,
+     0.0,
+     0.0366,
+     0.0075,
+     0.0099,
+     0.0284,
+     0.0203,
+     0.0113
+    ],
+    "alerts_per_hour": 80.57491107759807,
+    "called": {
+     "Infiltration": 22,
+     "PortScan": 10,
+     "Heartbleed": 2,
+     "DoS-SlowHTTPTest": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 42,
+     "53": 14,
+     "80": 3,
+     "4749": 3,
+     "13246": 3,
+     "5351": 1,
+     "8641": 1,
+     "13036": 1
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 70,
+     "services_partial": 9
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 triaged local flows + local refit anomaly",
+   "seed": 4,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9625316108262344,
+    "recall_ci": [
+     0.9620840287699232,
+     0.9629741127016848
+    ],
+    "fpr": 0.0017711293179240835,
+    "macro_detection": 0.9749408501848654,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.961,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9829,
+     "DoS-Hulk": 0.9597,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.931,
+     "PortScan": 0.9204,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 85,
+    "rate": 0.0183426845058265,
+    "rate_ci": [
+     0.013007903616640623,
+     0.023486575036227152
+    ],
+    "block_rates": [
+     0.0172,
+     0.0379,
+     0.0259,
+     0.0034,
+     0.0069,
+     0.0048,
+     0.0335,
+     0.015,
+     0.0099,
+     0.0236,
+     0.0243,
+     0.0113
+    ],
+    "alerts_per_hour": 85.61084301994795,
+    "called": {
+     "Infiltration": 22,
+     "PortScan": 10,
+     "Heartbleed": 2,
+     "DoS-SlowHTTPTest": 4,
+     "FTP-BruteForce": 1,
+     "Bot": 12
+    },
+    "alerts_by_port": {
+     "443": 35,
+     "53": 14,
+     "13246": 6,
+     "2710": 5,
+     "10004": 4,
+     "80": 3,
+     "4749": 3,
+     "13177": 2
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 71,
+     "services_partial": 8
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows",
+   "seed": 4,
+   "training_rows": 256293,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.952296064604023,
+    "recall_ci": [
+     0.9517940958415382,
+     0.9527930656069926
+    ],
+    "fpr": 0.007292635584833697,
+    "macro_detection": 0.9702503283349723,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9239,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9894,
+     "DoS-Hulk": 0.9684,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.9138,
+     "PortScan": 0.9032,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 318,
+    "rate": 0.06862321968062149,
+    "rate_ci": [
+     0.050423995479658465,
+     0.08611109432594113
+    ],
+    "block_rates": [
+     0.1149,
+     0.0671,
+     0.0632,
+     0.034,
+     0.0276,
+     0.0721,
+     0.0915,
+     0.0824,
+     0.0477,
+     0.0804,
+     0.0751,
+     0.0295
+    ],
+    "alerts_per_hour": 320.2852715334523,
+    "called": {
+     "PortScan": 132,
+     "Infiltration": 51,
+     "DoS-SlowHTTPTest": 5,
+     "Web-BruteForce": 1,
+     "Heartbleed": 3,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "443": 104,
+     "1900": 64,
+     "5353": 19,
+     "53": 17,
+     "5351": 15,
+     "0": 12,
+     "4749": 11,
+     "13246": 6
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.04716981132075472,
+     "services_clean": 60,
+     "services_partial": 18
+    }
+   }
+  },
+  {
+   "config": "few-shot + 30 uncertain local flows + exemplar envelope",
+   "seed": 4,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.9522946350584612,
+    "recall_ci": [
+     0.9517926591949654,
+     0.952791643178143
+    ],
+    "fpr": 0.003410591947944938,
+    "macro_detection": 0.9688135467257769,
+    "per_class": {
+     "Bot": 1.0,
+     "DDoS-HTTP": 0.9239,
+     "DDoS-UDP": 0.9802,
+     "DoS-GoldenEye": 0.9894,
+     "DoS-Hulk": 0.9684,
+     "DoS-Slowloris": 0.9641,
+     "Infiltration": 0.8966,
+     "PortScan": 0.9032,
+     "SSH-BruteForce": 1.0,
+     "Web-BruteForce": 1.0,
+     "Web-SQLInjection": 1.0,
+     "Web-XSS": 1.0
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 234,
+    "rate": 0.050496331463098836,
+    "rate_ci": [
+     0.03580349487124371,
+     0.06504349505047793
+    ],
+    "block_rates": [
+     0.0862,
+     0.0554,
+     0.0517,
+     0.0204,
+     0.0103,
+     0.0577,
+     0.0762,
+     0.0599,
+     0.0258,
+     0.0662,
+     0.0446,
+     0.0272
+    ],
+    "alerts_per_hour": 235.68161490197434,
+    "called": {
+     "PortScan": 132,
+     "Infiltration": 51,
+     "DoS-SlowHTTPTest": 5,
+     "Web-BruteForce": 1,
+     "Heartbleed": 3,
+     "Bot": 15
+    },
+    "alerts_by_port": {
+     "1900": 63,
+     "443": 53,
+     "53": 17,
+     "5351": 15,
+     "0": 12,
+     "4749": 7,
+     "13246": 6,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [
+      "5351"
+     ],
+     "alerts_in_collapsed": 15,
+     "share_in_collapsed": 0.0641025641025641,
+     "services_clean": 63,
+     "services_partial": 15
+    }
+   }
+  },
+  {
+   "config": "source only + 30 local flows",
+   "seed": 4,
+   "training_rows": 254716,
+   "target_test": {
+    "flows": 1170409,
+    "recall": 0.01681860353412254,
+    "recall_ci": [
+     0.016519899177484466,
+     0.017122614876975518
+    ],
+    "fpr": 0.033604736602914506,
+    "macro_detection": 0.3102344577039464,
+    "per_class": {
+     "Bot": 0.0732,
+     "DDoS-HTTP": 0.0,
+     "DDoS-UDP": 0.0,
+     "DoS-GoldenEye": 0.0281,
+     "DoS-Hulk": 0.0,
+     "DoS-Slowloris": 0.8969,
+     "Infiltration": 0.2069,
+     "PortScan": 0.7741,
+     "SSH-BruteForce": 0.0,
+     "Web-BruteForce": 0.037,
+     "Web-SQLInjection": 0.75,
+     "Web-XSS": 0.9565
+    }
+   },
+   "real_network": {
+    "blocks": 12,
+    "flows": 4634,
+    "alerts": 231,
+    "rate": 0.04984894259818731,
+    "rate_ci": [
+     0.035858421481135945,
+     0.06300534649957515
+    ],
+    "block_rates": [
+     0.0848,
+     0.0554,
+     0.0517,
+     0.0272,
+     0.0103,
+     0.0481,
+     0.061,
+     0.0487,
+     0.0477,
+     0.0615,
+     0.0467,
+     0.0181
+    ],
+    "alerts_per_hour": 232.66005573656443,
+    "called": {
+     "DoS-SlowHTTPTest": 75,
+     "Infiltration": 31,
+     "SSH-BruteForce": 3,
+     "PortScan": 15,
+     "Heartbleed": 6,
+     "FTP-BruteForce": 2
+    },
+    "alerts_by_port": {
+     "443": 76,
+     "1900": 46,
+     "5353": 20,
+     "0": 9,
+     "13246": 6,
+     "2710": 5,
+     "4749": 5,
+     "55068": 4
+    },
+    "service_concentration": {
+     "services": 79,
+     "collapsed_services": [],
+     "alerts_in_collapsed": 0,
+     "share_in_collapsed": 0.0,
+     "services_clean": 62,
+     "services_partial": 17
+    }
+   }
+  }
+ ],
+ "minutes": 66.9800286149999
+}

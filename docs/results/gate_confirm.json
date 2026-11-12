@@ -1,0 +1,486 @@
+{
+ "generated": "2026-11-04",
+ "features": 83,
+ "portable": false,
+ "seeds": [
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "poison_replicate": "run_20261025T050628Z",
+ "poison_attacks": 264,
+ "held_attacks": 528,
+ "rows": [
+  {
+   "arm": "clean",
+   "seed": 5,
+   "dismissed": 3,
+   "recall": 0.9109848484848485,
+   "per_class": {
+    "FTP-BruteForce": 0.0417,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.010142425550280535
+  },
+  {
+   "arm": "ungated",
+   "seed": 5,
+   "dismissed": 3,
+   "recall": 0.5303030303030303,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.012300388433318947
+  },
+  {
+   "arm": "gated",
+   "seed": 5,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.012084592145015106,
+   "attacks_kept": 0,
+   "legit_kept": 27,
+   "legit_offered": 27
+  },
+  {
+   "arm": "clean",
+   "seed": 5,
+   "dismissed": 10,
+   "recall": 0.9109848484848485,
+   "per_class": {
+    "FTP-BruteForce": 0.0417,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.010142425550280535
+  },
+  {
+   "arm": "ungated",
+   "seed": 5,
+   "dismissed": 10,
+   "recall": 0.003787878787878788,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0078,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.011868795856711264
+  },
+  {
+   "arm": "gated",
+   "seed": 5,
+   "dismissed": 10,
+   "recall": 0.8636363636363636,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.014458351316357358,
+   "attacks_kept": 1,
+   "legit_kept": 20,
+   "legit_offered": 20
+  },
+  {
+   "arm": "clean",
+   "seed": 6,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.009926629261976695
+  },
+  {
+   "arm": "ungated",
+   "seed": 6,
+   "dismissed": 3,
+   "recall": 0.4356060606060606,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0234,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.010358221838584376
+  },
+  {
+   "arm": "gated",
+   "seed": 6,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.010574018126888218,
+   "attacks_kept": 0,
+   "legit_kept": 27,
+   "legit_offered": 27
+  },
+  {
+   "arm": "clean",
+   "seed": 6,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.009926629261976695
+  },
+  {
+   "arm": "ungated",
+   "seed": 6,
+   "dismissed": 10,
+   "recall": 0.056818181818181816,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0234,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.011437203280103583
+  },
+  {
+   "arm": "gated",
+   "seed": 6,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.010574018126888218,
+   "attacks_kept": 1,
+   "legit_kept": 20,
+   "legit_offered": 20
+  },
+  {
+   "arm": "clean",
+   "seed": 7,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011868795856711264
+  },
+  {
+   "arm": "ungated",
+   "seed": 7,
+   "dismissed": 3,
+   "recall": 0.38636363636363635,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0156,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.015537332757876565
+  },
+  {
+   "arm": "gated",
+   "seed": 7,
+   "dismissed": 3,
+   "recall": 0.8636363636363636,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.015753129046180404,
+   "attacks_kept": 1,
+   "legit_kept": 27,
+   "legit_offered": 27
+  },
+  {
+   "arm": "clean",
+   "seed": 7,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011868795856711264
+  },
+  {
+   "arm": "ungated",
+   "seed": 7,
+   "dismissed": 10,
+   "recall": 0.003787878787878788,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0078,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.015753129046180404
+  },
+  {
+   "arm": "gated",
+   "seed": 7,
+   "dismissed": 10,
+   "recall": 0.8636363636363636,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.017047906776003454,
+   "attacks_kept": 2,
+   "legit_kept": 20,
+   "legit_offered": 20
+  },
+  {
+   "arm": "clean",
+   "seed": 8,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.013379369874838154
+  },
+  {
+   "arm": "ungated",
+   "seed": 8,
+   "dismissed": 3,
+   "recall": 0.1875,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.3867,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.012516184721622789
+  },
+  {
+   "arm": "gated",
+   "seed": 8,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 1.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.013379369874838154,
+   "attacks_kept": 1,
+   "legit_kept": 27,
+   "legit_offered": 27
+  },
+  {
+   "arm": "clean",
+   "seed": 8,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.013379369874838154
+  },
+  {
+   "arm": "ungated",
+   "seed": 8,
+   "dismissed": 10,
+   "recall": 0.001893939393939394,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0039,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.013810962451445835
+  },
+  {
+   "arm": "gated",
+   "seed": 8,
+   "dismissed": 10,
+   "recall": 0.8674242424242424,
+   "per_class": {
+    "FTP-BruteForce": 0.0833,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 0.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.013810962451445835,
+   "attacks_kept": 3,
+   "legit_kept": 20,
+   "legit_offered": 20
+  },
+  {
+   "arm": "clean",
+   "seed": 9,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011221406991799741
+  },
+  {
+   "arm": "ungated",
+   "seed": 9,
+   "dismissed": 3,
+   "recall": 0.5890151515151515,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.3398,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011221406991799741
+  },
+  {
+   "arm": "gated",
+   "seed": 9,
+   "dismissed": 3,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011437203280103583,
+   "attacks_kept": 0,
+   "legit_kept": 27,
+   "legit_offered": 27
+  },
+  {
+   "arm": "clean",
+   "seed": 9,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.011221406991799741
+  },
+  {
+   "arm": "ungated",
+   "seed": 9,
+   "dismissed": 10,
+   "recall": 0.045454545454545456,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 0.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 0.0
+   },
+   "real_network_rate": 0.015753129046180404
+  },
+  {
+   "arm": "gated",
+   "seed": 9,
+   "dismissed": 10,
+   "recall": 0.9090909090909091,
+   "per_class": {
+    "FTP-BruteForce": 0.0,
+    "Incomplete-HTTP-Probe": 0.0,
+    "PortScan": 1.0,
+    "SSH-BruteForce": 1.0,
+    "SYN-Burst": 1.0
+   },
+   "real_network_rate": 0.014458351316357358,
+   "attacks_kept": 0,
+   "legit_kept": 20,
+   "legit_offered": 20
+  }
+ ],
+ "verdicts": {
+  "3": {
+   "mean_drop_ungated": 0.48371212121212126,
+   "seeds_restored": 4,
+   "seeds": 5,
+   "legit_kept": 1.0,
+   "effect_replicates": true,
+   "confirmed": true
+  },
+  "10": {
+   "mean_drop_ungated": 0.8871212121212121,
+   "seeds_restored": 2,
+   "seeds": 5,
+   "legit_kept": 1.0,
+   "effect_replicates": null,
+   "confirmed": false
+  }
+ },
+ "minutes": 24.019889469999665
+}
