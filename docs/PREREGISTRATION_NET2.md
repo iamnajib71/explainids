@@ -68,3 +68,7 @@ blocks, discarded afterwards).
   is site-specific, as the thesis argues, this should do less than the second network's own repair.
 - **Exploratory (E2).** Composition of the remaining alerts by destination port class and by classifier versus
   anomaly layer, as for the first network, to see whether the same mechanisms drive them.
+
+## Status, 12 November 2026
+
+Not run. No second household was available for capture before the project deadline, so no data exist for this test and none of its hypotheses is confirmed or refuted. The study's evidence comes from one home network on three evenings; this is reported as its main limitation.

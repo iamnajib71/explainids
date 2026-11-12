@@ -326,8 +326,10 @@ def highlight_placeholders(doc):
 
 def fit_images(doc, width_cm=15.9):
     for shape in doc.inline_shapes:
-        ratio = Cm(width_cm) / shape.width
-        shape.width = Cm(width_cm)
+        # 16:10 screenshots are set a little narrower so three fit on two pages without a trailing blank page
+        width = width_cm * 0.9 if abs(shape.width / shape.height - 1.6) < 0.01 else width_cm
+        ratio = Cm(width) / shape.width
+        shape.width = Cm(width)
         shape.height = int(shape.height * ratio)
 
 

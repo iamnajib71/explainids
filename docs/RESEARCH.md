@@ -555,6 +555,38 @@ Results: [`real_network_day3_portable`](results/real_network_day3_portable.md),
 and the evaluation a Sunday, so part of H3 may be a weekend pattern rather than age. Still one network; alert rates
 on unlabelled traffic are upper bounds on false alerts.
 
+### Pre-registered fix: repetition pays back the veto's unseen-attack cost
+
+**Why it matters.** C2 left the repair with a stated price: the exemplar veto hides 29.3% of the unseen-attack flows
+only the anomaly layer catches, almost all DoS-Slowloris, because each slow connection resembles one of the site's
+idle sessions. The console already keeps vetoed alerts as low priority. The rule tested here returns them to the
+queue when one destination address and port receives at least N of them within 60 seconds, with N set from the
+site's own earlier evening alone (1 + the most repetition it showed, floor 3; N = 7 for every fitted model). The
+rule, the 10% recovery mark and the 0.2-point price mark were committed before the script ran on any attack class
+([PREREGISTRATION_ESCALATION.md](PREREGISTRATION_ESCALATION.md), commit `b76f788`).
+
+| Hypothesis (leave-one-class-out, 5 seeds, without port and window features) | Result | Verdict |
+|---|---|---|
+| H1: at most 10% of anomaly-only unseen detections stay lost | 939 of 3,200 vetoed (29.3%); 819 returned; **120 still lost (3.8%)**; 3.1–4.1% in every seed | **Confirmed** |
+| H2: alert rate rises by at most 0.2 points on each real evening | 1 November 1.75% → 1.75%; 8 November 1.87% → 1.87%; no escalated alert on either evening | **Confirmed** |
+| H3: the same with all 83 features | running | pending |
+
+Result: [`escalation_portable`](results/escalation_portable.md).
+
+**What we found.**
+- **The slow-attack price is largely repaid, at no measured cost in alerts.** Of 908 vetoed Slowloris detections,
+  819 return (90%). A slow DoS hides flow by flow but not in aggregate: it must open many connections to one service,
+  and that repetition exceeds anything the household's traffic showed.
+- **What stays lost is not repetitive.** All 30 vetoed Infiltration flows and the one Web-XSS flow stay vetoed: a
+  single quiet connection to a destination gives the rule nothing to count. This is the remaining unseen-attack cost
+  of the veto, 3.8% of anomaly-only detections.
+- **The site's own history sets the threshold.** No attack label and no tuning on the evaluation evenings were used;
+  on two later evenings the household never reached the repetition its earlier evening implied.
+
+**Limits.** One home network, whose demoted alerts are sparse; a busier site would set a higher N and could lose
+slower attacks. The benchmark's Slowloris comes from one attacker against one server. SSH brute force passing the
+dismissal gate (E10) is a different mechanism and is not addressed by this rule.
+
 ### A rule-based baseline: Suricata on the same recordings
 
 **Why it matters.** The obvious question about any learned detector is why not use what already exists. Suricata
